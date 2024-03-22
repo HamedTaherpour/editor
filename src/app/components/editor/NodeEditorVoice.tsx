@@ -1,5 +1,5 @@
 import { useRef } from "react";
-import { NodeVoice, OnUpdateNodeListener } from "@/app/lib/node-editor/type";
+import { NodeVoice, OnUpdateNodeListener } from "@/app/lib/editor/type";
 
 interface Props {
   node: NodeVoice;

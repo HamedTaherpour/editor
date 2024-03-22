@@ -1,5 +1,5 @@
 import { useRef } from "react";
-import { NodeImage, OnUpdateNodeListener } from "@/app/lib/node-editor/type";
+import { NodeImage, OnUpdateNodeListener } from "@/app/lib/editor/type";
 
 interface Props {
   node: NodeImage;

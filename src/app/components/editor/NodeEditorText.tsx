@@ -1,4 +1,4 @@
-import { NodeText, OnUpdateNodeListener } from "@/app/lib/node-editor/type";
+import { NodeText, OnUpdateNodeListener } from "@/app/lib/editor/type";
 
 interface Props {
   node: NodeText;
