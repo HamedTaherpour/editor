@@ -6,9 +6,9 @@ class NodeEditorTextModule {
   constructor(nodeEditor: NodeEditor) {
     this.nodeEditor = nodeEditor;
   }
-  add(node: NodeText) {
+  add(node: NodeText, index?: number) {
     node.type = TYPE_NODE_TEXT;
-    this.nodeEditor.addNode(node);
+    this.nodeEditor.addNode(node, index);
   }
   delete(id: number) {
     this.nodeEditor.deleteNode(id);

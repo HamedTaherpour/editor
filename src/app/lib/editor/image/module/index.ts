@@ -6,9 +6,9 @@ class NodeEditorImageModule {
   constructor(nodeEditor: NodeEditor) {
     this.nodeEditor = nodeEditor;
   }
-  add(node: NodeImage) {
+  add(node: NodeImage, index?: number) {
     node.type = TYPE_NODE_IMAGE;
-    this.nodeEditor.addNode(node);
+    this.nodeEditor.addNode(node, index);
   }
   delete(id: number) {
     this.nodeEditor.deleteNode(id);

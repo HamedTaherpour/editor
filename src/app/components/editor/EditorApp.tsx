@@ -8,7 +8,7 @@ import NodeEditorVoiceModule from "@/app/lib/editor/voice/module";
 import NodeEditorImageModule from "@/app/lib/editor/image/module";
 
 import NodeEditor from "@/app/components/editor/NodeEditor";
-import AppMenu from "@/app/components/AppMenu";
+import AppContextMenu from "@/app/components/AppContextMenu";
 
 import {
   JsonEditor,
@@ -20,10 +20,13 @@ import {
   NodeImage,
   Node,
   OnUpdateNodeListener,
+  OnPressEnterNodeListener,
   OnDeleteNodeListener,
+  OnRightClickNodeListener,
 } from "@/app/lib/editor/type";
 
 const EditorApp = () => {
+  const [contextMenuOpen, setContextMenuOpen] = useState<boolean>(false);
   const [jsonEditor, setJsonEditor] = useState<JsonEditor>({
     name: "TestA",
     nodes: [],
@@ -38,24 +41,24 @@ const EditorApp = () => {
       title: "متن",
       description: "محتوای متنی به عنوان یک درس",
       icon: "/editor/text.svg",
-      action: () => {
-        onBtnAddNodeClick(TYPE_NODE_TEXT);
+      action: (index: number) => {
+        onBtnAddNodeClick(TYPE_NODE_TEXT, index);
       },
     },
     {
       title: "صدا",
       description: "محتوای صدا به عنوان یک درس",
       icon: "/editor/voice.svg",
-      action: () => {
-        onBtnAddNodeClick(TYPE_NODE_VOICE);
+      action: (index: number) => {
+        onBtnAddNodeClick(TYPE_NODE_VOICE, index);
       },
     },
     {
       title: "تصویر",
       description: "محتوای تصویر به عنوان یک درس",
       icon: "/editor/image.svg",
-      action: () => {
-        onBtnAddNodeClick(TYPE_NODE_IMAGE);
+      action: (index: number) => {
+        onBtnAddNodeClick(TYPE_NODE_IMAGE, index);
       },
     },
   ];
@@ -66,16 +69,18 @@ const EditorApp = () => {
     },
   });
 
-  const onBtnAddNodeClick = (type: number) => {
+  const onBtnAddNodeClick = (type: number, _index: number = -1) => {
+    const index = _index >= 0 ? _index + 1 : _index;
+
     switch (type) {
       case TYPE_NODE_TEXT:
-        nodeEditorTextModule.add(new NodeText());
+        nodeEditorTextModule.add(new NodeText(), index);
         break;
       case TYPE_NODE_VOICE:
-        nodeEditorVoiceModule.add(new NodeVoice());
+        nodeEditorVoiceModule.add(new NodeVoice(), index);
         break;
       case TYPE_NODE_IMAGE:
-        nodeEditorImageModule.add(new NodeImage());
+        nodeEditorImageModule.add(new NodeImage(), index);
         break;
     }
   };
@@ -96,6 +101,12 @@ const EditorApp = () => {
     },
   };
 
+  const onPressEnterNodeListener: OnPressEnterNodeListener = {
+    onClick: (index: number) => {
+      onBtnAddNodeClick(TYPE_NODE_TEXT, index);
+    },
+  };
+
   const onUpdateNodeListener: OnUpdateNodeListener = {
     onUpdate: (node: Node) => {
       switch (node.type) {
@@ -112,56 +123,35 @@ const EditorApp = () => {
     },
   };
 
+  const onRightClickNodeListener: OnRightClickNodeListener = {
+    onRightClick(node: Node, posX: number, posY: number) {
+      // setContextMenuOpen(!contextMenuOpen);
+    },
+  };
+
   return (
     <div className="flex flex-row">
+      {/* <AppContextMenu open={contextMenuOpen} posX={850} posY={100} /> */}
       <div className="flex flex-col bg-sky-50 min-h-64 px-6 py-4 w-6/12">
-        <AppMenu
-          activator={
-            <button>
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="32"
-                height="32"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  fill="currentColor"
-                  d="M19 11h-6V5a1 1 0 0 0-2 0v6H5a1 1 0 0 0 0 2h6v6a1 1 0 0 0 2 0v-6h6a1 1 0 0 0 0-2Z"
-                />
-              </svg>
-            </button>
-          }
-          children={
-            <div className="flex flex-col gap-y-2">
-              {menuList.map((item) => (
-                <div
-                  key={item.title}
-                  onClick={item.action}
-                  className="flex flex-row cursor-pointer"
-                >
-                  <div className="grid place-items-center bg-slate-50 rounded p-2">
-                    <img src={item.icon} />
-                  </div>
-                  <div className="flex flex-col mr-2">
-                    <span className="text-xs font-bold">{item.title}</span>
-                    <p className="text-[10px] text-gray-600">
-                      {item.description}
-                    </p>
-                  </div>
-                </div>
-              ))}
-            </div>
-          }
-        />
-        <div className="flex flex-col gap-y-6">
-          {jsonEditor.nodes.map((item) => (
+        <div className="flex flex-col">
+          {jsonEditor.nodes.map((item, i) => (
             <NodeEditor
               key={item.id}
+              index={i}
               node={item}
+              menuList={menuList}
               onUpdateNodeListener={onUpdateNodeListener}
+              onRightClickNodeListener={onRightClickNodeListener}
+              onPressEnterNodeListener={onPressEnterNodeListener}
               onDeleteNodeListener={onDeleteNodeListener}
             />
           ))}
+          <button
+            className="text-slate-500 cursor-text text-right ring-1 ring-red-300"
+            onClick={() => onBtnAddNodeClick(TYPE_NODE_TEXT)}
+          >
+            یک متن اضافه کنید
+          </button>
         </div>
       </div>
       <div className="bg-slate-900 text-white dir-ltr w-6/12 overflow-auto">

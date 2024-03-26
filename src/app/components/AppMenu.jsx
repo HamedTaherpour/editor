@@ -4,7 +4,7 @@ import { useState } from "react";
 import { cloneElement } from "react";
 import useOutsideClick from "../lib/OutsideClick";
 
-const AppMenu = ({ activator, children }) => {
+const AppMenu = ({ activator, children, className }) => {
   const [open, setOpen] = useState(false);
 
   const onClickOutsideClick = () => {
@@ -17,12 +17,15 @@ const AppMenu = ({ activator, children }) => {
   };
 
   return (
-    <div className="relative">
+    <div className={className + " relative"}>
       {cloneElement(activator, {
         onClick: onActivatorClick,
       })}
       {open ? (
-        <div ref={ref} className="absolute bg-white p-4 rounded shadow-2xl">
+        <div
+          ref={ref}
+          className="absolute bg-white p-4 rounded shadow-2xl z-50"
+        >
           {cloneElement(children, {
             onClick: () => {
               setOpen(false);

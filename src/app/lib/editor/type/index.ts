@@ -52,6 +52,14 @@ export interface OnUpdateNodeListener {
   onUpdate(node: Node): void;
 }
 
+export interface OnPressEnterNodeListener {
+  onClick(index?: number): void;
+}
+
+export interface OnRightClickNodeListener {
+  onRightClick(node: Node, posX: number, posY: number): void;
+}
+
 export interface OnDeleteNodeListener {
   onDelete(node: Node): void;
 }

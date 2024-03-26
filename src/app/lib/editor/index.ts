@@ -18,9 +18,10 @@ class Editor {
     this.onJsonEditorUpdateListener = onJsonEditorUpdateListener;
   }
 
-  addNode(node: Node) {
+  addNode(node: Node, index: number = -1) {
     if (this.jsonEditor) {
-      this.jsonEditor.nodes.push(node);
+      if (index > 0) this.jsonEditor.nodes.splice(index, 0, node);
+      else this.jsonEditor.nodes.push(node);
       this.onJsonEditorUpdateListener?.onUpdate(this.jsonEditor);
     }
   }
