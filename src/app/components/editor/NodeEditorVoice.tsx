@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { ChangeEvent, useRef } from "react";
 import { NodeVoice, OnUpdateNodeListener } from "@/app/lib/editor/type";
 
 interface Props {
@@ -10,14 +10,14 @@ const NodeEditorVoice = (props: Props) => {
   const { node, onUpdateNodeListener } = props;
   const ref = useRef<HTMLAudioElement>(null);
 
-  const onChangeFile = (e) => {
-    node.path = URL.createObjectURL(e.target.files[0]);
-
-    if (ref.current) {
-      ref.current.src = URL.createObjectURL(e.target.files[0]);
+  const onChangeFile = (e: ChangeEvent<HTMLInputElement>) => {
+    if (!!e.target.files) {
+      node.path = URL.createObjectURL(e.target.files[0]);
+      if (ref.current) {
+        ref.current.src = URL.createObjectURL(e.target.files[0]);
+      }
+      onUpdateNodeListener.onUpdate(node);
     }
-
-    onUpdateNodeListener.onUpdate(node);
   };
 
   return (

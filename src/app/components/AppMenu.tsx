@@ -1,24 +1,35 @@
 "use client";
 
-import { useState } from "react";
+import { Children, ReactNode, useState } from "react";
 import { cloneElement } from "react";
-import useOutsideClick from "../lib/OutsideClick";
+import useOutsideClick from "@/app/lib/OutsideClick";
 
-const AppMenu = ({ activator, children, className }) => {
+interface Props {
+  activator: ReactNode;
+  menu: ReactNode;
+  className: string;
+}
+
+const AppMenu = (props: Props) => {
+  const { activator, menu, className } = props;
+
   const [open, setOpen] = useState(false);
 
   const onClickOutsideClick = () => {
     setOpen(false);
   };
-  const ref = useOutsideClick(onClickOutsideClick);
+  const ref = useOutsideClick<HTMLDivElement>(onClickOutsideClick);
 
   const onActivatorClick = () => {
     setOpen(!open);
   };
 
+  const childActivator = Children.only(activator) as React.ReactElement;
+  const childMenu = Children.only(menu) as React.ReactElement;
+
   return (
     <div className={className + " relative"}>
-      {cloneElement(activator, {
+      {cloneElement(childActivator, {
         onClick: onActivatorClick,
       })}
       {open ? (
@@ -26,7 +37,7 @@ const AppMenu = ({ activator, children, className }) => {
           ref={ref}
           className="absolute bg-white p-4 rounded shadow-2xl z-50"
         >
-          {cloneElement(children, {
+          {cloneElement(childMenu, {
             onClick: () => {
               setOpen(false);
             },

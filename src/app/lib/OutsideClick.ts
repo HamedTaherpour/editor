@@ -1,10 +1,12 @@
-import { useEffect, useRef } from "react";
+import { LegacyRef, Ref, RefObject, createRef, useEffect, useRef } from "react";
 
-const useOutsideClick = (callback) => {
-  const ref = useRef();
+function useOutsideClick<T extends HTMLElement>(
+  callback: Function
+): RefObject<T> {
+  const ref = createRef<T>();
 
   useEffect(() => {
-    const handleClick = (event) => {
+    const handleClick = (event: any) => {
       if (ref.current && !ref.current.contains(event.target)) {
         callback();
       }
@@ -18,6 +20,6 @@ const useOutsideClick = (callback) => {
   }, [ref]);
 
   return ref;
-};
+}
 
 export default useOutsideClick;

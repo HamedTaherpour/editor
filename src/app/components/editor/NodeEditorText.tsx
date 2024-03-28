@@ -4,7 +4,7 @@ import {
   OnPressEnterNodeListener,
   OnRightClickNodeListener,
 } from "@/app/lib/editor/type";
-import { useRef } from "react";
+import { ChangeEvent, KeyboardEvent, MouseEvent, useRef } from "react";
 
 interface Props {
   node: NodeText;
@@ -22,16 +22,16 @@ const NodeEditorText = (props: Props) => {
   } = props;
   const ref = useRef<HTMLInputElement>(null);
 
-  const onKeyUp = (e) => {
+  const onKeyUp = (e: KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") onPressEnterNodeListener.onClick();
   };
 
-  const onChangeText = (e) => {
+  const onChangeText = (e: ChangeEvent<HTMLInputElement>) => {
     node.text = e.target.value;
     onUpdateNodeListener.onUpdate(node);
   };
 
-  const onContextMenu = (e) => {
+  const onContextMenu = (e: MouseEvent<HTMLInputElement>) => {
     onRightClickNodeListener.onRightClick(node, e.clientX, e.clientY);
     e.preventDefault();
   };

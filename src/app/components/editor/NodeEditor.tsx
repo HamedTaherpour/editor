@@ -68,7 +68,7 @@ const NodeEditor = (props: Props) => {
             </svg>
           </button>
         }
-        children={
+        menu={
           <div className="flex flex-col gap-y-2 w-44">
             {menuList.map((item) => (
               <div
@@ -108,6 +108,8 @@ const NodeEditor = (props: Props) => {
       {node.type === TYPE_NODE_IMAGE ? (
         <NodeEditorImage
           node={node as NodeImage}
+          onRightClickNodeListener={onRightClickNodeListener}
+          onPressEnterNodeListener={myOnPressEnterNodeListener}
           onUpdateNodeListener={onUpdateNodeListener}
         />
       ) : null}

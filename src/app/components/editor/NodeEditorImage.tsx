@@ -1,4 +1,10 @@
-import { MouseEventHandler, useRef, useState } from "react";
+import {
+  ChangeEvent,
+  KeyboardEvent,
+  MouseEvent,
+  useRef,
+  useState,
+} from "react";
 import {
   NodeImage,
   OnUpdateNodeListener,
@@ -33,36 +39,38 @@ const NodeEditorImage = (props: Props) => {
       x: mouseDownEvent.pageX,
     };
 
-    function onMouseMove(mouseMoveEvent: MouseEvent) {
+    const onMouseMove = (mouseMoveEvent: any) => {
       setSize((currentSize) => ({
         x: startSize.x + startPosition.x - mouseMoveEvent.pageX,
       }));
-    }
-    function onMouseUp() {
+    };
+    const onMouseUp = () => {
       document.body.removeEventListener("mousemove", onMouseMove);
       // uncomment the following line if not using `{ once: true }`
       // document.body.removeEventListener("mouseup", onMouseUp);
-    }
+    };
 
     document.body.addEventListener("mousemove", onMouseMove);
     document.body.addEventListener("mouseup", onMouseUp, { once: true });
   };
 
-  const onKeyUp = (e) => {
+  const onKeyUp = (e: KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") onPressEnterNodeListener.onClick();
   };
 
-  const onChangeFile = (e) => {
-    node.path = URL.createObjectURL(e.target.files[0]);
-    if (ref.current) {
-      ref.current.src = URL.createObjectURL(e.target.files[0]);
+  const onChangeFile = (e: ChangeEvent<HTMLInputElement>) => {
+    if (!!e.target.files) {
+      node.path = URL.createObjectURL(e.target.files[0]);
+      if (ref.current) {
+        ref.current.src = URL.createObjectURL(e.target.files[0]);
+      }
+      onUpdateNodeListener.onUpdate(node);
+      setSize({ x: 250 });
+      setShowFileSelected(false);
     }
-    onUpdateNodeListener.onUpdate(node);
-    setSize({ x: 250 });
-    setShowFileSelected(false);
   };
 
-  const onContextMenu = (e) => {
+  const onContextMenu = (e: MouseEvent<HTMLImageElement>) => {
     // onRightClickNodeListener.onRightClick(node, e.clientX, e.clientY);
     // e.preventDefault();
   };
