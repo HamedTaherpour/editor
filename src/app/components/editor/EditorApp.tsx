@@ -46,17 +46,121 @@ const EditorApp = () => {
       },
     },
     {
-      title: "صدا",
-      description: "محتوای صدا به عنوان یک درس",
+      title: "سرفصل‌ها",
+      description: "نمایش سرفصل‌ها و محتوای دوره",
+      icon: "/editor/title.svg",
+      action: (index: number) => {
+        onBtnAddNodeClick(TYPE_NODE_TEXT, index);
+      },
+    },
+    {
+      title: "عنوان 1",
+      description: "سایز بزرگ برای نوشتن عنوان",
+      icon: "/editor/h1.svg",
+      action: (index: number) => {
+        onBtnAddNodeClick(TYPE_NODE_TEXT, index);
+      },
+    },
+    {
+      title: "عنوان 2",
+      description: "سایز متوسط برای نوشتن عنوان",
+      icon: "/editor/h1.svg",
+      action: (index: number) => {
+        onBtnAddNodeClick(TYPE_NODE_TEXT, index);
+      },
+    },
+    {
+      title: "عنوان 3",
+      description: "سایز کوچک برای نوشتن عنوان",
+      icon: "/editor/h1.svg",
+      action: (index: number) => {
+        onBtnAddNodeClick(TYPE_NODE_TEXT, index);
+      },
+    },
+    {
+      title: "نقل‌قول",
+      description: "برای نوشتن نقل‌قول استفاده کنید.",
+      icon: "/editor/quote.svg",
+      action: (index: number) => {
+        onBtnAddNodeClick(TYPE_NODE_TEXT, index);
+      },
+    },
+    {
+      title: "لینک",
+      description: "صوت یا ویس خود را بارگزاری کنید.",
+      icon: "/editor/quote.svg",
+      action: (index: number) => {
+        onBtnAddNodeClick(TYPE_NODE_TEXT, index);
+      },
+    },
+    {
+      title: "تصویر",
+      description: "تصویر خود را بارگزاری کنید.",
+      icon: "/editor/image.svg",
+      action: (index: number) => {
+        onBtnAddNodeClick(TYPE_NODE_TEXT, index);
+      },
+    },
+    {
+      title: "ویدیو",
+      description: "ویدیو خود را بارگزاری کنید.",
+      icon: "/editor/video.svg",
+      action: (index: number) => {
+        onBtnAddNodeClick(TYPE_NODE_TEXT, index);
+      },
+    },
+    {
+      title: "فایل یا پوشه",
+      description: "فایل خود را بارگزاری کنید.",
+      icon: "/editor/file.svg",
+      action: (index: number) => {
+        onBtnAddNodeClick(TYPE_NODE_TEXT, index);
+      },
+    },
+    {
+      title: "صوتی",
+      description: "صوت یا ویس خود را بارگزاری کنید.",
       icon: "/editor/voice.svg",
+      action: (index: number) => {
+        onBtnAddNodeClick(TYPE_NODE_TEXT, index);
+      },
+    },
+    {
+      title: "لیست افقی",
+      description: "معرفی کردن ویژگی‌ها و امکانات",
+      icon: "/editor/row-horizontal.svg",
       action: (index: number) => {
         onBtnAddNodeClick(TYPE_NODE_VOICE, index);
       },
     },
     {
-      title: "تصویر",
-      description: "محتوای تصویر به عنوان یک درس",
-      icon: "/editor/image.svg",
+      title: "لیست آکاردئونی",
+      description: "برای سوالات متداول و غیره",
+      icon: "/editor/row-horizontal.svg",
+      action: (index: number) => {
+        onBtnAddNodeClick(TYPE_NODE_VOICE, index);
+      },
+    },
+    {
+      title: "جداکننده",
+      description: "جداکننده بخش‌های مختلف",
+      icon: "/editor/divider.svg",
+      action: (index: number) => {
+        onBtnAddNodeClick(TYPE_NODE_VOICE, index);
+      },
+    },
+    {
+      title: "نظرات",
+      description: "نمایش رضایت شرکت‌کنندگان قبلی ",
+      icon: "/editor/star.svg",
+      action: (index: number) => {
+        onBtnAddNodeClick(TYPE_NODE_IMAGE, index);
+      },
+    },
+    {
+      title: "ایموجی",
+      description: "ایموجی مدنظر را انتخاب کنید.",
+      icon: "/editor/sticker.svg",
       action: (index: number) => {
         onBtnAddNodeClick(TYPE_NODE_IMAGE, index);
       },
@@ -132,7 +236,7 @@ const EditorApp = () => {
   return (
     <div className="flex flex-row">
       {/* <AppContextMenu open={contextMenuOpen} posX={850} posY={100} /> */}
-      <div className="flex flex-col bg-sky-50 min-h-64 px-6 py-4 w-6/12">
+      <div className="flex flex-col bg-white min-h-64 px-6 py-4 w-6/12 mt-16">
         <div className="flex flex-col">
           {jsonEditor.nodes.map((item, i) => (
             <NodeEditor
@@ -147,7 +251,7 @@ const EditorApp = () => {
             />
           ))}
           <button
-            className="text-slate-500 cursor-text text-right ring-1 ring-red-300"
+            className="text-slate-500 cursor-text text-right"
             onClick={() => onBtnAddNodeClick(TYPE_NODE_TEXT)}
           >
             یک متن اضافه کنید
