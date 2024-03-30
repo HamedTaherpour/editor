@@ -1,6 +1,6 @@
 "use client";
 
-import { Children, ReactNode, useState } from "react";
+import { Children, MouseEvent, ReactNode, useState } from "react";
 import useOutsideClick from "@/app/lib/OutsideClick";
 import {
   DropDownMenuItemType,
@@ -26,7 +26,7 @@ const AppDropDownMenu = (props: Props) => {
   };
   const ref = useOutsideClick<HTMLDivElement>(onClickOutsideClick);
 
-  const onActivatorClick = () => {
+  const onActivatorClick = (e: MouseEvent) => {
     setOpen(!open);
   };
 

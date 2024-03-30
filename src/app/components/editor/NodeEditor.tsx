@@ -16,6 +16,7 @@ import {
   TYPE_NODE_IMAGE,
   OnRightClickNodeListener,
 } from "@/app/lib/editor/type";
+import { ChangeEvent } from "react";
 
 interface Props {
   index: number;
