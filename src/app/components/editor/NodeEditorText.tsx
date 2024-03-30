@@ -34,7 +34,6 @@ const NodeEditorText = (props: Props) => {
 
   const onKeyUp = (e: KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") onPressEnterNodeListener.onClick();
-    else if (e.key === "Backspace") setShowToolbar(false);
   };
 
   const onChangeText = (text: string) => {
