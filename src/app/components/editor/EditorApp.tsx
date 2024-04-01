@@ -6,27 +6,29 @@ import Editor from "@/app/lib/editor";
 import NodeEditorTextModule from "@/app/lib/editor/text/module";
 import NodeEditorVoiceModule from "@/app/lib/editor/voice/module";
 import NodeEditorImageModule from "@/app/lib/editor/image/module";
+import NodeEditorQuoteModule from "@/app/lib/editor/quote/module";
 
 import NodeEditor from "@/app/components/editor/NodeEditor";
-import AppContextMenu from "@/app/components/AppContextMenu";
 
 import {
   JsonEditor,
   TYPE_NODE_TEXT,
   TYPE_NODE_VOICE,
   TYPE_NODE_IMAGE,
+  TYPE_NODE_QUOTE,
   NodeText,
   NodeVoice,
   NodeImage,
+  NodeQuote,
   Node,
   OnUpdateNodeListener,
   OnPressEnterNodeListener,
   OnDeleteNodeListener,
   OnRightClickNodeListener,
+  OnAddNodeFromChildNodeListener,
 } from "@/app/lib/editor/type";
 
 const EditorApp = () => {
-  const [contextMenuOpen, setContextMenuOpen] = useState<boolean>(false);
   const [jsonEditor, setJsonEditor] = useState<JsonEditor>({
     name: "TestA",
     nodes: [],
@@ -35,6 +37,7 @@ const EditorApp = () => {
   const nodeEditorTextModule = new NodeEditorTextModule(editor);
   const nodeEditorVoiceModule = new NodeEditorVoiceModule(editor);
   const nodeEditorImageModule = new NodeEditorImageModule(editor);
+  const nodeEditorQuoteModule = new NodeEditorQuoteModule(editor);
 
   const menuList = [
     {
@@ -82,7 +85,7 @@ const EditorApp = () => {
       description: "برای نوشتن نقل‌قول استفاده کنید.",
       icon: "/editor/quote.svg",
       action: (index: number) => {
-        onBtnAddNodeClick(TYPE_NODE_TEXT, index);
+        onBtnAddNodeClick(TYPE_NODE_QUOTE, index);
       },
     },
     {
@@ -98,7 +101,7 @@ const EditorApp = () => {
       description: "تصویر خود را بارگزاری کنید.",
       icon: "/editor/image.svg",
       action: (index: number) => {
-        onBtnAddNodeClick(TYPE_NODE_TEXT, index);
+        onBtnAddNodeClick(TYPE_NODE_IMAGE, index);
       },
     },
     {
@@ -186,6 +189,9 @@ const EditorApp = () => {
       case TYPE_NODE_IMAGE:
         nodeEditorImageModule.add(new NodeImage(), index);
         break;
+      case TYPE_NODE_QUOTE:
+        nodeEditorQuoteModule.add(new NodeQuote(), index);
+        break;
     }
   };
 
@@ -200,6 +206,9 @@ const EditorApp = () => {
           break;
         case TYPE_NODE_IMAGE:
           nodeEditorImageModule.delete(node.id);
+          break;
+        case TYPE_NODE_QUOTE:
+          nodeEditorQuoteModule.delete(node.id);
           break;
       }
     },
@@ -223,7 +232,16 @@ const EditorApp = () => {
         case TYPE_NODE_IMAGE:
           nodeEditorImageModule.update(node as NodeImage);
           break;
+        case TYPE_NODE_QUOTE:
+          nodeEditorQuoteModule.update(node as NodeQuote);
+          break;
       }
+    },
+  };
+
+  const onAddNodeFromChildNodeListener: OnAddNodeFromChildNodeListener = {
+    onAdd(type) {
+      onBtnAddNodeClick(type);
     },
   };
 
@@ -234,9 +252,8 @@ const EditorApp = () => {
   };
 
   return (
-    <div className="flex flex-row">
-      {/* <AppContextMenu open={contextMenuOpen} posX={850} posY={100} /> */}
-      <div className="flex flex-col bg-white min-h-64 px-6 py-4 w-6/12 mt-16">
+    <div className="flex flex-col h-screen et-container mx-auto">
+      <div className="flex flex-col h-4/6 mt-16 w-full">
         <div className="flex flex-col">
           {jsonEditor.nodes.map((item, i) => (
             <NodeEditor
@@ -248,6 +265,7 @@ const EditorApp = () => {
               onRightClickNodeListener={onRightClickNodeListener}
               onPressEnterNodeListener={onPressEnterNodeListener}
               onDeleteNodeListener={onDeleteNodeListener}
+              onAddNodeFromChildNodeListener={onAddNodeFromChildNodeListener}
             />
           ))}
           <button
@@ -258,7 +276,7 @@ const EditorApp = () => {
           </button>
         </div>
       </div>
-      <div className="bg-slate-900 text-white dir-ltr w-6/12 overflow-auto">
+      <div className="bg-slate-900 text-white dir-ltr h-2/6 overflow-auto">
         <pre>{JSON.stringify(jsonEditor, null, 2)}</pre>
       </div>
     </div>

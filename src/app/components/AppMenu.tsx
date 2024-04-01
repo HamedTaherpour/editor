@@ -35,7 +35,7 @@ const AppMenu = (props: Props) => {
       {open ? (
         <div
           ref={ref}
-          className="absolute bg-white p-4 rounded shadow-2xl z-50"
+          className="absolute bg-white p-4 border border-slate-200 rounded-2xl shadow-xl2 z-50"
         >
           {cloneElement(childMenu, {
             onClick: () => {

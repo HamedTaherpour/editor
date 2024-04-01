@@ -16,7 +16,7 @@ interface Props {
   onAddNodeFromChildNodeListener: OnAddNodeFromChildNodeListener;
 }
 
-const NodeEditorText = (props: Props) => {
+const NodeEditorQuote = (props: Props) => {
   const {
     node,
     onUpdateNodeListener,
@@ -34,12 +34,15 @@ const NodeEditorText = (props: Props) => {
   };
 
   return (
-    <DraftEditor
-      onChangeText={onChangeText}
-      onKeyUp={onKeyUp}
-      onAddNodeListener={onAddNodeFromChildNodeListener}
-    />
+    <div className="rounded flex flex-row px-1 py-1 bg-slate-100">
+      <div className="w-[3px] bg-slate-500 min-h-full  ml-2.5">&nbsp;</div>
+      <DraftEditor
+        onChangeText={onChangeText}
+        onKeyUp={onKeyUp}
+        onAddNodeListener={onAddNodeFromChildNodeListener}
+      />
+    </div>
   );
 };
 
-export default NodeEditorText;
+export default NodeEditorQuote;

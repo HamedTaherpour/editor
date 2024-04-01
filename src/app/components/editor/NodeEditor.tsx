@@ -1,12 +1,14 @@
 import NodeEditorText from "@/app/components/editor/NodeEditorText";
 import NodeEditorVoice from "@/app/components/editor/NodeEditorVoice";
 import NodeEditorImage from "@/app/components/editor/NodeEditorImage";
+import NodeEditorQuote from "@/app/components/editor/NodeEditorQuote";
 import AppMenu from "@/app/components/AppMenu";
 
 import {
   NodeText,
   NodeVoice,
   NodeImage,
+  NodeQuote,
   Node,
   OnUpdateNodeListener,
   OnPressEnterNodeListener,
@@ -14,9 +16,10 @@ import {
   TYPE_NODE_TEXT,
   TYPE_NODE_VOICE,
   TYPE_NODE_IMAGE,
+  TYPE_NODE_QUOTE,
   OnRightClickNodeListener,
+  OnAddNodeFromChildNodeListener,
 } from "@/app/lib/editor/type";
-import { ChangeEvent } from "react";
 
 interface Props {
   index: number;
@@ -26,6 +29,7 @@ interface Props {
   onPressEnterNodeListener: OnPressEnterNodeListener;
   onDeleteNodeListener: OnDeleteNodeListener;
   onRightClickNodeListener: OnRightClickNodeListener;
+  onAddNodeFromChildNodeListener: OnAddNodeFromChildNodeListener;
 }
 
 const NodeEditor = (props: Props) => {
@@ -37,6 +41,7 @@ const NodeEditor = (props: Props) => {
     onPressEnterNodeListener,
     onDeleteNodeListener,
     onRightClickNodeListener,
+    onAddNodeFromChildNodeListener,
   } = props;
 
   const myOnPressEnterNodeListener: OnPressEnterNodeListener = {
@@ -50,8 +55,10 @@ const NodeEditor = (props: Props) => {
   };
 
   return (
-    <div className="flex flex-row items-start group">
-      <div className="flex flex-row app-base-transform opacity-0 group-hover:opacity-100 mr-0.5">
+    <div
+      className={node.clazz + " flex flex-row items-start justify-start group"}
+    >
+      <div className="flex flex-row app-base-transform opacity-0 group-hover:opacity-100 mr-0.5 h-full w-12">
         <AppMenu
           className="h-6"
           activator={
@@ -70,12 +77,12 @@ const NodeEditor = (props: Props) => {
             </button>
           }
           menu={
-            <div className="flex flex-col gap-y-2 w-44 h-80 overflow-auto">
+            <div className="flex flex-col gap-y-2 w-72 h-96 overflow-auto">
               {menuList.map((item) => (
                 <div
                   key={item.title}
                   onClick={() => item.action(index)}
-                  className="flex flex-row cursor-pointer p-1"
+                  className="flex flex-row cursor-pointer p-1 w-full"
                 >
                   <div className="grid place-items-center bg-slate-50 rounded-lg border p-2 flex-none ">
                     <img src={item.icon} />
@@ -124,15 +131,25 @@ const NodeEditor = (props: Props) => {
           </svg>
         </button>
       </div>
-
       {node.type === TYPE_NODE_TEXT ? (
         <NodeEditorText
           node={node as NodeText}
           onRightClickNodeListener={onRightClickNodeListener}
           onPressEnterNodeListener={myOnPressEnterNodeListener}
           onUpdateNodeListener={onUpdateNodeListener}
+          onAddNodeFromChildNodeListener={onAddNodeFromChildNodeListener}
         />
       ) : null}
+      {node.type === TYPE_NODE_QUOTE ? (
+        <NodeEditorQuote
+          node={node as NodeQuote}
+          onRightClickNodeListener={onRightClickNodeListener}
+          onPressEnterNodeListener={myOnPressEnterNodeListener}
+          onUpdateNodeListener={onUpdateNodeListener}
+          onAddNodeFromChildNodeListener={onAddNodeFromChildNodeListener}
+        />
+      ) : null}
+
       {node.type === TYPE_NODE_VOICE ? (
         <NodeEditorVoice
           node={node as NodeVoice}

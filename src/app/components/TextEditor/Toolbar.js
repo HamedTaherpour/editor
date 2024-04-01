@@ -1,29 +1,39 @@
 import React, { useState } from "react";
-import { RichUtils } from "draft-js";
+import { RichUtils, EditorState } from "draft-js";
 import AppDropDownMenu from "@/app/components/AppDropDownMenu";
+import { TYPE_NODE_QUOTE } from "@/app/lib/editor/type";
+import LinkConfirm from "@/app/components/TextEditor/component/LinkConfirm";
 
-const Toolbar = ({ editorState, setEditorState }) => {
-  const [headingSelected, setHeadingSelected] = useState("p");
+const Toolbar = ({ editorState, setEditorState, onAddNodeListener }) => {
+  const [showLinkConfirm, setShowLinkConfirm] = useState(false);
   const headingItems = {
     h1: {
       title: "عنوان 1",
       value: "h1",
+      style: "header-one",
+      method: "block",
     },
     h2: {
       title: "عنوان 2",
       value: "h2",
+      style: "header-two",
+      method: "block",
     },
     h3: {
       title: "عنوان 3",
       value: "h3",
+      style: "header-three",
+      method: "block",
     },
     p: {
       title: "توضیحات",
       value: "p",
+      style: "unstyled",
+      method: "block",
     },
   };
   const onBtnHeadingItemClick = (item) => {
-    setHeadingSelected(item.value);
+    applyStyle(null, item.style, item.method);
   };
 
   const colorItems = {
@@ -180,9 +190,6 @@ const Toolbar = ({ editorState, setEditorState }) => {
     },
   };
   const [colorSelected, setColorSelected] = useState("COLOR_DARK");
-  const [colorFontSelected, setColorFontSelected] = useState("COLOR_DARK");
-  const [colorBackgroundSelected, setColorBackgroundSelected] =
-    useState("dark");
 
   const toolsBtnItems = [
     {
@@ -213,18 +220,19 @@ const Toolbar = ({ editorState, setEditorState }) => {
 
   const onBtnColorClick = (e, type, item) => {
     if (type === 0) {
-      setColorFontSelected(item.value);
       applyStyle(e, item.option.style.color, item.method);
     } else {
-      setColorBackgroundSelected(item.value);
       applyStyle(e, item.option.style.background, item.method);
     }
     setColorSelected(item.value);
   };
 
+  const onBtnLinkClick = (e) => {
+    setShowLinkConfirm(!showLinkConfirm);
+  };
+
   const applyStyle = (e, style, method) => {
-    e.preventDefault();
-    console.log(style, method);
+    if (!!e) e.preventDefault();
     method === "block"
       ? setEditorState(RichUtils.toggleBlockType(editorState, style))
       : setEditorState(RichUtils.toggleInlineStyle(editorState, style));
@@ -244,19 +252,54 @@ const Toolbar = ({ editorState, setEditorState }) => {
     }
   };
 
+  const onSetLink = (link) => {
+    const contentState = editorState.getCurrentContent();
+    const contentStateWithEntity = contentState.createEntity(
+      "LINK",
+      "MUTABLE",
+      { url: link } // link for testing only
+    );
+    const entityKey = contentStateWithEntity.getLastCreatedEntityKey();
+
+    const newEditorState = EditorState.set(editorState, {
+      currentContent: contentStateWithEntity,
+    });
+
+    setEditorState(
+      RichUtils.toggleLink(
+        newEditorState,
+        newEditorState.getSelection(),
+        entityKey
+      )
+    );
+
+    setShowLinkConfirm(false);
+  };
+
   return (
-    <div className="absolute bottom-6 pb-3">
-      <div
-        className="rounded-lg shadow-md flex flex-row items-center h-11 border border-slate-200 bg-white"
-        onMouseDown={(e) => e.preventDefault()}
-      >
+    <div className="absolute bottom-0 pb-3 z-50 ignore">
+      <div className="rounded-lg shadow-md flex flex-row items-center h-11 border border-slate-200 bg-white">
         <AppDropDownMenu
           className="px-3"
           onItemClick={onBtnHeadingItemClick}
           activator={
-            <span className="text-sm w-14 text-right">
-              {headingItems[headingSelected].title}
-            </span>
+            <div className="w-full">
+              {Object.keys(headingItems).map((item) => (
+                <span
+                  key={headingItems[item].value}
+                  className={
+                    (!!isActive(
+                      headingItems[item].style,
+                      headingItems[item].method
+                    )
+                      ? ""
+                      : "hidden") + " text-sm w-14 text-right"
+                  }
+                >
+                  {headingItems[item].title}
+                </span>
+              ))}
+            </div>
           }
           items={headingItems}
         />
@@ -302,7 +345,7 @@ const Toolbar = ({ editorState, setEditorState }) => {
                       onClick={(e) => onBtnColorClick(e, 1, colorItems[item])}
                       className={
                         (!!isActive(
-                          colorItems[item].option.style.color,
+                          colorItems[item].option.style.background,
                           item.method
                         )
                           ? "ring ring-slate-200"
@@ -335,11 +378,17 @@ const Toolbar = ({ editorState, setEditorState }) => {
               <img src={item.icon} className="w-5 h-5" />
             </button>
           ))}
-          <button className="px-1.5 flex-none">
+          <button
+            className="px-1.5 flex-none"
+            onClick={() => onAddNodeListener(TYPE_NODE_QUOTE)}
+          >
             <img src="/editor/quote-up.svg" className="w-5 h-5" />
           </button>
         </div>
-        <button className="flex flex-row gap-x-1 px-3 items-center border-x border-slate-200">
+        <button
+          onClick={onBtnLinkClick}
+          className="flex flex-row gap-x-1 px-3 items-center border-x border-slate-200"
+        >
           <span className="text-sm">لینک</span>
           <svg
             width="20"
@@ -379,6 +428,7 @@ const Toolbar = ({ editorState, setEditorState }) => {
           </svg>
         </button>
       </div>
+      {showLinkConfirm ? <LinkConfirm onSetLink={onSetLink} /> : null}
     </div>
   );
 };

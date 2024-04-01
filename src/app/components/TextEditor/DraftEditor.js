@@ -1,17 +1,12 @@
-import React, { useEffect, useMemo, useRef, useState } from "react";
-import {
-  Editor,
-  EditorState,
-  RichUtils,
-  convertToRaw,
-  convertFromRaw,
-  CompositeDecorator,
-} from "draft-js";
+import React, { useEffect, useRef, useState } from "react";
+import { Editor, EditorState, RichUtils, convertToRaw } from "draft-js";
 import Toolbar from "@/app/components/TextEditor/Toolbar";
-import "./DraftEditor.css";
-
-const DraftEditor = ({ onChangeText, onKeyUp }) => {
-  const [editorState, setEditorState] = useState(EditorState.createEmpty());
+import { editorDecorator } from "@/app/components/TextEditor/index";
+import "draft-js/dist/Draft.css";
+const DraftEditor = ({ onChangeText, onKeyUp, onAddNodeListener }) => {
+  const [editorState, setEditorState] = useState(
+    EditorState.createEmpty(editorDecorator)
+  );
   const [showToolbar, setShowToolbar] = useState(false);
   const editor = useRef(null);
 
@@ -31,6 +26,7 @@ const DraftEditor = ({ onChangeText, onKeyUp }) => {
     }
     return false;
   };
+
   const handleReturn = (event) => {
     setShowToolbar(false);
     onKeyUp(event);
@@ -40,49 +36,17 @@ const DraftEditor = ({ onChangeText, onKeyUp }) => {
   const onMouseUp = (e) => {
     if (!!window.getSelection().toString()) {
       setShowToolbar(true);
-    } else {
+    } else if (!e.target.closest(".ignore")) {
       setShowToolbar(false);
     }
   };
 
   const onMouseLeave = (e) => {
-    setShowToolbar(false);
+    if (!e.target.closest(".ignore")) setShowToolbar(false);
   };
 
   // FOR INLINE STYLES
   const styleMap = {
-    CODE: {
-      backgroundColor: "rgba(0, 0, 0, 0.05)",
-      fontFamily: '"Inconsolata", "Menlo", "Consolas", monospace',
-      fontSize: 16,
-      padding: 2,
-    },
-    HIGHLIGHT: {
-      backgroundColor: "#F7A5F7",
-    },
-    UPPERCASE: {
-      textTransform: "uppercase",
-    },
-    LOWERCASE: {
-      textTransform: "lowercase",
-    },
-    CODEBLOCK: {
-      fontFamily: '"fira-code", "monospace"',
-      fontSize: "inherit",
-      background: "#ffeff0",
-      fontStyle: "italic",
-      lineHeight: 1.5,
-      padding: "0.3rem 0.5rem",
-      borderRadius: " 0.2rem",
-    },
-    SUPERSCRIPT: {
-      verticalAlign: "super",
-      fontSize: "80%",
-    },
-    SUBSCRIPT: {
-      verticalAlign: "sub",
-      fontSize: "80%",
-    },
     COLOR_YELLOW: {
       color: "rgba(203, 145, 47, 1)",
     },
@@ -149,33 +113,42 @@ const DraftEditor = ({ onChangeText, onKeyUp }) => {
   const myBlockStyleFn = (contentBlock) => {
     const type = contentBlock.getType();
     switch (type) {
-      case "blockQuote":
-        return "superFancyBlockquote";
-      case "leftAlign":
-        return "leftAlign";
-      case "rightAlign":
-        return "rightAlign";
-      case "centerAlign":
-        return "centerAlign";
-      case "justifyAlign":
-        return "justifyAlign";
+      case "header-one":
+        return "te-header-one";
+      case "header-two":
+        return "te-header-two";
+      case "header-three":
+        return "te-header-three";
+      case "unstyled":
+        return "te-unstyled";
       default:
         break;
     }
   };
 
+  const myOnAddNodeListener = (type) => {
+    setShowToolbar(false);
+    onAddNodeListener.onAdd(type);
+  };
+
   return (
     <div
-      className="relative w-full"
-      onClick={focusEditor}
+      className="et-wrapper"
       onMouseLeave={onMouseLeave}
       onMouseUp={onMouseUp}
     >
-      {showToolbar ? (
-        <Toolbar editorState={editorState} setEditorState={setEditorState} />
-      ) : null}
+      <div className="relative">
+        {showToolbar ? (
+          <Toolbar
+            editorState={editorState}
+            setEditorState={setEditorState}
+            onAddNodeListener={myOnAddNodeListener}
+          />
+        ) : null}
+      </div>
       <Editor
         ref={editor}
+        placeholder="چیزی منویسید"
         handleReturn={handleReturn}
         handleKeyCommand={handleKeyCommand}
         editorState={editorState}

@@ -26,3 +26,43 @@
     scrollbar-width: none; /* Firefox */
   }
 }
+
+.te-header-one {
+  font-size: 26px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: normal;
+}
+
+.te-header-two {
+  font-size: 22px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: normal;
+}
+
+.te-header-three {
+  font-size: 18px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: normal;
+}
+.te-unstyled {
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+}
+
+.et-container {
+  @apply w-[480px];
+}
+
+.et-wrapper {
+  @apply w-[432px];
+}
+
+.public-DraftStyleDefault-ltr {
+  direction: rtl !important;
+  text-align: right !important;
+}
