@@ -1,43 +1,29 @@
-import {
-  NodeText,
-  OnUpdateNodeListener,
-  OnPressEnterNodeListener,
-  OnRightClickNodeListener,
-  OnAddNodeFromChildNodeListener,
-} from "@/app/lib/editor/type";
-import { KeyboardEvent } from "react";
+import { useContext } from "react";
+import { NodeText, OnNodeBehavior } from "@/app/lib/editor/type";
 import DraftEditor from "@/app/components/TextEditor/DraftEditor";
+import { EditorContext } from "@/app/lib/editor/hook/context";
 
 interface Props {
   node: NodeText;
-  onUpdateNodeListener: OnUpdateNodeListener;
-  onPressEnterNodeListener: OnPressEnterNodeListener;
-  onRightClickNodeListener: OnRightClickNodeListener;
-  onAddNodeFromChildNodeListener: OnAddNodeFromChildNodeListener;
+  index: number;
 }
 
 const NodeEditorText = (props: Props) => {
-  const {
-    node,
-    onUpdateNodeListener,
-    onPressEnterNodeListener,
-    onAddNodeFromChildNodeListener,
-  } = props;
+  const { node, index } = props;
 
-  const onKeyUp = (e: KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === "Enter") onPressEnterNodeListener.onClick();
-  };
+  const onNodeBehavior = useContext<OnNodeBehavior | undefined>(EditorContext);
 
   const onChangeText = (text: string) => {
     node.text = text;
-    onUpdateNodeListener.onUpdate(node);
+    if (onNodeBehavior) onNodeBehavior.onUpdate(node);
   };
 
   return (
     <DraftEditor
       onChangeText={onChangeText}
-      onKeyUp={onKeyUp}
-      onAddNodeListener={onAddNodeFromChildNodeListener}
+      node={node}
+      index={index}
+      placeholder="متن را اینجا بنوسید..."
     />
   );
 };

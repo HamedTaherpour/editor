@@ -1,12 +1,31 @@
-import React, { useEffect, useRef, useState } from "react";
-import { Editor, EditorState, RichUtils, convertToRaw } from "draft-js";
+import React, { useEffect, useRef, useState, useContext } from "react";
+import {
+  Editor,
+  EditorState,
+  RichUtils,
+  convertToRaw,
+  convertFromRaw,
+  getDefaultKeyBinding,
+} from "draft-js";
 import Toolbar from "@/app/components/TextEditor/Toolbar";
 import { editorDecorator } from "@/app/components/TextEditor/index";
 import "draft-js/dist/Draft.css";
-const DraftEditor = ({ onChangeText, onKeyUp, onAddNodeListener }) => {
-  const [editorState, setEditorState] = useState(
-    EditorState.createEmpty(editorDecorator)
-  );
+import { TYPE_NODE_QUOTE } from "@/app/lib/editor/type";
+import { EditorContext } from "@/app/lib/editor/hook/context";
+
+var delta = 500;
+var lastKeypressTime = 0;
+
+const DraftEditor = ({ onChangeText, placeholder, node, index }) => {
+  const onNodeBehavior = useContext(EditorContext);
+
+  let initEditorState = EditorState.createEmpty(editorDecorator);
+  if (!!node.text && !!node.text.blocks) {
+    const content = convertFromRaw(node.text);
+    initEditorState = EditorState.createWithContent(content, editorDecorator);
+    initEditorState = EditorState.moveSelectionToEnd(initEditorState);
+  }
+  const [editorState, setEditorState] = useState(initEditorState);
   const [showToolbar, setShowToolbar] = useState(false);
   const editor = useRef(null);
 
@@ -17,6 +36,24 @@ const DraftEditor = ({ onChangeText, onKeyUp, onAddNodeListener }) => {
   const focusEditor = () => {
     editor.current.focus();
   };
+  node.focus = focusEditor;
+
+  function myKeyBindingFn(event) {
+    if (node.type === TYPE_NODE_QUOTE && event.key === "Enter") {
+      var thisKeypressTime = new Date();
+      if (thisKeypressTime - lastKeypressTime <= delta) {
+        onNodeBehavior.onKeyUp(event, index);
+        // optional - if we'd rather not detect a triple-press
+        // as a second double-press, reset the timestamp
+        thisKeypressTime = 0;
+        return "handled";
+      }
+      lastKeypressTime = thisKeypressTime;
+    } else {
+      onNodeBehavior.onKeyUp(event, index);
+    }
+    return getDefaultKeyBinding(event);
+  }
 
   const handleKeyCommand = (command) => {
     const newState = RichUtils.handleKeyCommand(editorState, command);
@@ -29,8 +66,10 @@ const DraftEditor = ({ onChangeText, onKeyUp, onAddNodeListener }) => {
 
   const handleReturn = (event) => {
     setShowToolbar(false);
-    onKeyUp(event);
-    return "handled";
+    if (node.type !== TYPE_NODE_QUOTE) {
+      onNodeBehavior.onKeyUp(event, index);
+      return "handled";
+    }
   };
 
   const onMouseUp = (e) => {
@@ -126,9 +165,9 @@ const DraftEditor = ({ onChangeText, onKeyUp, onAddNodeListener }) => {
     }
   };
 
-  const myOnAddNodeListener = (type) => {
+  const myOnTransitionNodeListener = (typeTransition) => {
     setShowToolbar(false);
-    onAddNodeListener.onAdd(type);
+    onNodeBehavior.onTransition(typeTransition, index);
   };
 
   return (
@@ -142,18 +181,19 @@ const DraftEditor = ({ onChangeText, onKeyUp, onAddNodeListener }) => {
           <Toolbar
             editorState={editorState}
             setEditorState={setEditorState}
-            onAddNodeListener={myOnAddNodeListener}
+            onTransitionNodeListener={myOnTransitionNodeListener}
           />
         ) : null}
       </div>
       <Editor
         ref={editor}
-        placeholder="چیزی منویسید"
+        placeholder={placeholder}
         handleReturn={handleReturn}
         handleKeyCommand={handleKeyCommand}
         editorState={editorState}
         customStyleMap={styleMap}
         blockStyleFn={myBlockStyleFn}
+        keyBindingFn={myKeyBindingFn}
         onChange={(editorState) => {
           const contentState = editorState.getCurrentContent();
           onChangeText(convertToRaw(contentState));

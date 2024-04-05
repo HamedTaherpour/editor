@@ -2,6 +2,7 @@ import NodeEditorText from "@/app/components/editor/NodeEditorText";
 import NodeEditorVoice from "@/app/components/editor/NodeEditorVoice";
 import NodeEditorImage from "@/app/components/editor/NodeEditorImage";
 import NodeEditorQuote from "@/app/components/editor/NodeEditorQuote";
+import NodeEditorDivider from "@/app/components/editor/NodeEditorDivider";
 import AppMenu from "@/app/components/AppMenu";
 
 import {
@@ -10,49 +11,22 @@ import {
   NodeImage,
   NodeQuote,
   Node,
-  OnUpdateNodeListener,
-  OnPressEnterNodeListener,
-  OnDeleteNodeListener,
   TYPE_NODE_TEXT,
   TYPE_NODE_VOICE,
   TYPE_NODE_IMAGE,
   TYPE_NODE_QUOTE,
-  OnRightClickNodeListener,
-  OnAddNodeFromChildNodeListener,
+  TYPE_NODE_DIVIDER,
+  NodeDivider,
 } from "@/app/lib/editor/type";
 
 interface Props {
   index: number;
   node: Node;
   menuList: Array<any>;
-  onUpdateNodeListener: OnUpdateNodeListener;
-  onPressEnterNodeListener: OnPressEnterNodeListener;
-  onDeleteNodeListener: OnDeleteNodeListener;
-  onRightClickNodeListener: OnRightClickNodeListener;
-  onAddNodeFromChildNodeListener: OnAddNodeFromChildNodeListener;
 }
 
 const NodeEditor = (props: Props) => {
-  const {
-    index,
-    node,
-    menuList,
-    onUpdateNodeListener,
-    onPressEnterNodeListener,
-    onDeleteNodeListener,
-    onRightClickNodeListener,
-    onAddNodeFromChildNodeListener,
-  } = props;
-
-  const myOnPressEnterNodeListener: OnPressEnterNodeListener = {
-    onClick: () => {
-      onPressEnterNodeListener.onClick(index);
-    },
-  };
-
-  const onBtnDeleteClick = (node: Node) => {
-    onDeleteNodeListener.onDelete(node);
-  };
+  const { index, node, menuList } = props;
 
   return (
     <div
@@ -132,37 +106,20 @@ const NodeEditor = (props: Props) => {
         </button>
       </div>
       {node.type === TYPE_NODE_TEXT ? (
-        <NodeEditorText
-          node={node as NodeText}
-          onRightClickNodeListener={onRightClickNodeListener}
-          onPressEnterNodeListener={myOnPressEnterNodeListener}
-          onUpdateNodeListener={onUpdateNodeListener}
-          onAddNodeFromChildNodeListener={onAddNodeFromChildNodeListener}
-        />
+        <NodeEditorText node={node as NodeText} index={index} />
       ) : null}
       {node.type === TYPE_NODE_QUOTE ? (
-        <NodeEditorQuote
-          node={node as NodeQuote}
-          onRightClickNodeListener={onRightClickNodeListener}
-          onPressEnterNodeListener={myOnPressEnterNodeListener}
-          onUpdateNodeListener={onUpdateNodeListener}
-          onAddNodeFromChildNodeListener={onAddNodeFromChildNodeListener}
-        />
+        <NodeEditorQuote node={node as NodeQuote} index={index} />
       ) : null}
 
       {node.type === TYPE_NODE_VOICE ? (
-        <NodeEditorVoice
-          node={node as NodeVoice}
-          onUpdateNodeListener={onUpdateNodeListener}
-        />
+        <NodeEditorVoice node={node as NodeVoice} index={index} />
       ) : null}
       {node.type === TYPE_NODE_IMAGE ? (
-        <NodeEditorImage
-          node={node as NodeImage}
-          onRightClickNodeListener={onRightClickNodeListener}
-          onPressEnterNodeListener={myOnPressEnterNodeListener}
-          onUpdateNodeListener={onUpdateNodeListener}
-        />
+        <NodeEditorImage node={node as NodeImage} index={index} />
+      ) : null}
+      {node.type === TYPE_NODE_DIVIDER ? (
+        <NodeEditorDivider node={node as NodeDivider} index={index} />
       ) : null}
     </div>
   );

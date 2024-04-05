@@ -42,6 +42,7 @@ class Editor {
   deleteNode(id: number) {
     if (!this.jsonEditor) return;
     const index = this.jsonEditor.nodes.findIndex((item) => item.id === id);
+
     if (index > -1) {
       this.jsonEditor.nodes.splice(index, 1);
       this.onJsonEditorUpdateListener?.onUpdate(this.jsonEditor);

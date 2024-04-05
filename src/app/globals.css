@@ -47,13 +47,19 @@
   font-weight: 600;
   line-height: normal;
 }
-.te-unstyled {
+.te-unstyled,
+.public-DraftEditorPlaceholder-inner {
   font-size: 14px;
   font-style: normal;
   font-weight: 400;
   line-height: normal;
 }
-
+.public-DraftEditorPlaceholder-inner {
+  @apply opacity-0 group-hover:opacity-100 app-base-transform;
+}
+.public-DraftEditorPlaceholder-hasFocus .public-DraftEditorPlaceholder-inner {
+  @apply opacity-100;
+}
 .et-container {
   @apply w-[480px];
 }
@@ -62,7 +68,6 @@
   @apply w-[432px];
 }
 
-.public-DraftStyleDefault-ltr {
-  direction: rtl !important;
-  text-align: right !important;
+[contentEditable="true"]:empty:not(:focus)::before {
+  content: attr(data-ph);
 }

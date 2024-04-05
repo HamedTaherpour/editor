@@ -2,47 +2,54 @@ import {
   ChangeEvent,
   KeyboardEvent,
   MouseEvent,
+  useContext,
   useRef,
   useState,
 } from "react";
-import {
-  NodeImage,
-  OnUpdateNodeListener,
-  OnPressEnterNodeListener,
-  OnRightClickNodeListener,
-} from "@/app/lib/editor/type";
+import { NodeImage, OnNodeBehavior } from "@/app/lib/editor/type";
+import AppTooltip from "@/app/components/AppTooltip";
+import { EditorContext } from "@/app/lib/editor/hook/context";
 
 interface Props {
   node: NodeImage;
-  onUpdateNodeListener: OnUpdateNodeListener;
-  onPressEnterNodeListener: OnPressEnterNodeListener;
-  onRightClickNodeListener: OnRightClickNodeListener;
+  index: number;
 }
 
 const NodeEditorImage = (props: Props) => {
-  const {
-    node,
-    onUpdateNodeListener,
-    onPressEnterNodeListener,
-    onRightClickNodeListener,
-  } = props;
+  const { node, index } = props;
+
+  const onNodeBehavior = useContext<OnNodeBehavior | undefined>(EditorContext);
 
   const ref = useRef<HTMLImageElement>(null);
   const rootRef = useRef<HTMLDivElement>(null);
 
+  const maxWidth = 432;
+  const FILE_TYPE_UPLOAD = 0;
+  const FILE_TYPE_URL = 1;
   const [size, setSize] = useState({ x: 0 });
   const [showFileSelected, setShowFileSelected] = useState(true);
+  const [fileTypeSelected, setFileTypeSelected] = useState(FILE_TYPE_UPLOAD);
+  const [link, setLink] = useState("");
+  const [enabledCaption, setEnabledCaption] = useState(false);
+  const refCaption = useRef<HTMLDivElement>(null);
 
-  const handler = (mouseDownEvent: MouseEvent) => {
+  const handler = (mouseDownEvent: MouseEvent, fromRight: boolean) => {
     const startSize = size;
     const startPosition = {
       x: mouseDownEvent.pageX,
     };
 
     const onMouseMove = (mouseMoveEvent: any) => {
-      setSize((currentSize) => ({
-        x: startSize.x + startPosition.x - mouseMoveEvent.pageX,
-      }));
+      const pageX = mouseMoveEvent.pageX;
+      const x = fromRight
+        ? startSize.x - startPosition.x + pageX
+        : startSize.x + startPosition.x - pageX;
+
+      if (x < 432) {
+        setSize({
+          x,
+        });
+      }
     };
     const onMouseUp = () => {
       document.body.removeEventListener("mousemove", onMouseMove);
@@ -54,76 +61,260 @@ const NodeEditorImage = (props: Props) => {
     document.body.addEventListener("mouseup", onMouseUp, { once: true });
   };
 
-  const onKeyUp = (e: KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === "Enter") onPressEnterNodeListener.onClick();
+  const onKeyUp = (e: KeyboardEvent<HTMLElement>) => {
+    if (onNodeBehavior) onNodeBehavior.onKeyUp(e, index);
   };
 
   const onChangeFile = (e: ChangeEvent<HTMLInputElement>) => {
     if (!!e.target.files) {
       node.path = URL.createObjectURL(e.target.files[0]);
-      if (ref.current) {
-        ref.current.src = URL.createObjectURL(e.target.files[0]);
-      }
-      onUpdateNodeListener.onUpdate(node);
-      setSize({ x: 250 });
-      setShowFileSelected(false);
+      setImage(node.path);
     }
   };
 
-  const onContextMenu = (e: MouseEvent<HTMLImageElement>) => {
-    // onRightClickNodeListener.onRightClick(node, e.clientX, e.clientY);
-    // e.preventDefault();
+  const onSetLink = () => {
+    setImage(link);
+  };
+
+  const setImage = (url: string) => {
+    node.path = url;
+    if (ref.current) {
+      ref.current.src = url;
+      const img = new Image();
+      img.src = url;
+      img.onload = () => {
+        if (img.width >= maxWidth) setSize({ x: maxWidth });
+        else setSize({ x: img.width });
+      };
+
+      if (onNodeBehavior) onNodeBehavior.onUpdate(node);
+    }
+    setShowFileSelected(false);
+  };
+
+  const onChangeCaption = (e: ChangeEvent<HTMLDivElement>) => {
+    node.caption = e.target.textContent;
+    if (onNodeBehavior) onNodeBehavior.onUpdate(node);
+  };
+
+  const onBtnAddCaptionClick = () => {
+    setEnabledCaption(!enabledCaption);
+    if (refCaption.current && node.caption) {
+      refCaption.current.innerText = node.caption;
+      refCaption.current.textContent = node.caption;
+    }
   };
 
   return (
-    <div
-      ref={rootRef}
-      className="w-full bg-slate-300 rounded flex flex-row justify-between items-center overflow-x-hidden"
-    >
+    <div ref={rootRef} className="w-full rounded flex flex-row">
       {showFileSelected ? (
-        <label className="w-52 bg-slate-700 rounded text-white flex justify-center gap-2 mx-auto my-2 py-2 cursor-pointer">
+        <div className="px-3 rounded-xl bg-gray-2 flex flex-row items-center cursor-pointer h-12 w-full relative">
           <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="20"
-            height="20"
+            className="ml-3"
+            width="24"
+            height="24"
             viewBox="0 0 24 24"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
           >
             <path
-              fill="currentColor"
-              d="M16 11V6h2v5zm-5 6.9q-.875-.25-1.437-.975T9 15.25V6h2zm.75 4.1q-2.6 0-4.425-1.825T5.5 15.75V6.5q0-1.875 1.313-3.187T10 2q1.875 0 3.188 1.313T14.5 6.5V14h-2V6.5q-.025-1.05-.737-1.775T10 4q-1.05 0-1.775.725T7.5 6.5v9.25q-.025 1.775 1.225 3.013T11.75 20q.625 0 1.188-.162T14 19.35v2.225q-.525.2-1.088.313T11.75 22M16 21v-3h-3v-2h3v-3h2v3h3v2h-3v3z"
+              d="M21.8245 9.56699C21.8388 9.58396 21.8522 9.60146 21.8648 9.61942C21.9421 9.72977 21.9873 9.85772 21.998 9.98919C21.9998 10.0122 22.0006 10.0352 22.0003 10.0583"
+              fill="#171717"
+            />
+            <path
+              d="M9.78847 10.5285C9.71222 10.442 9.61554 10.3725 9.50378 10.3279C9.40768 10.2896 9.30697 10.2723 9.20759 10.2747C9.02806 10.2789 8.84942 10.3471 8.7089 10.4805C8.69236 10.4962 8.67669 10.5125 8.66189 10.5292L6.83105 12.4585C6.54592 12.7589 6.55835 13.2336 6.8588 13.5188C7.15926 13.8039 7.63397 13.7915 7.9191 13.491L8.47586 12.9043V16.8752C8.47586 17.2895 8.81164 17.6252 9.22586 17.6252C9.64007 17.6252 9.97586 17.2895 9.97586 16.8752V12.9051L10.5319 13.491C10.8171 13.7915 11.2918 13.8039 11.5922 13.5188C11.8927 13.2336 11.9051 12.7589 11.62 12.4585L9.78847 10.5285Z"
+              fill="#171717"
+            />
+            <path
+              d="M22.0003 10.0583V14.9252C22.0003 17.429 21.5309 19.3759 20.2913 20.6826C19.0422 21.9993 17.1705 22.501 14.7752 22.501H9.22501C6.82968 22.501 4.95794 21.9993 3.70888 20.6826C2.46926 19.3759 1.99983 17.429 1.99983 14.9252V9.07442C1.99983 6.57063 2.46926 4.62372 3.70888 3.31697C4.95794 2.00025 6.82968 1.49856 9.22501 1.49856H13.8437H13.8501C13.8635 1.49856 13.8768 1.49891 13.8899 1.4996C13.8746 1.49878 13.8591 1.49843 13.8437 1.49856M13.1002 2.99856H9.22501C6.99521 2.99856 5.62936 3.47199 4.79712 4.34931C3.95543 5.23658 3.49983 6.7026 3.49983 9.07442V14.9252C3.49983 17.297 3.95543 18.763 4.79712 19.6503C5.62936 20.5276 6.99521 21.001 9.22501 21.001H14.7752C17.005 21.001 18.3708 20.5276 19.2031 19.6503C20.0447 18.763 20.5003 17.297 20.5003 14.9252V10.7995H17.5503C16.1137 10.7995 14.9155 10.5559 14.1154 9.71248C13.3266 8.88087 13.1002 7.64662 13.1002 6.14905V2.99856ZM14.6002 6.14905V4.12894L19.5051 9.29955H17.5503C16.2117 9.29955 15.5599 9.05568 15.2037 8.68015C14.8363 8.29286 14.6002 7.57686 14.6002 6.14905Z"
+              fill="#171717"
+            />
+            <path
+              d="M14.2898 1.64088C14.3269 1.66776 14.362 1.6983 14.3943 1.73239L21.7945 9.53338C21.8049 9.54433 21.8149 9.55554 21.8245 9.56699"
+              fill="#171717"
             />
           </svg>
-          <span className="text-sm">عکس خود را انتخاب کنید</span>
-          <input
-            className="hidden"
-            id="file_input"
-            type="file"
-            accept="image/png, image/jpeg"
-            onChange={onChangeFile}
-          />
-        </label>
+          <span className="text-xs font-semibold text-gray-8 ml-1">
+            فایل خود را بارگذاری کنید.
+          </span>
+          <span className="text-xs text-gray-8">pdf . jpj فرمت</span>
+          <div className="pt-4 pb-3 px-3 rounded-xl bg-white shadow-xs border border-gray-3 flex flex-col w-96 absolute top-9">
+            <div className="flex flex-row gap-x-4 border-b border-gray-5 mb-4">
+              <button
+                className={
+                  "text-sm  pb-2 " +
+                  (fileTypeSelected === FILE_TYPE_UPLOAD
+                    ? " border-b border-black"
+                    : "")
+                }
+                onClick={() => setFileTypeSelected(FILE_TYPE_UPLOAD)}
+              >
+                بارگذاری
+              </button>
+              <button
+                className={
+                  "text-sm  pb-2 " +
+                  (fileTypeSelected === FILE_TYPE_URL
+                    ? " border-b border-black"
+                    : "")
+                }
+                onClick={() => setFileTypeSelected(FILE_TYPE_URL)}
+              >
+                Embed link
+              </button>
+            </div>
+            {fileTypeSelected === FILE_TYPE_UPLOAD ? (
+              <div className="flex flex-col">
+                <label className="text-sm text-white p-2 bg-blue-600 rounded-lg text-center cursor-pointer">
+                  فایل رو انتخاب کن
+                  <input
+                    className="hidden"
+                    id="file_input"
+                    type="file"
+                    accept="image/png, image/jpeg"
+                    onChange={onChangeFile}
+                  />
+                </label>
+
+                <span className="text-xs text-gray-7 mt-2">
+                  حداکثر سایز فایل 5MB
+                </span>
+              </div>
+            ) : null}
+            {fileTypeSelected === FILE_TYPE_URL ? (
+              <div className="flex flex-row  gap-x-1.5">
+                {link ? (
+                  <button
+                    className="size-9 rounded bg-slate-100 p-1.5"
+                    onClick={() => {
+                      onSetLink();
+                    }}
+                  >
+                    <svg
+                      width="24"
+                      height="24"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M20.2835 6.21967C20.5722 6.51256 20.5722 6.98744 20.2835 7.28033L9.93569 17.7803C9.64704 18.0732 9.17905 18.0732 8.8904 17.7803L3.71649 12.5303C3.42784 12.2374 3.42784 11.7626 3.71649 11.4697C4.00513 11.1768 4.47313 11.1768 4.76177 11.4697L9.41304 16.1893L19.2382 6.21967C19.5269 5.92678 19.9949 5.92678 20.2835 6.21967Z"
+                        fill="#171717"
+                      />
+                    </svg>
+                  </button>
+                ) : null}
+
+                <input
+                  placeholder="لینک را اینجا بنویسید."
+                  onChange={(e) => setLink(e.target.value)}
+                  className="placeholder:text-slate-400 text-sm px-3 h-9 py-1 rounded-lg border border-slate-200 w-full outline-none"
+                />
+              </div>
+            ) : null}
+          </div>
+        </div>
       ) : null}
 
-      <div className="bg-blue-400 w-full flex justify-center">
-        <div className="relative" style={{ width: size.x }}>
-          <img
-            ref={ref}
-            className="w-full h-full min-w-9"
-            onContextMenu={onContextMenu}
-          />
-          {!showFileSelected ? (
-            <div className="absolute w-full h-full inset-0 flex flex-col justify-between">
-              <div></div>
-              <div className="flex flex-row justify-between items-center">
-                <div></div>
+      <div
+        className={
+          showFileSelected ? "hidden" : null + " w-full flex justify-center"
+        }
+      >
+        <div className="flex flex-col" style={{ width: size.x }}>
+          <div className="relative">
+            <img ref={ref} className="w-full h-full min-w-9 rounded-2xl" />
+            <div className="absolute w-full h-full inset-0 flex flex-col justify-between p-2 opacity-0 hover:opacity-100 app-base-transform">
+              <div className="flex flex-row justify-start items-start h-2/6">
+                <div className="bg-black/80 rounded-lg px-1.5 flex flex-row items-center gap-x-2">
+                  <AppTooltip
+                    activator={
+                      <button
+                        onClick={onBtnAddCaptionClick}
+                        className="w-6 h-7 text-white"
+                      >
+                        C
+                      </button>
+                    }
+                    text="اضافه کردن کپشن"
+                  />
+
+                  {/* <div className="w-[2px] h-3.5 bg-gray-9"></div>
+                <button className="size-6">
+                  <svg
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <g opacity="0.5">
+                      <path
+                        d="M5 10.5C4.175 10.5 3.5 11.175 3.5 12C3.5 12.825 4.175 13.5 5 13.5C5.825 13.5 6.5 12.825 6.5 12C6.5 11.175 5.825 10.5 5 10.5Z"
+                        fill="white"
+                      />
+                      <path
+                        d="M19 10.5C18.175 10.5 17.5 11.175 17.5 12C17.5 12.825 18.175 13.5 19 13.5C19.825 13.5 20.5 12.825 20.5 12C20.5 11.175 19.825 10.5 19 10.5Z"
+                        fill="white"
+                      />
+                      <path
+                        d="M12 10.5C11.175 10.5 10.5 11.175 10.5 12C10.5 12.825 11.175 13.5 12 13.5C12.825 13.5 13.5 12.825 13.5 12C13.5 11.175 12.825 10.5 12 10.5Z"
+                        fill="white"
+                      />
+                    </g>
+                  </svg>
+                </button>
+                <div className="w-[2px] h-3.5 bg-gray-9"></div>
+                <button className="size-6">
+                  <svg
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <g opacity="0.5">
+                      <path
+                        d="M5 10.5C4.175 10.5 3.5 11.175 3.5 12C3.5 12.825 4.175 13.5 5 13.5C5.825 13.5 6.5 12.825 6.5 12C6.5 11.175 5.825 10.5 5 10.5Z"
+                        fill="white"
+                      />
+                      <path
+                        d="M19 10.5C18.175 10.5 17.5 11.175 17.5 12C17.5 12.825 18.175 13.5 19 13.5C19.825 13.5 20.5 12.825 20.5 12C20.5 11.175 19.825 10.5 19 10.5Z"
+                        fill="white"
+                      />
+                      <path
+                        d="M12 10.5C11.175 10.5 10.5 11.175 10.5 12C10.5 12.825 11.175 13.5 12 13.5C12.825 13.5 13.5 12.825 13.5 12C13.5 11.175 12.825 10.5 12 10.5Z"
+                        fill="white"
+                      />
+                    </g>
+                  </svg>
+                </button> */}
+                </div>
+              </div>
+              <div className="flex flex-row justify-between items-center h-2/6">
                 <button
-                  className="cursor-move -ml-1 bg-slate-900/40 border border-white/50 rounded-full  w-3 h-10"
+                  className="cursor-move bg-black/60 border border-gray-2 rounded-full w-1.5 h-full flex-none"
                   type="button"
-                  onMouseDown={handler}
+                  onMouseDown={(e) => handler(e, true)}
+                ></button>
+                <button
+                  className="cursor-move bg-black/60 border border-gray-2 rounded-full w-1.5 h-full flex-none"
+                  type="button"
+                  onMouseDown={(e) => handler(e, false)}
                 ></button>
               </div>
-              <div></div>
+              <div className="h-2/6"></div>
             </div>
+          </div>
+          {enabledCaption ? (
+            <p
+              ref={refCaption}
+              onKeyUp={onKeyUp}
+              data-ph="یک کپشن منویسید"
+              contentEditable="true"
+              onInput={onChangeCaption}
+              className="text-sm text-gray-7 pt-1.5 pb-4 px-4 outline-none text-center resize-none"
+            ></p>
           ) : null}
         </div>
       </div>

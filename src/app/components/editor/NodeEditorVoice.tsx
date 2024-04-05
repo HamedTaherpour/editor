@@ -1,14 +1,16 @@
-import { ChangeEvent, useRef } from "react";
-import { NodeVoice, OnUpdateNodeListener } from "@/app/lib/editor/type";
+import { ChangeEvent, useRef, useContext } from "react";
+import { NodeVoice, OnNodeBehavior } from "@/app/lib/editor/type";
+import { EditorContext } from "@/app/lib/editor/hook/context";
 
 interface Props {
+  index: number;
   node: NodeVoice;
-  onUpdateNodeListener: OnUpdateNodeListener;
 }
 
 const NodeEditorVoice = (props: Props) => {
-  const { node, onUpdateNodeListener } = props;
+  const { node, index } = props;
   const ref = useRef<HTMLAudioElement>(null);
+  const onNodeBehavior = useContext<OnNodeBehavior | undefined>(EditorContext);
 
   const onChangeFile = (e: ChangeEvent<HTMLInputElement>) => {
     if (!!e.target.files) {
@@ -16,7 +18,7 @@ const NodeEditorVoice = (props: Props) => {
       if (ref.current) {
         ref.current.src = URL.createObjectURL(e.target.files[0]);
       }
-      onUpdateNodeListener.onUpdate(node);
+      if (onNodeBehavior) onNodeBehavior.onUpdate(node);
     }
   };
 

@@ -4,7 +4,7 @@ import AppDropDownMenu from "@/app/components/AppDropDownMenu";
 import { TYPE_NODE_QUOTE } from "@/app/lib/editor/type";
 import LinkConfirm from "@/app/components/TextEditor/component/LinkConfirm";
 
-const Toolbar = ({ editorState, setEditorState, onAddNodeListener }) => {
+const Toolbar = ({ editorState, setEditorState, onTransitionNodeListener }) => {
   const [showLinkConfirm, setShowLinkConfirm] = useState(false);
   const headingItems = {
     h1: {
@@ -380,7 +380,7 @@ const Toolbar = ({ editorState, setEditorState, onAddNodeListener }) => {
           ))}
           <button
             className="px-1.5 flex-none"
-            onClick={() => onAddNodeListener(TYPE_NODE_QUOTE)}
+            onClick={() => onTransitionNodeListener(TYPE_NODE_QUOTE)}
           >
             <img src="/editor/quote-up.svg" className="w-5 h-5" />
           </button>

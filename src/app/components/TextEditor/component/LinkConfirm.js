@@ -10,7 +10,6 @@ const LinkConfirm = ({ onSetLink }) => {
           <button
             className="w-9 h-9 rounded bg-slate-100 p-1.5"
             onClick={() => {
-              console.log("s");
               onSetLink(link);
             }}
           >

@@ -1,45 +1,31 @@
-import {
-  NodeText,
-  OnUpdateNodeListener,
-  OnPressEnterNodeListener,
-  OnRightClickNodeListener,
-  OnAddNodeFromChildNodeListener,
-} from "@/app/lib/editor/type";
-import { KeyboardEvent } from "react";
+import { useContext } from "react";
+import { NodeQuote, OnNodeBehavior } from "@/app/lib/editor/type";
 import DraftEditor from "@/app/components/TextEditor/DraftEditor";
+import { EditorContext } from "@/app/lib/editor/hook/context";
 
 interface Props {
-  node: NodeText;
-  onUpdateNodeListener: OnUpdateNodeListener;
-  onPressEnterNodeListener: OnPressEnterNodeListener;
-  onRightClickNodeListener: OnRightClickNodeListener;
-  onAddNodeFromChildNodeListener: OnAddNodeFromChildNodeListener;
+  node: NodeQuote;
+  index: number;
 }
 
 const NodeEditorQuote = (props: Props) => {
-  const {
-    node,
-    onUpdateNodeListener,
-    onPressEnterNodeListener,
-    onAddNodeFromChildNodeListener,
-  } = props;
+  const { node, index } = props;
 
-  const onKeyUp = (e: KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === "Enter") onPressEnterNodeListener.onClick();
-  };
+  const onNodeBehavior = useContext<OnNodeBehavior | undefined>(EditorContext);
 
   const onChangeText = (text: string) => {
     node.text = text;
-    onUpdateNodeListener.onUpdate(node);
+    if (onNodeBehavior) onNodeBehavior.onUpdate(node);
   };
 
   return (
     <div className="rounded flex flex-row px-1 py-1 bg-slate-100">
-      <div className="w-[3px] bg-slate-500 min-h-full  ml-2.5">&nbsp;</div>
+      <div className="w-[3px] bg-slate-500 min-h-full ml-2.5">&nbsp;</div>
       <DraftEditor
         onChangeText={onChangeText}
-        onKeyUp={onKeyUp}
-        onAddNodeListener={onAddNodeFromChildNodeListener}
+        node={node}
+        index={index}
+        placeholder="نقل قول را اینجا بنوسید..."
       />
     </div>
   );

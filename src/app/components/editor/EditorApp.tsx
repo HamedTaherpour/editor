@@ -7,8 +7,11 @@ import NodeEditorTextModule from "@/app/lib/editor/text/module";
 import NodeEditorVoiceModule from "@/app/lib/editor/voice/module";
 import NodeEditorImageModule from "@/app/lib/editor/image/module";
 import NodeEditorQuoteModule from "@/app/lib/editor/quote/module";
+import NodeEditorDividerModule from "@/app/lib/editor/divider/module";
 
 import NodeEditor from "@/app/components/editor/NodeEditor";
+
+import { EditorContext } from "@/app/lib/editor/hook/context";
 
 import {
   JsonEditor,
@@ -16,16 +19,13 @@ import {
   TYPE_NODE_VOICE,
   TYPE_NODE_IMAGE,
   TYPE_NODE_QUOTE,
+  TYPE_NODE_DIVIDER,
   NodeText,
   NodeVoice,
   NodeImage,
   NodeQuote,
-  Node,
-  OnUpdateNodeListener,
-  OnPressEnterNodeListener,
-  OnDeleteNodeListener,
-  OnRightClickNodeListener,
-  OnAddNodeFromChildNodeListener,
+  NodeDivider,
+  OnNodeBehavior,
 } from "@/app/lib/editor/type";
 
 const EditorApp = () => {
@@ -38,6 +38,84 @@ const EditorApp = () => {
   const nodeEditorVoiceModule = new NodeEditorVoiceModule(editor);
   const nodeEditorImageModule = new NodeEditorImageModule(editor);
   const nodeEditorQuoteModule = new NodeEditorQuoteModule(editor);
+  const nodeEditorDividerModule = new NodeEditorDividerModule(editor);
+
+  const onNodeBehavior: OnNodeBehavior = {
+    onDelete(node) {
+      switch (node.type) {
+        case TYPE_NODE_TEXT:
+          nodeEditorTextModule.delete(node.id);
+          break;
+        case TYPE_NODE_VOICE:
+          nodeEditorVoiceModule.delete(node.id);
+          break;
+        case TYPE_NODE_IMAGE:
+          nodeEditorImageModule.delete(node.id);
+          break;
+        case TYPE_NODE_QUOTE:
+          nodeEditorQuoteModule.delete(node.id);
+          break;
+        case TYPE_NODE_DIVIDER:
+          nodeEditorDividerModule.delete(node.id);
+          break;
+      }
+    },
+    onKeyUp(e, index) {
+      switch (e.key) {
+        case "ArrowDown":
+          selectDown(index);
+          break;
+        case "ArrowUp":
+          selectUp(index);
+          break;
+        case "Enter":
+          onBtnAddNodeClick(TYPE_NODE_TEXT);
+          break;
+        case "Backspace":
+          const node = jsonEditor.nodes[index] as NodeText;
+
+          if (
+            node.text &&
+            node.text.blocks &&
+            node.text.blocks[0].text.length <= 0
+          ) {
+            selectUp(index);
+            this.onDelete(jsonEditor.nodes[index]);
+          }
+
+          break;
+      }
+    },
+    onTransition(typeTransition, index) {
+      const node = jsonEditor.nodes[index];
+      if (!!node) {
+        switch (node.type) {
+          case TYPE_NODE_TEXT:
+            nodeEditorTextModule.transition(typeTransition, node as NodeText);
+            break;
+        }
+      }
+    },
+    onUpdate(node) {
+      switch (node.type) {
+        case TYPE_NODE_TEXT:
+          nodeEditorTextModule.update(node as NodeText);
+          break;
+        case TYPE_NODE_VOICE:
+          nodeEditorVoiceModule.update(node as NodeVoice);
+          break;
+        case TYPE_NODE_IMAGE:
+          nodeEditorImageModule.update(node as NodeImage);
+          break;
+        case TYPE_NODE_QUOTE:
+          nodeEditorQuoteModule.update(node as NodeQuote);
+          break;
+        case TYPE_NODE_DIVIDER:
+          nodeEditorDividerModule.update(node as NodeDivider);
+          break;
+      }
+    },
+  };
 
   const menuList = [
     {
@@ -149,7 +227,7 @@ const EditorApp = () => {
       description: "جداکننده بخش‌های مختلف",
       icon: "/editor/divider.svg",
       action: (index: number) => {
-        onBtnAddNodeClick(TYPE_NODE_VOICE, index);
+        onBtnAddNodeClick(TYPE_NODE_DIVIDER, index);
       },
     },
     {
@@ -192,91 +270,49 @@ const EditorApp = () => {
       case TYPE_NODE_QUOTE:
         nodeEditorQuoteModule.add(new NodeQuote(), index);
         break;
+      case TYPE_NODE_DIVIDER:
+        nodeEditorDividerModule.add(new NodeDivider(), index);
+        break;
     }
   };
 
-  const onDeleteNodeListener: OnDeleteNodeListener = {
-    onDelete: (node: Node) => {
-      switch (node.type) {
-        case TYPE_NODE_TEXT:
-          nodeEditorTextModule.delete(node.id);
-          break;
-        case TYPE_NODE_VOICE:
-          nodeEditorVoiceModule.delete(node.id);
-          break;
-        case TYPE_NODE_IMAGE:
-          nodeEditorImageModule.delete(node.id);
-          break;
-        case TYPE_NODE_QUOTE:
-          nodeEditorQuoteModule.delete(node.id);
-          break;
-      }
-    },
+  const selectUp = (index: number) => {
+    const node = jsonEditor.nodes[index - 1];
+    if (!!node && !!node.focus) {
+      node.focus();
+    }
   };
 
-  const onPressEnterNodeListener: OnPressEnterNodeListener = {
-    onClick: (index: number) => {
-      onBtnAddNodeClick(TYPE_NODE_TEXT, index);
-    },
-  };
-
-  const onUpdateNodeListener: OnUpdateNodeListener = {
-    onUpdate: (node: Node) => {
-      switch (node.type) {
-        case TYPE_NODE_TEXT:
-          nodeEditorTextModule.update(node as NodeText);
-          break;
-        case TYPE_NODE_VOICE:
-          nodeEditorVoiceModule.update(node as NodeVoice);
-          break;
-        case TYPE_NODE_IMAGE:
-          nodeEditorImageModule.update(node as NodeImage);
-          break;
-        case TYPE_NODE_QUOTE:
-          nodeEditorQuoteModule.update(node as NodeQuote);
-          break;
-      }
-    },
-  };
-
-  const onAddNodeFromChildNodeListener: OnAddNodeFromChildNodeListener = {
-    onAdd(type) {
-      onBtnAddNodeClick(type);
-    },
-  };
-
-  const onRightClickNodeListener: OnRightClickNodeListener = {
-    onRightClick(node: Node, posX: number, posY: number) {
-      // setContextMenuOpen(!contextMenuOpen);
-    },
+  const selectDown = (index: number) => {
+    const node = jsonEditor.nodes[index + 1];
+    if (!!node && !!node.focus) {
+      node.focus();
+    }
   };
 
   return (
-    <div className="flex flex-col h-screen et-container mx-auto">
-      <div className="flex flex-col h-4/6 mt-16 w-full">
-        <div className="flex flex-col">
-          {jsonEditor.nodes.map((item, i) => (
-            <NodeEditor
-              key={item.id}
-              index={i}
-              node={item}
-              menuList={menuList}
-              onUpdateNodeListener={onUpdateNodeListener}
-              onRightClickNodeListener={onRightClickNodeListener}
-              onPressEnterNodeListener={onPressEnterNodeListener}
-              onDeleteNodeListener={onDeleteNodeListener}
-              onAddNodeFromChildNodeListener={onAddNodeFromChildNodeListener}
-            />
-          ))}
-          <button
-            className="text-slate-500 cursor-text text-right"
-            onClick={() => onBtnAddNodeClick(TYPE_NODE_TEXT)}
-          >
-            یک متن اضافه کنید
-          </button>
-        </div>
+    <div className="flex flex-col min-h-screen et-container mx-auto">
+      <div className="flex flex-col min-h-96 mt-16 w-full">
+        <EditorContext.Provider value={onNodeBehavior}>
+          <div className="flex flex-col">
+            {jsonEditor.nodes.map((item, i) => (
+              <NodeEditor
+                key={item.id}
+                index={i}
+                node={item}
+                menuList={menuList}
+              />
+            ))}
+            <button
+              className="text-slate-500 cursor-text text-right"
+              onClick={() => onBtnAddNodeClick(TYPE_NODE_TEXT)}
+            >
+              یک متن اضافه کنید
+            </button>
+          </div>
+        </EditorContext.Provider>
       </div>
-      <div className="bg-slate-900 text-white dir-ltr h-2/6 overflow-auto">
+      <div className="bg-slate-900 text-white dir-ltr max-h-96 overflow-auto">
         <pre>{JSON.stringify(jsonEditor, null, 2)}</pre>
       </div>
     </div>
