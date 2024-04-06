@@ -1,4 +1,9 @@
-import React, { useEffect, useRef, useState, useContext } from "react";
+import React, {
+  useEffect,
+  useRef,
+  useState,
+  useContext,
+} from "react";
 import {
   Editor,
   EditorState,
@@ -10,13 +15,14 @@ import {
 import Toolbar from "@/app/components/TextEditor/Toolbar";
 import { editorDecorator } from "@/app/components/TextEditor/index";
 import "draft-js/dist/Draft.css";
-import { TYPE_NODE_QUOTE } from "@/app/lib/editor/type";
+import { TYPE_NODE_QUOTE, TYPE_NODE_TEXT } from "@/app/lib/editor/type";
 import { EditorContext } from "@/app/lib/editor/hook/context";
+import useOutsideClick from "@/app/lib/OutsideClick";
 
-var delta = 500;
+var delta = 200;
 var lastKeypressTime = 0;
 
-const DraftEditor = ({ onChangeText, placeholder, node, index }) => {
+const DraftEditor = ({ onChangeText, onChange, placeholder, node, index }) => {
   const onNodeBehavior = useContext(EditorContext);
 
   let initEditorState = EditorState.createEmpty(editorDecorator);
@@ -28,6 +34,9 @@ const DraftEditor = ({ onChangeText, placeholder, node, index }) => {
   const [editorState, setEditorState] = useState(initEditorState);
   const [showToolbar, setShowToolbar] = useState(false);
   const editor = useRef(null);
+  const ref = useOutsideClick(() => {
+    setShowToolbar(false);
+  });
 
   useEffect(() => {
     focusEditor();
@@ -39,21 +48,67 @@ const DraftEditor = ({ onChangeText, placeholder, node, index }) => {
   node.focus = focusEditor;
 
   function myKeyBindingFn(event) {
-    if (node.type === TYPE_NODE_QUOTE && event.key === "Enter") {
-      var thisKeypressTime = new Date();
-      if (thisKeypressTime - lastKeypressTime <= delta) {
+    if (node.type === TYPE_NODE_QUOTE) {
+      const lineNumber = getLineNumberSelected();
+      const linesize = getLineSize();
+      if (event.key === "ArrowUp" && lineNumber <= 1) {
+        setShowToolbar(false);
         onNodeBehavior.onKeyUp(event, index);
-        // optional - if we'd rather not detect a triple-press
-        // as a second double-press, reset the timestamp
-        thisKeypressTime = 0;
-        return "handled";
+        return;
+      } else if (event.key === "ArrowDown" && lineNumber >= linesize - 1) {
+        setShowToolbar(false);
+        onNodeBehavior.onKeyUp(event, index);
+        return;
+      } else if (event.key === "Enter") {
+        var thisKeypressTime = new Date();
+        if (thisKeypressTime - lastKeypressTime <= delta) {
+          thisKeypressTime = 0;
+          setShowToolbar(false);
+          onNodeBehavior.onKeyUp(event, index);
+          return;
+        }
+        lastKeypressTime = thisKeypressTime;
       }
-      lastKeypressTime = thisKeypressTime;
-    } else {
-      onNodeBehavior.onKeyUp(event, index);
+    } else if (node.type === TYPE_NODE_TEXT) {
+      if (
+        event.key === "ArrowUp" ||
+        event.key === "ArrowDown" ||
+        event.key === "Enter"
+      ) {
+        setShowToolbar(false);
+        onNodeBehavior.onKeyUp(event, index);
+        return;
+      }
+    }
+
+    if (event.key === "Backspace") {
+      console.log(node.plainText);
+      if (node.plainText.length <= 0) {
+        setShowToolbar(false);
+        onNodeBehavior.onKeyUp(event, index);
+        return;
+      }
     }
     return getDefaultKeyBinding(event);
   }
+
+  const getLineNumberSelected = () => {
+    const currentBlockKey = editorState.getSelection().getStartKey();
+    return editorState
+      .getCurrentContent()
+      .getBlockMap()
+      .keySeq()
+      .findIndex((k) => k === currentBlockKey);
+  };
+
+  const getLineSize = () => {
+    const currentBlockKey = editorState.getSelection().getStartKey();
+    return editorState.getCurrentContent().getBlockMap().keySeq().size;
+  };
+  const getValue = (contentState) => {
+    contentState = contentState || editorState.getCurrentContent();
+    return contentState.getPlainText("\u0001");
+  };
 
   const handleKeyCommand = (command) => {
     const newState = RichUtils.handleKeyCommand(editorState, command);
@@ -62,26 +117,6 @@ const DraftEditor = ({ onChangeText, placeholder, node, index }) => {
       return true;
     }
     return false;
-  };
-
-  const handleReturn = (event) => {
-    setShowToolbar(false);
-    if (node.type !== TYPE_NODE_QUOTE) {
-      onNodeBehavior.onKeyUp(event, index);
-      return "handled";
-    }
-  };
-
-  const onMouseUp = (e) => {
-    if (!!window.getSelection().toString()) {
-      setShowToolbar(true);
-    } else if (!e.target.closest(".ignore")) {
-      setShowToolbar(false);
-    }
-  };
-
-  const onMouseLeave = (e) => {
-    if (!e.target.closest(".ignore")) setShowToolbar(false);
   };
 
   // FOR INLINE STYLES
@@ -170,12 +205,12 @@ const DraftEditor = ({ onChangeText, placeholder, node, index }) => {
     onNodeBehavior.onTransition(typeTransition, index);
   };
 
+  const onFocus = () => {
+    setShowToolbar(true);
+  };
+
   return (
-    <div
-      className="et-wrapper"
-      onMouseLeave={onMouseLeave}
-      onMouseUp={onMouseUp}
-    >
+    <div ref={ref} className={"node-" + node.id + " w-full"}>
       <div className="relative">
         {showToolbar ? (
           <Toolbar
@@ -188,15 +223,17 @@ const DraftEditor = ({ onChangeText, placeholder, node, index }) => {
       <Editor
         ref={editor}
         placeholder={placeholder}
-        handleReturn={handleReturn}
         handleKeyCommand={handleKeyCommand}
         editorState={editorState}
         customStyleMap={styleMap}
+        textDirectionality="RTL"
         blockStyleFn={myBlockStyleFn}
         keyBindingFn={myKeyBindingFn}
+        onFocus={onFocus}
         onChange={(editorState) => {
           const contentState = editorState.getCurrentContent();
-          onChangeText(convertToRaw(contentState));
+          onChange(convertToRaw(contentState));
+          onChangeText(getValue(contentState));
           setEditorState(editorState);
         }}
       />

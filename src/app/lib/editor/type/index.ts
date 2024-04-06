@@ -26,19 +26,23 @@ export class Node {
 
 export class NodeText extends Node {
   text: any;
+  plainText: string;
 
-  constructor(text: any = "") {
+  constructor(text: any = "", plainText: string = "") {
     super(TYPE_NODE_TEXT);
     this.text = text;
+    this.plainText = plainText;
   }
 }
 
 export class NodeQuote extends Node {
   text: any;
+  plainText: string;
 
-  constructor(text: any = "") {
+  constructor(text: any = "", plainText: string = "") {
     super(TYPE_NODE_QUOTE);
     this.text = text;
+    this.plainText = plainText;
     this.clazz = "my-5";
   }
 }

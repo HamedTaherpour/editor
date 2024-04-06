@@ -14,13 +14,19 @@ const NodeEditorText = (props: Props) => {
   const onNodeBehavior = useContext<OnNodeBehavior | undefined>(EditorContext);
 
   const onChangeText = (text: string) => {
-    node.text = text;
+    node.plainText = text;
+    if (onNodeBehavior) onNodeBehavior.onUpdate(node);
+  };
+
+  const onChange = (josn: string) => {
+    node.text = josn;
     if (onNodeBehavior) onNodeBehavior.onUpdate(node);
   };
 
   return (
     <DraftEditor
       onChangeText={onChangeText}
+      onChange={onChange}
       node={node}
       index={index}
       placeholder="متن را اینجا بنوسید..."

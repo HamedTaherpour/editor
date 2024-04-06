@@ -14,15 +14,21 @@ const NodeEditorQuote = (props: Props) => {
   const onNodeBehavior = useContext<OnNodeBehavior | undefined>(EditorContext);
 
   const onChangeText = (text: string) => {
-    node.text = text;
+    node.plainText = text;
+    if (onNodeBehavior) onNodeBehavior.onUpdate(node);
+  };
+
+  const onChange = (josn: string) => {
+    node.text = josn;
     if (onNodeBehavior) onNodeBehavior.onUpdate(node);
   };
 
   return (
-    <div className="rounded flex flex-row px-1 py-1 bg-slate-100">
+    <div className="rounded flex flex-row px-1 py-1 bg-slate-100 w-full">
       <div className="w-[3px] bg-slate-500 min-h-full ml-2.5">&nbsp;</div>
       <DraftEditor
         onChangeText={onChangeText}
+        onChange={onChange}
         node={node}
         index={index}
         placeholder="نقل قول را اینجا بنوسید..."

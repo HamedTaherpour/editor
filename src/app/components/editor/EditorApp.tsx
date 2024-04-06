@@ -69,7 +69,7 @@ const EditorApp = () => {
           selectUp(index);
           break;
         case "Enter":
-          onBtnAddNodeClick(TYPE_NODE_TEXT);
+          onBtnAddNodeClick(TYPE_NODE_TEXT, index);
           break;
         case "Backspace":
           const node = jsonEditor.nodes[index] as NodeText;
