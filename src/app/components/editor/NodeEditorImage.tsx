@@ -9,6 +9,7 @@ import {
 import { NodeImage, OnNodeBehavior } from "@/app/lib/editor/type";
 import AppTooltip from "@/app/components/AppTooltip";
 import { EditorContext } from "@/app/lib/editor/hook/context";
+import useOutsideClick from "@/app/lib/OutsideClick";
 
 interface Props {
   node: NodeImage;
@@ -21,7 +22,6 @@ const NodeEditorImage = (props: Props) => {
   const onNodeBehavior = useContext<OnNodeBehavior | undefined>(EditorContext);
 
   const ref = useRef<HTMLImageElement>(null);
-  const rootRef = useRef<HTMLDivElement>(null);
 
   const maxWidth = 432;
   const FILE_TYPE_UPLOAD = 0;
@@ -32,6 +32,9 @@ const NodeEditorImage = (props: Props) => {
   const [link, setLink] = useState("");
   const [enabledCaption, setEnabledCaption] = useState(false);
   const refCaption = useRef<HTMLDivElement>(null);
+  const rootRef = useOutsideClick<HTMLDivElement>(() => {
+    setShowFileSelected(false);
+  });
 
   const handler = (mouseDownEvent: MouseEvent, fromRight: boolean) => {
     const startSize = size;
@@ -62,7 +65,7 @@ const NodeEditorImage = (props: Props) => {
   };
 
   const onKeyUp = (e: KeyboardEvent<HTMLElement>) => {
-    if (onNodeBehavior) onNodeBehavior.onKeyUp(e, index);
+    console.log(e);
   };
 
   const onChangeFile = (e: ChangeEvent<HTMLInputElement>) => {
@@ -106,7 +109,7 @@ const NodeEditorImage = (props: Props) => {
   };
 
   return (
-    <div ref={rootRef} className="w-full rounded flex flex-row">
+    <div ref={rootRef} className="w-full rounded flex flex-col">
       {showFileSelected ? (
         <div className="px-3 rounded-xl bg-gray-2 flex flex-row items-center cursor-pointer h-12 w-full relative">
           <svg
@@ -138,7 +141,7 @@ const NodeEditorImage = (props: Props) => {
             فایل خود را بارگذاری کنید.
           </span>
           <span className="text-xs text-gray-8">pdf . jpj فرمت</span>
-          <div className="pt-4 pb-3 px-3 rounded-xl bg-white shadow-xs border border-gray-3 flex flex-col w-96 absolute top-9">
+          <div className="pt-4 pb-3 px-3 rounded-xl bg-white shadow-xs border border-gray-3 flex flex-col w-96 absolute top-9 z-50">
             <div className="flex flex-row gap-x-4 border-b border-gray-5 mb-4">
               <button
                 className={
@@ -215,7 +218,6 @@ const NodeEditorImage = (props: Props) => {
           </div>
         </div>
       ) : null}
-
       <div
         className={
           showFileSelected ? "hidden" : null + " w-full flex justify-center"
@@ -238,57 +240,6 @@ const NodeEditorImage = (props: Props) => {
                     }
                     text="اضافه کردن کپشن"
                   />
-
-                  {/* <div className="w-[2px] h-3.5 bg-gray-9"></div>
-                <button className="size-6">
-                  <svg
-                    width="24"
-                    height="24"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <g opacity="0.5">
-                      <path
-                        d="M5 10.5C4.175 10.5 3.5 11.175 3.5 12C3.5 12.825 4.175 13.5 5 13.5C5.825 13.5 6.5 12.825 6.5 12C6.5 11.175 5.825 10.5 5 10.5Z"
-                        fill="white"
-                      />
-                      <path
-                        d="M19 10.5C18.175 10.5 17.5 11.175 17.5 12C17.5 12.825 18.175 13.5 19 13.5C19.825 13.5 20.5 12.825 20.5 12C20.5 11.175 19.825 10.5 19 10.5Z"
-                        fill="white"
-                      />
-                      <path
-                        d="M12 10.5C11.175 10.5 10.5 11.175 10.5 12C10.5 12.825 11.175 13.5 12 13.5C12.825 13.5 13.5 12.825 13.5 12C13.5 11.175 12.825 10.5 12 10.5Z"
-                        fill="white"
-                      />
-                    </g>
-                  </svg>
-                </button>
-                <div className="w-[2px] h-3.5 bg-gray-9"></div>
-                <button className="size-6">
-                  <svg
-                    width="24"
-                    height="24"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <g opacity="0.5">
-                      <path
-                        d="M5 10.5C4.175 10.5 3.5 11.175 3.5 12C3.5 12.825 4.175 13.5 5 13.5C5.825 13.5 6.5 12.825 6.5 12C6.5 11.175 5.825 10.5 5 10.5Z"
-                        fill="white"
-                      />
-                      <path
-                        d="M19 10.5C18.175 10.5 17.5 11.175 17.5 12C17.5 12.825 18.175 13.5 19 13.5C19.825 13.5 20.5 12.825 20.5 12C20.5 11.175 19.825 10.5 19 10.5Z"
-                        fill="white"
-                      />
-                      <path
-                        d="M12 10.5C11.175 10.5 10.5 11.175 10.5 12C10.5 12.825 11.175 13.5 12 13.5C12.825 13.5 13.5 12.825 13.5 12C13.5 11.175 12.825 10.5 12 10.5Z"
-                        fill="white"
-                      />
-                    </g>
-                  </svg>
-                </button> */}
                 </div>
               </div>
               <div className="flex flex-row justify-between items-center h-2/6">
@@ -318,6 +269,14 @@ const NodeEditorImage = (props: Props) => {
           ) : null}
         </div>
       </div>
+      {!showFileSelected && node.path.length <= 0 ? (
+        <span
+          onClick={() => setShowFileSelected(true)}
+          className="text-xs text-gray-7"
+        >
+          یک عکس انتخاب کنید
+        </span>
+      ) : null}
     </div>
   );
 };
