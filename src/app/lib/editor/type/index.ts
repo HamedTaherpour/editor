@@ -27,6 +27,7 @@ export class Node {
 export class NodeText extends Node {
   text: any;
   plainText: string;
+  baseTag: string = "p";
 
   constructor(text: any = "", plainText: string = "") {
     super(TYPE_NODE_TEXT);
@@ -43,7 +44,7 @@ export class NodeQuote extends Node {
     super(TYPE_NODE_QUOTE);
     this.text = text;
     this.plainText = plainText;
-    this.clazz = "my-5";
+    this.clazz = "my-3";
   }
 }
 
@@ -64,6 +65,7 @@ export class NodeImage extends Node {
     super(TYPE_NODE_IMAGE);
     this.path = path;
     this.caption = caption;
+    this.clazz = "my-3";
   }
 }
 

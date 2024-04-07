@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import Editor from "@/app/lib/editor";
 import NodeEditorTextModule from "@/app/lib/editor/text/module";
@@ -26,7 +26,14 @@ import {
   NodeQuote,
   NodeDivider,
   OnNodeBehavior,
+  Node,
 } from "@/app/lib/editor/type";
+
+interface AddNode {
+  type: number;
+  node?: Node;
+  index?: number;
+}
 
 const EditorApp = () => {
   const [jsonEditor, setJsonEditor] = useState<JsonEditor>({
@@ -39,6 +46,12 @@ const EditorApp = () => {
   const nodeEditorImageModule = new NodeEditorImageModule(editor);
   const nodeEditorQuoteModule = new NodeEditorQuoteModule(editor);
   const nodeEditorDividerModule = new NodeEditorDividerModule(editor);
+
+  useEffect(() => {
+    if (jsonEditor.nodes.length <= 0) {
+      onBtnAddNodeClick({ type: TYPE_NODE_TEXT });
+    }
+  });
 
   const onNodeBehavior: OnNodeBehavior = {
     onDelete(node) {
@@ -69,7 +82,7 @@ const EditorApp = () => {
           selectUp(index);
           break;
         case "Enter":
-          onBtnAddNodeClick(TYPE_NODE_TEXT, index);
+          onBtnAddNodeClick({ type: TYPE_NODE_TEXT, index });
           break;
         case "Backspace":
           const node = jsonEditor.nodes[index] as NodeText;
@@ -121,129 +134,98 @@ const EditorApp = () => {
     {
       title: "متن",
       description: "محتوای متنی به عنوان یک درس",
-      icon: "/editor/text.svg",
+      icon: "textalign",
       action: (index: number) => {
-        onBtnAddNodeClick(TYPE_NODE_TEXT, index);
-      },
-    },
-    {
-      title: "سرفصل‌ها",
-      description: "نمایش سرفصل‌ها و محتوای دوره",
-      icon: "/editor/title.svg",
-      action: (index: number) => {
-        onBtnAddNodeClick(TYPE_NODE_TEXT, index);
+        onBtnAddNodeClick({ type: TYPE_NODE_TEXT, index });
       },
     },
     {
       title: "عنوان 1",
       description: "سایز بزرگ برای نوشتن عنوان",
-      icon: "/editor/h1.svg",
+      icon: "smallcaps",
       action: (index: number) => {
-        onBtnAddNodeClick(TYPE_NODE_TEXT, index);
+        const node = new NodeText();
+        node.baseTag = "h1";
+        onBtnAddNodeClick({ type: TYPE_NODE_TEXT, node, index });
       },
     },
     {
       title: "عنوان 2",
       description: "سایز متوسط برای نوشتن عنوان",
-      icon: "/editor/h1.svg",
+      icon: "smallcaps",
       action: (index: number) => {
-        onBtnAddNodeClick(TYPE_NODE_TEXT, index);
+        const node = new NodeText();
+        node.baseTag = "h2";
+        onBtnAddNodeClick({ type: TYPE_NODE_TEXT, node, index });
       },
     },
     {
       title: "عنوان 3",
       description: "سایز کوچک برای نوشتن عنوان",
-      icon: "/editor/h1.svg",
+      icon: "smallcaps",
       action: (index: number) => {
-        onBtnAddNodeClick(TYPE_NODE_TEXT, index);
+        const node = new NodeText();
+        node.baseTag = "h3";
+        onBtnAddNodeClick({ type: TYPE_NODE_TEXT, node, index });
       },
     },
     {
       title: "نقل‌قول",
       description: "برای نوشتن نقل‌قول استفاده کنید.",
-      icon: "/editor/quote.svg",
+      icon: "quote-up",
       action: (index: number) => {
-        onBtnAddNodeClick(TYPE_NODE_QUOTE, index);
+        onBtnAddNodeClick({ type: TYPE_NODE_QUOTE, index });
       },
     },
     {
       title: "لینک",
       description: "صوت یا ویس خود را بارگزاری کنید.",
-      icon: "/editor/quote.svg",
+      icon: "link",
       action: (index: number) => {
-        onBtnAddNodeClick(TYPE_NODE_TEXT, index);
+        onBtnAddNodeClick({ type: TYPE_NODE_TEXT, index });
       },
     },
     {
       title: "تصویر",
       description: "تصویر خود را بارگزاری کنید.",
-      icon: "/editor/image.svg",
+      icon: "gallery",
       action: (index: number) => {
-        onBtnAddNodeClick(TYPE_NODE_IMAGE, index);
+        onBtnAddNodeClick({ type: TYPE_NODE_IMAGE, index });
       },
     },
     {
       title: "ویدیو",
       description: "ویدیو خود را بارگزاری کنید.",
-      icon: "/editor/video.svg",
+      icon: "play-circle",
       action: (index: number) => {
-        onBtnAddNodeClick(TYPE_NODE_TEXT, index);
+        // onBtnAddNodeClick(TYPE_NODE_TEXT, index);
       },
     },
     {
       title: "فایل یا پوشه",
       description: "فایل خود را بارگزاری کنید.",
-      icon: "/editor/file.svg",
+      icon: "document",
       action: (index: number) => {
-        onBtnAddNodeClick(TYPE_NODE_TEXT, index);
+        // onBtnAddNodeClick(TYPE_NODE_TEXT, index);
       },
     },
     {
       title: "صوتی",
       description: "صوت یا ویس خود را بارگزاری کنید.",
-      icon: "/editor/voice.svg",
+      icon: "volume",
       action: (index: number) => {
-        onBtnAddNodeClick(TYPE_NODE_TEXT, index);
-      },
-    },
-    {
-      title: "لیست افقی",
-      description: "معرفی کردن ویژگی‌ها و امکانات",
-      icon: "/editor/row-horizontal.svg",
-      action: (index: number) => {
-        onBtnAddNodeClick(TYPE_NODE_VOICE, index);
-      },
-    },
-    {
-      title: "لیست آکاردئونی",
-      description: "برای سوالات متداول و غیره",
-      icon: "/editor/row-horizontal.svg",
-      action: (index: number) => {
-        onBtnAddNodeClick(TYPE_NODE_VOICE, index);
+        // onBtnAddNodeClick(TYPE_NODE_TEXT, index);
       },
     },
     {
       title: "جداکننده",
       description: "جداکننده بخش‌های مختلف",
-      icon: "/editor/divider.svg",
+      icon: "divider",
       action: (index: number) => {
-        onBtnAddNodeClick(TYPE_NODE_DIVIDER, index);
-      },
-    },
-    {
-      title: "نظرات",
-      description: "نمایش رضایت شرکت‌کنندگان قبلی ",
-      icon: "/editor/star.svg",
-      action: (index: number) => {
-        onBtnAddNodeClick(TYPE_NODE_IMAGE, index);
-      },
-    },
-    {
-      title: "ایموجی",
-      description: "ایموجی مدنظر را انتخاب کنید.",
-      icon: "/editor/sticker.svg",
-      action: (index: number) => {
-        onBtnAddNodeClick(TYPE_NODE_IMAGE, index);
+        onBtnAddNodeClick({
+          type: TYPE_NODE_DIVIDER,
+          index,
+        });
       },
     },
   ];
@@ -254,24 +236,25 @@ const EditorApp = () => {
     },
   });
 
-  const onBtnAddNodeClick = (type: number, _index: number = -1) => {
-    const index = _index >= 0 ? _index + 1 : _index;
+  const onBtnAddNodeClick = (params: AddNode) => {
+    const { type, index, node } = params;
+    let _index = typeof index === "undefined" ? -1 : index + 1;
 
     switch (type) {
       case TYPE_NODE_TEXT:
-        nodeEditorTextModule.add(new NodeText(), index);
+        nodeEditorTextModule.add((node as NodeText) || new NodeText(), _index);
         break;
       case TYPE_NODE_VOICE:
-        nodeEditorVoiceModule.add(new NodeVoice(), index);
+        nodeEditorVoiceModule.add(new NodeVoice(), _index);
         break;
       case TYPE_NODE_IMAGE:
-        nodeEditorImageModule.add(new NodeImage(), index);
+        nodeEditorImageModule.add(new NodeImage(), _index);
         break;
       case TYPE_NODE_QUOTE:
-        nodeEditorQuoteModule.add(new NodeQuote(), index);
+        nodeEditorQuoteModule.add(new NodeQuote(), _index);
         break;
       case TYPE_NODE_DIVIDER:
-        nodeEditorDividerModule.add(new NodeDivider(), index);
+        nodeEditorDividerModule.add(new NodeDivider(), _index);
         break;
     }
   };
@@ -303,12 +286,6 @@ const EditorApp = () => {
                 menuList={menuList}
               />
             ))}
-            <button
-              className="text-slate-500 cursor-text text-right"
-              onClick={() => onBtnAddNodeClick(TYPE_NODE_TEXT)}
-            >
-              یک متن اضافه کنید
-            </button>
           </div>
         </EditorContext.Provider>
       </div>

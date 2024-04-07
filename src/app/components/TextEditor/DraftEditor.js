@@ -1,9 +1,4 @@
-import React, {
-  useEffect,
-  useRef,
-  useState,
-  useContext,
-} from "react";
+import React, { useEffect, useRef, useState, useContext } from "react";
 import {
   Editor,
   EditorState,
@@ -38,6 +33,23 @@ const DraftEditor = ({ onChangeText, onChange, placeholder, node, index }) => {
     setShowToolbar(false);
   });
 
+  if (node.baseTag !== "p" && !!!node.text && !!!node.text.blocks) {
+    const keys = {
+      h1: "header-one",
+      h2: "header-two",
+      h3: "header-three",
+    };
+    const style = keys[node.baseTag];
+    const selection = editorState.getSelection();
+    const blockType = editorState
+      .getCurrentContent()
+      .getBlockForKey(selection.getStartKey())
+      .getType();
+    if (blockType !== style) {
+      setEditorState(RichUtils.toggleBlockType(editorState, style));
+    }
+  }
+
   useEffect(() => {
     focusEditor();
   }, []);
@@ -48,7 +60,7 @@ const DraftEditor = ({ onChangeText, onChange, placeholder, node, index }) => {
   node.focus = focusEditor;
 
   function myKeyBindingFn(event) {
-    if (node.type === TYPE_NODE_QUOTE) {
+    if (event.key === "ArrowUp" || event.key === "ArrowDown") {
       const lineNumber = getLineNumberSelected();
       const linesize = getLineSize();
       if (event.key === "ArrowUp" && lineNumber <= 1) {
@@ -59,7 +71,9 @@ const DraftEditor = ({ onChangeText, onChange, placeholder, node, index }) => {
         setShowToolbar(false);
         onNodeBehavior.onKeyUp(event, index);
         return;
-      } else if (event.key === "Enter") {
+      }
+    } else if (event.key === "Enter") {
+      if (node.type === TYPE_NODE_QUOTE) {
         var thisKeypressTime = new Date();
         if (thisKeypressTime - lastKeypressTime <= delta) {
           thisKeypressTime = 0;
@@ -68,21 +82,19 @@ const DraftEditor = ({ onChangeText, onChange, placeholder, node, index }) => {
           return;
         }
         lastKeypressTime = thisKeypressTime;
+      } else {
+        const lineNumber = getLineNumberSelected();
+        const lineKey = getLineKeySelected();
+        const linesize = getLineSize();
+        const postionOfLine = getPositionOfLine();
+        const lineLength = getValueOfLine(lineKey).length;
+        if (postionOfLine >= lineLength && lineNumber >= linesize - 1) {
+          setShowToolbar(false);
+          onNodeBehavior.onKeyUp(event, index);
+          return;
+        }
       }
-    } else if (node.type === TYPE_NODE_TEXT) {
-      if (
-        event.key === "ArrowUp" ||
-        event.key === "ArrowDown" ||
-        event.key === "Enter"
-      ) {
-        setShowToolbar(false);
-        onNodeBehavior.onKeyUp(event, index);
-        return;
-      }
-    }
-
-    if (event.key === "Backspace") {
-      console.log(node.plainText);
+    } else if (event.key === "Backspace") {
       if (node.plainText.length <= 0) {
         setShowToolbar(false);
         onNodeBehavior.onKeyUp(event, index);
@@ -100,10 +112,31 @@ const DraftEditor = ({ onChangeText, onChange, placeholder, node, index }) => {
       .keySeq()
       .findIndex((k) => k === currentBlockKey);
   };
-
+  const getLineKeySelected = () => {
+    return editorState.getSelection().getStartKey();
+  };
   const getLineSize = () => {
     const currentBlockKey = editorState.getSelection().getStartKey();
     return editorState.getCurrentContent().getBlockMap().keySeq().size;
+  };
+  const getPositionOfLine = () => {
+    const selectionState = editorState.getSelection();
+    return selectionState.getStartOffset();
+  };
+  const getValueHighlight = () => {
+    let selectionState = editorState.getSelection();
+    let anchorKey = selectionState.getAnchorKey();
+    let currentContent = editorState.getCurrentContent();
+    let currentContentBlock = currentContent.getBlockForKey(anchorKey);
+    let start = selectionState.getStartOffset();
+    let end = selectionState.getEndOffset();
+    let selectedText = currentContentBlock.getText().slice(start, end);
+    return selectedText;
+  };
+  const getValueOfLine = (lineKey) => {
+    let currentContent = editorState.getCurrentContent();
+    let currentContentBlock = currentContent.getBlockForKey(lineKey);
+    return currentContentBlock.getText();
   };
   const getValue = (contentState) => {
     contentState = contentState || editorState.getCurrentContent();
@@ -152,34 +185,34 @@ const DraftEditor = ({ onChangeText, onChange, placeholder, node, index }) => {
       color: "rgba(68, 131, 97, 1)",
     },
     BACKGROUND_YELLOW: {
-      background: "rgba(203, 145, 47, 1)",
+      background: "rgba(251, 246, 238, 1)",
     },
     BACKGROUND_ORAMGE: {
-      background: "rgba(217, 115, 13, 1)",
+      background: "rgba(254, 245, 236, 1)",
     },
     BACKGROUND_BROWN: {
-      background: "rgba(159, 107, 83, 1)",
+      background: "rgba(248, 244, 242, 1)",
     },
     BACKGROUND_GRAY: {
-      background: "rgba(120, 119, 116, 1)",
+      background: "rgba(245, 245, 245, 1)",
     },
     BACKGROUND_DARK: {
-      background: "rgba(36, 36, 36, 1)",
+      background: "rgba(255, 255, 255, 1)",
     },
     BACKGROUND_RED: {
-      background: "rgba(212, 76, 71, 1)",
+      background: "rgba(251, 239, 238, 1)",
     },
     BACKGROUND_PINK: {
-      background: "rgba(193, 76, 138, 1)",
+      background: "rgba(250, 240, 245, 1)",
     },
     BACKGROUND_PURPLE: {
-      background: "rgba(144, 101, 176, 1)",
+      background: "rgba(245, 242, 248, 1)",
     },
     BACKGROUND_BLUE: {
-      background: "rgba(54, 128, 170, 1)",
+      background: "rgba(239, 246, 250, 1)",
     },
     BACKGROUND_GREEN: {
-      background: "rgba(68, 131, 97, 1)",
+      background: "rgba(242, 248, 245, 1)",
     },
   };
 
@@ -205,12 +238,20 @@ const DraftEditor = ({ onChangeText, onChange, placeholder, node, index }) => {
     onNodeBehavior.onTransition(typeTransition, index);
   };
 
-  const onFocus = () => {
-    setShowToolbar(true);
+  const onMouseUp = (e) => {
+    if (!!window.getSelection().toString()) {
+      setShowToolbar(true);
+    } else if (!e.target.closest(".node-" + node.id)) {
+      setShowToolbar(false);
+    }
   };
 
   return (
-    <div ref={ref} className={"node-" + node.id + " w-full"}>
+    <div
+      ref={ref}
+      className={"node-" + node.id + " w-full"}
+      onMouseUp={onMouseUp}
+    >
       <div className="relative">
         {showToolbar ? (
           <Toolbar
@@ -229,7 +270,6 @@ const DraftEditor = ({ onChangeText, onChange, placeholder, node, index }) => {
         textDirectionality="RTL"
         blockStyleFn={myBlockStyleFn}
         keyBindingFn={myKeyBindingFn}
-        onFocus={onFocus}
         onChange={(editorState) => {
           const contentState = editorState.getCurrentContent();
           onChange(convertToRaw(contentState));

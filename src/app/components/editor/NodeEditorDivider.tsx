@@ -1,6 +1,5 @@
 import { useContext } from "react";
 import { NodeDivider, OnNodeBehavior } from "@/app/lib/editor/type";
-import DraftEditor from "@/app/components/TextEditor/DraftEditor";
 import { EditorContext } from "@/app/lib/editor/hook/context";
 
 interface Props {

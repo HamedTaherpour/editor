@@ -3,30 +3,31 @@ import { RichUtils, EditorState } from "draft-js";
 import AppDropDownMenu from "@/app/components/AppDropDownMenu";
 import { TYPE_NODE_QUOTE } from "@/app/lib/editor/type";
 import LinkConfirm from "@/app/components/TextEditor/component/LinkConfirm";
+import AppIcon from "@/app/components/AppIcon";
 
 const Toolbar = ({ editorState, setEditorState, onTransitionNodeListener }) => {
   const [showLinkConfirm, setShowLinkConfirm] = useState(false);
   const headingItems = {
     h1: {
-      title: "عنوان 1",
+      title: "عنوان بزرگ",
       value: "h1",
       style: "header-one",
       method: "block",
     },
     h2: {
-      title: "عنوان 2",
+      title: "عنوان متوسط",
       value: "h2",
       style: "header-two",
       method: "block",
     },
     h3: {
-      title: "عنوان 3",
+      title: "عنوان کوچک",
       value: "h3",
       style: "header-three",
       method: "block",
     },
     p: {
-      title: "توضیحات",
+      title: "متن",
       value: "p",
       style: "unstyled",
       method: "block",
@@ -48,7 +49,7 @@ const Toolbar = ({ editorState, setEditorState, onTransitionNodeListener }) => {
         },
         class: {
           color: "text-yellow",
-          background: "bg-yellow",
+          background: "bg-yellow-bg",
         },
       },
     },
@@ -63,7 +64,7 @@ const Toolbar = ({ editorState, setEditorState, onTransitionNodeListener }) => {
         },
         class: {
           color: "text-orange",
-          background: "bg-orange",
+          background: "bg-orange-bg",
         },
       },
     },
@@ -78,7 +79,7 @@ const Toolbar = ({ editorState, setEditorState, onTransitionNodeListener }) => {
         },
         class: {
           color: "text-brown",
-          background: "bg-brown",
+          background: "bg-brown-bg",
         },
       },
     },
@@ -93,7 +94,7 @@ const Toolbar = ({ editorState, setEditorState, onTransitionNodeListener }) => {
         },
         class: {
           color: "text-gray",
-          background: "bg-gray",
+          background: "bg-gray-bg",
         },
       },
     },
@@ -108,7 +109,7 @@ const Toolbar = ({ editorState, setEditorState, onTransitionNodeListener }) => {
         },
         class: {
           color: "text-dark",
-          background: "bg-dark",
+          background: "bg-dark-bg",
         },
       },
     },
@@ -123,7 +124,7 @@ const Toolbar = ({ editorState, setEditorState, onTransitionNodeListener }) => {
         },
         class: {
           color: "text-red",
-          background: "bg-red",
+          background: "bg-red-bg",
         },
       },
     },
@@ -138,7 +139,7 @@ const Toolbar = ({ editorState, setEditorState, onTransitionNodeListener }) => {
         },
         class: {
           color: "text-pink",
-          background: "bg-pink",
+          background: "bg-pink-bg",
         },
       },
     },
@@ -153,7 +154,7 @@ const Toolbar = ({ editorState, setEditorState, onTransitionNodeListener }) => {
         },
         class: {
           color: "text-purple",
-          background: "bg-purple",
+          background: "bg-purple-bg",
         },
       },
     },
@@ -168,7 +169,7 @@ const Toolbar = ({ editorState, setEditorState, onTransitionNodeListener }) => {
         },
         class: {
           color: "text-blue",
-          background: "bg-blue",
+          background: "bg-blue-bg",
         },
       },
     },
@@ -184,7 +185,7 @@ const Toolbar = ({ editorState, setEditorState, onTransitionNodeListener }) => {
         },
         class: {
           color: "text-green",
-          background: "bg-green",
+          background: "bg-green-bg",
         },
       },
     },
@@ -195,47 +196,71 @@ const Toolbar = ({ editorState, setEditorState, onTransitionNodeListener }) => {
     {
       label: "bold",
       style: "BOLD",
-      icon: "/editor/bold.svg",
+      icon: "text-bold",
       method: "inline",
     },
     {
       label: "underline",
       style: "UNDERLINE",
-      icon: "/editor/underline.svg",
+      icon: "underline",
       method: "inline",
     },
     {
       label: "italic",
       style: "ITALIC",
-      icon: "/editor/italic.svg",
+      icon: "italic",
       method: "inline",
     },
     {
       label: "strike-through",
       style: "STRIKETHROUGH",
-      icon: "/editor/text-cross.svg",
+      icon: "text-cross",
       method: "inline",
     },
   ];
 
-  const onBtnColorClick = (e, type, item) => {
-    if (type === 0) {
-      applyStyle(e, item.option.style.color, item.method);
-    } else {
-      applyStyle(e, item.option.style.background, item.method);
-    }
+  const onBtnColorClick = (e, item) => {
+    const lastStyle = editorState.getCurrentInlineStyle().find((style) => {
+      if (!!style) return style.includes("COLOR_");
+    });
+
+    let newEditorState = editorState;
+    if (lastStyle && lastStyle !== item.option.style.color)
+      newEditorState = applyStyle(e, lastStyle, item.method);
+
+    applyStyle(e, item.option.style.color, item.method, newEditorState);
+
     setColorSelected(item.value);
   };
 
+  const onBtnBackgroundClick = (e, item) => {
+    const lastStyle = editorState.getCurrentInlineStyle().find((style) => {
+      if (!!style) return style.includes("BACKGROUND_");
+    });
+
+    let newEditorState = editorState;
+    if (lastStyle && lastStyle !== item.option.style.background)
+      newEditorState = applyStyle(e, lastStyle, item.method);
+
+    applyStyle(e, item.option.style.background, item.method, newEditorState);
+
+    setColorSelected(item.value);
+  };
   const onBtnLinkClick = (e) => {
     setShowLinkConfirm(!showLinkConfirm);
   };
 
-  const applyStyle = (e, style, method) => {
+  const applyStyle = (e, style, method, _editorState = editorState) => {
     if (!!e) e.preventDefault();
-    method === "block"
-      ? setEditorState(RichUtils.toggleBlockType(editorState, style))
-      : setEditorState(RichUtils.toggleInlineStyle(editorState, style));
+    if (method === "block") {
+      const newEditorState = RichUtils.toggleBlockType(_editorState, style);
+      setEditorState(newEditorState);
+      return newEditorState;
+    } else {
+      const newEditorState = RichUtils.toggleInlineStyle(_editorState, style);
+      setEditorState(newEditorState);
+      return newEditorState;
+    }
   };
 
   const isActive = (style, method) => {
@@ -278,12 +303,12 @@ const Toolbar = ({ editorState, setEditorState, onTransitionNodeListener }) => {
 
   return (
     <div className="absolute bottom-0 pb-3 z-50 ignore">
-      <div className="rounded-lg shadow-md flex flex-row items-center h-11 border border-slate-200 bg-white">
+      <div className="rounded-lg shadow-md flex flex-row items-center h-11 border border-gray-2 bg-white">
         <AppDropDownMenu
-          className="px-3"
+          className="px-3 hover:bg-gray-2 app-base-transform h-full"
           onItemClick={onBtnHeadingItemClick}
           activator={
-            <div className="w-full">
+            <div className="w-20 flex">
               {Object.keys(headingItems).map((item) => (
                 <span
                   key={headingItems[item].value}
@@ -293,7 +318,7 @@ const Toolbar = ({ editorState, setEditorState, onTransitionNodeListener }) => {
                       headingItems[item].method
                     )
                       ? ""
-                      : "hidden") + " text-sm w-14 text-right"
+                      : "hidden") + " text-sm"
                   }
                 >
                   {headingItems[item].title}
@@ -303,9 +328,9 @@ const Toolbar = ({ editorState, setEditorState, onTransitionNodeListener }) => {
           }
           items={headingItems}
         />
-        <div className="border-x border-slate-200 h-full flex items-center">
+        <div className="border-x border-gray-2 h-full flex items-center">
           <AppDropDownMenu
-            className="px-3"
+            className="px-3 hover:bg-gray-2 app-base-transform h-full"
             activator={
               <div
                 className={
@@ -319,18 +344,19 @@ const Toolbar = ({ editorState, setEditorState, onTransitionNodeListener }) => {
                 <div className="grid grid-cols-5 gap-1">
                   {Object.keys(colorItems).map((item, i) => (
                     <button
+                      title={colorItems[item].title}
                       key={colorItems[item].value}
-                      onClick={(e) => onBtnColorClick(e, 0, colorItems[item])}
+                      onClick={(e) => onBtnColorClick(e, colorItems[item])}
                       className={
                         (!!isActive(
                           colorItems[item].option.style.color,
                           item.method
                         )
-                          ? "ring ring-slate-200"
+                          ? "ring ring-gray-2"
                           : "") +
                         " " +
                         colorItems[item].option.class.color +
-                        " w-6 h-6 rounded border border-slate-200 text-sm app-base-transform hover:bg-slate-200"
+                        " size-6 rounded border border-gray-2 text-sm app-base-transform hover:bg-gray-2"
                       }
                     >
                       A
@@ -341,20 +367,21 @@ const Toolbar = ({ editorState, setEditorState, onTransitionNodeListener }) => {
                 <div className="grid grid-cols-5 gap-1">
                   {Object.keys(colorItems).map((item, i) => (
                     <button
+                      title={colorItems[item].title}
                       key={colorItems[item].value}
-                      onClick={(e) => onBtnColorClick(e, 1, colorItems[item])}
+                      onClick={(e) => onBtnBackgroundClick(e, colorItems[item])}
                       className={
                         (!!isActive(
                           colorItems[item].option.style.background,
                           item.method
                         )
-                          ? "ring ring-slate-200"
+                          ? "ring ring-gray-2"
                           : "") +
                         " " +
                         colorItems[item].option.class.color +
                         " " +
                         colorItems[item].option.class.background +
-                        " w-6 h-6 rounded border border-slate-200 text-sm app-base-transform hover:bg-slate-200 bg-opacity-10"
+                        " size-6 rounded border border-gray-2 text-sm app-base-transform hover:bg-gray-2"
                       }
                     >
                       A
@@ -371,61 +398,29 @@ const Toolbar = ({ editorState, setEditorState, onTransitionNodeListener }) => {
               key={item.style}
               onClick={(e) => applyStyle(e, item.style, item.method)}
               className={
-                "px-1.5 h-full " +
-                (!!isActive(item.style, item.method) ? "bg-slate-100" : "")
+                "px-1.5 h-full hover:bg-gray-2 app-base-transform " +
+                (!!isActive(item.style, item.method) ? "bg-gray-2" : "")
               }
             >
-              <img src={item.icon} className="w-5 h-5" />
+              <AppIcon name={item.icon} className="size-5" />
             </button>
           ))}
           <button
-            className="px-1.5 flex-none"
+            className="px-1.5 flex-none hover:bg-gray-2 app-base-transform h-full"
             onClick={() => onTransitionNodeListener(TYPE_NODE_QUOTE)}
           >
-            <img src="/editor/quote-up.svg" className="w-5 h-5" />
+            <AppIcon name="quote-up" className="size-5" />
           </button>
         </div>
         <button
           onClick={onBtnLinkClick}
-          className="flex flex-row gap-x-1 px-3 items-center border-x border-slate-200"
+          className="flex flex-row gap-x-1 px-3 items-center border-x border-gray-2 hover:bg-gray-2 app-base-transform h-full"
         >
           <span className="text-sm">لینک</span>
-          <svg
-            width="20"
-            height="20"
-            viewBox="0 0 20 20"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              d="M7.5 5.625C7.15482 5.625 6.875 5.34518 6.875 5C6.875 4.65482 7.15482 4.375 7.5 4.375H15C15.3452 4.375 15.625 4.65482 15.625 5V12.5C15.625 12.8452 15.3452 13.125 15 13.125C14.6548 13.125 14.375 12.8452 14.375 12.5V6.50888L5.44194 15.4419C5.19786 15.686 4.80214 15.686 4.55806 15.4419C4.31398 15.1979 4.31398 14.8021 4.55806 14.5581L13.4911 5.625H7.5Z"
-              fill="#ACACAC"
-            />
-          </svg>
+          <AppIcon name="arrow-right-up" className="size-5 opacity-50" />
         </button>
-        <button className="px-3">
-          <svg
-            width="20"
-            height="20"
-            viewBox="0 0 20 20"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <g opacity="0.5">
-              <path
-                d="M4.16663 8.75C3.47913 8.75 2.91663 9.3125 2.91663 10C2.91663 10.6875 3.47913 11.25 4.16663 11.25C4.85413 11.25 5.41663 10.6875 5.41663 10C5.41663 9.3125 4.85413 8.75 4.16663 8.75Z"
-                fill="#ACACAC"
-              />
-              <path
-                d="M15.8333 8.75C15.1458 8.75 14.5833 9.3125 14.5833 10C14.5833 10.6875 15.1458 11.25 15.8333 11.25C16.5208 11.25 17.0833 10.6875 17.0833 10C17.0833 9.3125 16.5208 8.75 15.8333 8.75Z"
-                fill="#ACACAC"
-              />
-              <path
-                d="M9.99996 8.75C9.31246 8.75 8.74996 9.3125 8.74996 10C8.74996 10.6875 9.31246 11.25 9.99996 11.25C10.6875 11.25 11.25 10.6875 11.25 10C11.25 9.3125 10.6875 8.75 9.99996 8.75Z"
-                fill="#ACACAC"
-              />
-            </g>
-          </svg>
+        <button className="px-3 hover:bg-gray-2 app-base-transform h-full">
+          <AppIcon name="more" className="size-5 opacity-50" />
         </button>
       </div>
       {showLinkConfirm ? <LinkConfirm onSetLink={onSetLink} /> : null}

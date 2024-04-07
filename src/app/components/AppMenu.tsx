@@ -1,6 +1,6 @@
 "use client";
 
-import { Children, ReactNode, useRef, useState } from "react";
+import { Children, ReactNode, useEffect, useRef, useState } from "react";
 import { cloneElement } from "react";
 import useOutsideClick from "@/app/lib/OutsideClick";
 import { createPortal } from "react-dom";
@@ -26,11 +26,15 @@ const AppMenu = (props: Props) => {
   const ref = useOutsideClick<HTMLDivElement>(onClickOutsideClick);
   const refRoot = useRef<HTMLDivElement>(null);
 
+  useEffect(() => {
+    if (postion.x + postion.y === 0) load();
+  });
+
   const onActivatorClick = () => {
     setOpen(!open);
   };
 
-  const onLoad = () => {
+  const load = () => {
     if (refRoot.current && ref.current) {
       setPostion({
         x:
@@ -60,8 +64,7 @@ const AppMenu = (props: Props) => {
                 top: postion.y,
                 left: postion.x,
               }}
-              onLoad={onLoad}
-              className="absolute bg-white p-4 border border-slate-200 rounded-2xl shadow-xl2 z-50"
+              className="absolute bg-white p-2 border border-slate-200 rounded-lg shadow-xl2 z-50"
             >
               {cloneElement(childMenu, {
                 onClick: () => {
