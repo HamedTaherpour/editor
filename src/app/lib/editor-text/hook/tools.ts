@@ -1,6 +1,6 @@
-import exp from "constants";
+// @ts-ignore
 import { EditorState, RichUtils, ContentBlock } from "draft-js";
-import { Node } from "../../editor/type";
+import { Node } from "@/app/lib/editor/type";
 
 // FOR INLINE STYLES
 export const customStyleMap = {
