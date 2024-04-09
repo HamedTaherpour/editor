@@ -1,4 +1,6 @@
 import React, { useEffect, useRef, useState, useContext } from "react";
+import { createPortal } from "react-dom";
+
 import {
   Editor,
   EditorState,
@@ -7,8 +9,25 @@ import {
   convertFromRaw,
   getDefaultKeyBinding,
 } from "draft-js";
+import {
+  getValue,
+  getLineNumberSelected,
+  getLineKeySelected,
+  getLineSize,
+  getPositionOfLine,
+  getValueOfLine,
+  customStyleMap,
+  blockStyleFn,
+  editLink,
+  getBlockPositionDOM,
+  setLink,
+} from "@/app/lib/editor-text/hook/tools";
+
 import Toolbar from "@/app/components/TextEditor/Toolbar";
 import { editorDecorator } from "@/app/components/TextEditor/index";
+import ToolsMenuNodeEditor from "@/app/components/editor/ToolsMenuNodeEditor";
+import LinkEditConfirm from "@/app/components/TextEditor/component/LinkEditConfirm";
+import LinkConfirm from "@/app/components/TextEditor/component/LinkConfirm";
 import "draft-js/dist/Draft.css";
 import { TYPE_NODE_QUOTE, TYPE_NODE_TEXT } from "@/app/lib/editor/type";
 import { EditorContext } from "@/app/lib/editor/hook/context";
@@ -28,10 +47,34 @@ const DraftEditor = ({ onChangeText, onChange, placeholder, node, index }) => {
   }
   const [editorState, setEditorState] = useState(initEditorState);
   const [showToolbar, setShowToolbar] = useState(false);
+  const [showMenu, setShowMenu] = useState(false);
+
+  const [postionLink, setPostionLink] = useState({ x: 0, y: 0 });
+  const [showEditLinkConfirm, setShowEditLinkConfirm] = useState(false);
+  const [linkEdit, setLinkEdit] = useState("");
+  const [showLinkConfirm, setShowLinkConfirm] = useState(false);
+  const [entityKeyEdit, setEntityKeyEdit] = useState();
+  const [offseKeyEdit, setOffseKeyEdit] = useState();
+
+  const [postionMenu, setPostionMenu] = useState({ x: 0, y: 0 });
   const editor = useRef(null);
   const ref = useOutsideClick(() => {
     setShowToolbar(false);
   });
+  const refMenu = useOutsideClick(() => {
+    setShowMenu(false);
+  });
+  const refConfirm = useOutsideClick((e) => {
+    if (!e.target.closest(".node-" + node.id)) {
+      setShowLinkConfirm(false);
+    }
+  });
+  const refEditConfirm = useOutsideClick((e) => {
+    if (!e.target.closest(".node-" + node.id)) {
+      setShowEditLinkConfirm(false);
+    }
+  });
+  const menuEl = document.getElementById("menu");
 
   if (node.baseTag !== "p" && !!!node.text && !!!node.text.blocks) {
     const keys = {
@@ -40,10 +83,9 @@ const DraftEditor = ({ onChangeText, onChange, placeholder, node, index }) => {
       h3: "header-three",
     };
     const style = keys[node.baseTag];
-    const selection = editorState.getSelection();
     const blockType = editorState
       .getCurrentContent()
-      .getBlockForKey(selection.getStartKey())
+      .getBlockForKey(editorState.getSelection().getStartKey())
       .getType();
     if (blockType !== style) {
       setEditorState(RichUtils.toggleBlockType(editorState, style));
@@ -52,7 +94,15 @@ const DraftEditor = ({ onChangeText, onChange, placeholder, node, index }) => {
 
   useEffect(() => {
     focusEditor();
-  }, []);
+
+    if (showEditLinkConfirm && refEditConfirm.current) {
+      const positionblock = getBlockPositionDOM(offseKeyEdit);
+      setPostionLink({
+        x: positionblock.x - refEditConfirm.current.clientWidth,
+        y: positionblock.y,
+      });
+    }
+  }, [showEditLinkConfirm]);
 
   const focusEditor = () => {
     editor.current.focus();
@@ -60,9 +110,10 @@ const DraftEditor = ({ onChangeText, onChange, placeholder, node, index }) => {
   node.focus = focusEditor;
 
   function myKeyBindingFn(event) {
+    setShowMenu(false);
     if (event.key === "ArrowUp" || event.key === "ArrowDown") {
-      const lineNumber = getLineNumberSelected();
-      const linesize = getLineSize();
+      const lineNumber = getLineNumberSelected(editorState);
+      const linesize = getLineSize(editorState);
       if (event.key === "ArrowUp" && lineNumber <= 1) {
         setShowToolbar(false);
         onNodeBehavior.onKeyUp(event, index);
@@ -83,11 +134,11 @@ const DraftEditor = ({ onChangeText, onChange, placeholder, node, index }) => {
         }
         lastKeypressTime = thisKeypressTime;
       } else {
-        const lineNumber = getLineNumberSelected();
-        const lineKey = getLineKeySelected();
-        const linesize = getLineSize();
-        const postionOfLine = getPositionOfLine();
-        const lineLength = getValueOfLine(lineKey).length;
+        const lineNumber = getLineNumberSelected(editorState);
+        const lineKey = getLineKeySelected(editorState);
+        const linesize = getLineSize(editorState);
+        const postionOfLine = getPositionOfLine(editorState);
+        const lineLength = getValueOfLine(editorState, lineKey).length;
         if (postionOfLine >= lineLength && lineNumber >= linesize - 1) {
           setShowToolbar(false);
           onNodeBehavior.onKeyUp(event, index);
@@ -98,49 +149,31 @@ const DraftEditor = ({ onChangeText, onChange, placeholder, node, index }) => {
       if (node.plainText.length <= 0) {
         setShowToolbar(false);
         onNodeBehavior.onKeyUp(event, index);
-        return;
       }
+    } else if (event.key === "/") {
+      openKeySlash(event);
     }
     return getDefaultKeyBinding(event);
   }
 
-  const getLineNumberSelected = () => {
-    const currentBlockKey = editorState.getSelection().getStartKey();
-    return editorState
-      .getCurrentContent()
-      .getBlockMap()
-      .keySeq()
-      .findIndex((k) => k === currentBlockKey);
-  };
-  const getLineKeySelected = () => {
-    return editorState.getSelection().getStartKey();
-  };
-  const getLineSize = () => {
-    const currentBlockKey = editorState.getSelection().getStartKey();
-    return editorState.getCurrentContent().getBlockMap().keySeq().size;
-  };
-  const getPositionOfLine = () => {
-    const selectionState = editorState.getSelection();
-    return selectionState.getStartOffset();
-  };
-  const getValueHighlight = () => {
-    let selectionState = editorState.getSelection();
-    let anchorKey = selectionState.getAnchorKey();
-    let currentContent = editorState.getCurrentContent();
-    let currentContentBlock = currentContent.getBlockForKey(anchorKey);
-    let start = selectionState.getStartOffset();
-    let end = selectionState.getEndOffset();
-    let selectedText = currentContentBlock.getText().slice(start, end);
-    return selectedText;
-  };
-  const getValueOfLine = (lineKey) => {
-    let currentContent = editorState.getCurrentContent();
-    let currentContentBlock = currentContent.getBlockForKey(lineKey);
-    return currentContentBlock.getText();
-  };
-  const getValue = (contentState) => {
-    contentState = contentState || editorState.getCurrentContent();
-    return contentState.getPlainText("\u0001");
+  const openKeySlash = (e) => {
+    setShowMenu(true);
+    let x = 0;
+    let y = 0;
+
+    let el = window.getSelection().focusNode.parentNode;
+    const elHeight = el.offsetHeight;
+    while (el && !isNaN(el.offsetLeft) && !isNaN(el.offsetTop)) {
+      x += el.offsetLeft - el.scrollLeft;
+      y += el.offsetTop - el.scrollTop;
+      el = el.offsetParent;
+    }
+    x = x - 256;
+
+    setPostionMenu({
+      x: x,
+      y: y + elHeight,
+    });
   };
 
   const handleKeyCommand = (command) => {
@@ -152,90 +185,12 @@ const DraftEditor = ({ onChangeText, onChange, placeholder, node, index }) => {
     return false;
   };
 
-  // FOR INLINE STYLES
-  const styleMap = {
-    COLOR_YELLOW: {
-      color: "rgba(203, 145, 47, 1)",
-    },
-    COLOR_ORAMGE: {
-      color: "rgba(217, 115, 13, 1)",
-    },
-    COLOR_BROWN: {
-      color: "rgba(159, 107, 83, 1)",
-    },
-    COLOR_GRAY: {
-      color: "rgba(120, 119, 116, 1)",
-    },
-    COLOR_DARK: {
-      color: "rgba(36, 36, 36, 1)",
-    },
-    COLOR_RED: {
-      color: "rgba(212, 76, 71, 1)",
-    },
-    COLOR_PINK: {
-      color: "rgba(193, 76, 138, 1)",
-    },
-    COLOR_PURPLE: {
-      color: "rgba(144, 101, 176, 1)",
-    },
-    COLOR_BLUE: {
-      color: "rgba(54, 128, 170, 1)",
-    },
-    COLOR_GREEN: {
-      color: "rgba(68, 131, 97, 1)",
-    },
-    BACKGROUND_YELLOW: {
-      background: "rgba(251, 246, 238, 1)",
-    },
-    BACKGROUND_ORAMGE: {
-      background: "rgba(254, 245, 236, 1)",
-    },
-    BACKGROUND_BROWN: {
-      background: "rgba(248, 244, 242, 1)",
-    },
-    BACKGROUND_GRAY: {
-      background: "rgba(245, 245, 245, 1)",
-    },
-    BACKGROUND_DARK: {
-      background: "rgba(255, 255, 255, 1)",
-    },
-    BACKGROUND_RED: {
-      background: "rgba(251, 239, 238, 1)",
-    },
-    BACKGROUND_PINK: {
-      background: "rgba(250, 240, 245, 1)",
-    },
-    BACKGROUND_PURPLE: {
-      background: "rgba(245, 242, 248, 1)",
-    },
-    BACKGROUND_BLUE: {
-      background: "rgba(239, 246, 250, 1)",
-    },
-    BACKGROUND_GREEN: {
-      background: "rgba(242, 248, 245, 1)",
-    },
-  };
-
-  // FOR BLOCK LEVEL STYLES(Returns CSS Class From DraftEditor.css)
-  const myBlockStyleFn = (contentBlock) => {
-    const type = contentBlock.getType();
-    switch (type) {
-      case "header-one":
-        return "te-header-one";
-      case "header-two":
-        return "te-header-two";
-      case "header-three":
-        return "te-header-three";
-      case "unstyled":
-        return "te-unstyled";
-      default:
-        break;
-    }
-  };
-
-  const myOnTransitionNodeListener = (typeTransition) => {
+  const myOnTransitionNodeListener = () => {
     setShowToolbar(false);
-    onNodeBehavior.onTransition(typeTransition, index);
+    onNodeBehavior.onTransition(
+      node.type === TYPE_NODE_TEXT ? TYPE_NODE_QUOTE : TYPE_NODE_TEXT,
+      index
+    );
   };
 
   const onMouseUp = (e) => {
@@ -246,34 +201,99 @@ const DraftEditor = ({ onChangeText, onChange, placeholder, node, index }) => {
     }
   };
 
+  const onBtnShowLinkConfirmClick = () => {
+    setShowLinkConfirm(!showLinkConfirm);
+  };
+
+  const onBtnSetLinkClick = (link) => {
+    setEditorState(setLink(editorState, link, onLinkActionClick));
+    setShowLinkConfirm(false);
+  };
+
+  const onBtnSetEditLinkClick = (link) => {
+    setEditorState(
+      editLink(editorState, entityKeyEdit, link, onLinkActionClick)
+    );
+    setShowEditLinkConfirm(false);
+  };
+
+  const onLinkActionClick = (url, entityKey, offsetKey) => {
+    setEntityKeyEdit(entityKey);
+    setOffseKeyEdit(offsetKey);
+    setLinkEdit(url);
+    setShowEditLinkConfirm(true);
+  };
+
   return (
     <div
       ref={ref}
       className={"node-" + node.id + " w-full"}
       onMouseUp={onMouseUp}
     >
+      {showMenu
+        ? createPortal(
+            <div
+              ref={refMenu}
+              style={{
+                top: postionMenu.y,
+                left: postionMenu.x,
+              }}
+              className="absolute z-50 bg-white p-2 border border-slate-200 rounded-lg shadow-xl2"
+            >
+              <ToolsMenuNodeEditor
+                index={index}
+                onActionClick={() => setShowMenu(false)}
+              />
+            </div>,
+            menuEl
+          )
+        : null}
       <div className="relative">
         {showToolbar ? (
           <Toolbar
             editorState={editorState}
             setEditorState={setEditorState}
+            onBtnShowLinkConfirmClick={onBtnShowLinkConfirmClick}
             onTransitionNodeListener={myOnTransitionNodeListener}
           />
         ) : null}
+        {showLinkConfirm ? (
+          <div ref={refConfirm} className="absolute z-50">
+            <LinkConfirm onBtnSetLinkClick={onBtnSetLinkClick} />
+          </div>
+        ) : null}
+        {showEditLinkConfirm
+          ? createPortal(
+              <div
+                ref={refEditConfirm}
+                className="absolute z-50"
+                style={{
+                  top: postionLink.y,
+                  left: postionLink.x,
+                }}
+              >
+                <LinkEditConfirm
+                  onBtnSetEditLinkClick={onBtnSetEditLinkClick}
+                  linkEdit={linkEdit}
+                />
+              </div>,
+              menuEl
+            )
+          : null}
       </div>
       <Editor
         ref={editor}
         placeholder={placeholder}
         handleKeyCommand={handleKeyCommand}
         editorState={editorState}
-        customStyleMap={styleMap}
+        customStyleMap={customStyleMap}
         textDirectionality="RTL"
-        blockStyleFn={myBlockStyleFn}
+        blockStyleFn={blockStyleFn}
         keyBindingFn={myKeyBindingFn}
         onChange={(editorState) => {
           const contentState = editorState.getCurrentContent();
           onChange(convertToRaw(contentState));
-          onChangeText(getValue(contentState));
+          onChangeText(getValue(editorState));
           setEditorState(editorState);
         }}
       />

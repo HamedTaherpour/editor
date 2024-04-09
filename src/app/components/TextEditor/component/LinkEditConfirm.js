@@ -1,7 +1,7 @@
 import { useState } from "react";
 
-const LinkConfirm = ({ onBtnSetLinkClick }) => {
-  const [link, setLink] = useState("");
+const LinkEditConfirm = ({ onBtnSetEditLinkClick, linkEdit }) => {
+  const [link, setLink] = useState(linkEdit);
 
   return (
     <div className="flex flex-row p-3 rounded-xl border border-gray-2 bg-white w-80 shadow-md gap-x-1.5">
@@ -9,7 +9,7 @@ const LinkConfirm = ({ onBtnSetLinkClick }) => {
         <button
           className="w-9 h-9 rounded bg-gray-2 p-1.5"
           onClick={() => {
-            onBtnSetLinkClick(link);
+            onBtnSetEditLinkClick(link);
           }}
         >
           <svg
@@ -28,6 +28,7 @@ const LinkConfirm = ({ onBtnSetLinkClick }) => {
       ) : null}
 
       <input
+        value={link}
         placeholder="لینک را اینجا بنویسید."
         onChange={(e) => setLink(e.target.value)}
         className="placeholder:text-gray-5 text-sm px-3 py-1 rounded-lg border border-gray-2 w-full outline-none"
@@ -36,4 +37,4 @@ const LinkConfirm = ({ onBtnSetLinkClick }) => {
   );
 };
 
-export default LinkConfirm;
+export default LinkEditConfirm;

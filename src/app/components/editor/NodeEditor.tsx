@@ -3,6 +3,7 @@ import NodeEditorVoice from "@/app/components/editor/NodeEditorVoice";
 import NodeEditorImage from "@/app/components/editor/NodeEditorImage";
 import NodeEditorQuote from "@/app/components/editor/NodeEditorQuote";
 import NodeEditorDivider from "@/app/components/editor/NodeEditorDivider";
+import ToolsMenuNodeEditor from "@/app/components/editor/ToolsMenuNodeEditor";
 import AppMenu from "@/app/components/AppMenu";
 import AppIcon from "@/app/components/AppIcon";
 
@@ -23,11 +24,10 @@ import {
 interface Props {
   index: number;
   node: Node;
-  menuList: Array<any>;
 }
 
 const NodeEditor = (props: Props) => {
-  const { index, node, menuList } = props;
+  const { index, node } = props;
 
   return (
     <div
@@ -41,25 +41,7 @@ const NodeEditor = (props: Props) => {
               <AppIcon name="add" className="size-6 fill-gray-5 " />
             </button>
           }
-          menu={
-            <div className="flex flex-col gap-y-2 w-72 h-96 overflow-auto">
-              {menuList.map((item) => (
-                <div
-                  key={item.title}
-                  onClick={() => item.action(index)}
-                  className="flex flex-row cursor-pointer p-1 w-full"
-                >
-                  <div className="grid place-items-center bg-slate-50 rounded-lg border p-2 flex-none ">
-                    <AppIcon name={item.icon} className="size-6" />
-                  </div>
-                  <div className="flex flex-col mr-3">
-                    <span className="text-xs font-bold">{item.title}</span>
-                    <p className="text-xs text-gray-600">{item.description}</p>
-                  </div>
-                </div>
-              ))}
-            </div>
-          }
+          menu={<ToolsMenuNodeEditor index={index} />}
         />
 
         <button className="size-6">

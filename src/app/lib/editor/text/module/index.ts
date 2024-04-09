@@ -21,13 +21,6 @@ class NodeEditorTextModule {
   update(node: NodeText) {
     this.nodeEditor.updateNode(node);
   }
-  transition(typeTransition: number, node: NodeText) {
-    switch (typeTransition) {
-      case TYPE_NODE_QUOTE:
-        this.transitionToQuote(node);
-        break;
-    }
-  }
   transitionToQuote(node: NodeText) {
     const newNode = new NodeQuote(node.text);
     newNode.id = node.id;

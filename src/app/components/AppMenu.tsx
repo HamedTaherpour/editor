@@ -36,6 +36,7 @@ const AppMenu = (props: Props) => {
 
   const load = () => {
     if (refRoot.current && ref.current) {
+      refRoot.current.offsetLeft;
       setPostion({
         x:
           refRoot.current.getBoundingClientRect().left -
@@ -64,13 +65,10 @@ const AppMenu = (props: Props) => {
                 top: postion.y,
                 left: postion.x,
               }}
+              onClick={() => setOpen(false)}
               className="absolute bg-white p-2 border border-slate-200 rounded-lg shadow-xl2 z-50"
             >
-              {cloneElement(childMenu, {
-                onClick: () => {
-                  setOpen(false);
-                },
-              })}
+              {cloneElement(childMenu, {})}
             </div>,
             menuEl
           )

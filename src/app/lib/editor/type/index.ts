@@ -80,6 +80,7 @@ export interface OnJsonEditorUpdateListener {
 }
 
 export interface OnNodeBehavior {
+  toolsMenu: Array<any>;
   onDelete(node: Node): void;
   onUpdate(node: Node): void;
   onKeyUp(e: KeyboardEvent<HTMLElement>, index: number): void;

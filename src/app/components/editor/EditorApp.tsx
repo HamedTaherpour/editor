@@ -54,6 +54,105 @@ const EditorApp = () => {
   });
 
   const onNodeBehavior: OnNodeBehavior = {
+    toolsMenu: [
+      {
+        title: "متن",
+        description: "محتوای متنی به عنوان یک درس",
+        icon: "textalign",
+        action: (index: number) => {
+          onBtnAddNodeClick({ type: TYPE_NODE_TEXT, index });
+        },
+      },
+      {
+        title: "عنوان 1",
+        description: "سایز بزرگ برای نوشتن عنوان",
+        icon: "smallcaps",
+        action: (index: number) => {
+          const node = new NodeText();
+          node.baseTag = "h1";
+          onBtnAddNodeClick({ type: TYPE_NODE_TEXT, node, index });
+        },
+      },
+      {
+        title: "عنوان 2",
+        description: "سایز متوسط برای نوشتن عنوان",
+        icon: "smallcaps",
+        action: (index: number) => {
+          const node = new NodeText();
+          node.baseTag = "h2";
+          onBtnAddNodeClick({ type: TYPE_NODE_TEXT, node, index });
+        },
+      },
+      {
+        title: "عنوان 3",
+        description: "سایز کوچک برای نوشتن عنوان",
+        icon: "smallcaps",
+        action: (index: number) => {
+          const node = new NodeText();
+          node.baseTag = "h3";
+          onBtnAddNodeClick({ type: TYPE_NODE_TEXT, node, index });
+        },
+      },
+      {
+        title: "نقل‌قول",
+        description: "برای نوشتن نقل‌قول استفاده کنید.",
+        icon: "quote-up",
+        action: (index: number) => {
+          onBtnAddNodeClick({ type: TYPE_NODE_QUOTE, index });
+        },
+      },
+      {
+        title: "لینک",
+        description: "صوت یا ویس خود را بارگزاری کنید.",
+        icon: "link",
+        action: (index: number) => {
+          onBtnAddNodeClick({ type: TYPE_NODE_TEXT, index });
+        },
+      },
+      {
+        title: "تصویر",
+        description: "تصویر خود را بارگزاری کنید.",
+        icon: "gallery",
+        action: (index: number) => {
+          onBtnAddNodeClick({ type: TYPE_NODE_IMAGE, index });
+        },
+      },
+      {
+        title: "ویدیو",
+        description: "ویدیو خود را بارگزاری کنید.",
+        icon: "play-circle",
+        action: (index: number) => {
+          // onBtnAddNodeClick(TYPE_NODE_TEXT, index);
+        },
+      },
+      {
+        title: "فایل یا پوشه",
+        description: "فایل خود را بارگزاری کنید.",
+        icon: "document",
+        action: (index: number) => {
+          // onBtnAddNodeClick(TYPE_NODE_TEXT, index);
+        },
+      },
+      {
+        title: "صوتی",
+        description: "صوت یا ویس خود را بارگزاری کنید.",
+        icon: "volume",
+        action: (index: number) => {
+          // onBtnAddNodeClick(TYPE_NODE_TEXT, index);
+        },
+      },
+      {
+        title: "جداکننده",
+        description: "جداکننده بخش‌های مختلف",
+        icon: "divider",
+        action: (index: number) => {
+          onBtnAddNodeClick({
+            type: TYPE_NODE_DIVIDER,
+            index,
+          });
+        },
+      },
+    ],
     onDelete(node) {
       switch (node.type) {
         case TYPE_NODE_TEXT:
@@ -90,12 +189,12 @@ const EditorApp = () => {
           if (
             node.text &&
             node.text.blocks &&
-            node.text.blocks[0].text.length <= 0
+            node.text.blocks[0].text.length <= 0 &&
+            index > 0
           ) {
             selectUp(index);
             this.onDelete(jsonEditor.nodes[index]);
           }
-
           break;
       }
     },
@@ -104,7 +203,12 @@ const EditorApp = () => {
       if (!!node) {
         switch (node.type) {
           case TYPE_NODE_TEXT:
-            nodeEditorTextModule.transition(typeTransition, node as NodeText);
+            if (typeTransition === TYPE_NODE_QUOTE)
+              nodeEditorTextModule.transitionToQuote(node as NodeText);
+            break;
+          case TYPE_NODE_QUOTE:
+            if (typeTransition === TYPE_NODE_TEXT)
+              nodeEditorQuoteModule.transitionToText(node as NodeQuote);
             break;
         }
       }
@@ -129,106 +233,6 @@ const EditorApp = () => {
       }
     },
   };
-
-  const menuList = [
-    {
-      title: "متن",
-      description: "محتوای متنی به عنوان یک درس",
-      icon: "textalign",
-      action: (index: number) => {
-        onBtnAddNodeClick({ type: TYPE_NODE_TEXT, index });
-      },
-    },
-    {
-      title: "عنوان 1",
-      description: "سایز بزرگ برای نوشتن عنوان",
-      icon: "smallcaps",
-      action: (index: number) => {
-        const node = new NodeText();
-        node.baseTag = "h1";
-        onBtnAddNodeClick({ type: TYPE_NODE_TEXT, node, index });
-      },
-    },
-    {
-      title: "عنوان 2",
-      description: "سایز متوسط برای نوشتن عنوان",
-      icon: "smallcaps",
-      action: (index: number) => {
-        const node = new NodeText();
-        node.baseTag = "h2";
-        onBtnAddNodeClick({ type: TYPE_NODE_TEXT, node, index });
-      },
-    },
-    {
-      title: "عنوان 3",
-      description: "سایز کوچک برای نوشتن عنوان",
-      icon: "smallcaps",
-      action: (index: number) => {
-        const node = new NodeText();
-        node.baseTag = "h3";
-        onBtnAddNodeClick({ type: TYPE_NODE_TEXT, node, index });
-      },
-    },
-    {
-      title: "نقل‌قول",
-      description: "برای نوشتن نقل‌قول استفاده کنید.",
-      icon: "quote-up",
-      action: (index: number) => {
-        onBtnAddNodeClick({ type: TYPE_NODE_QUOTE, index });
-      },
-    },
-    {
-      title: "لینک",
-      description: "صوت یا ویس خود را بارگزاری کنید.",
-      icon: "link",
-      action: (index: number) => {
-        onBtnAddNodeClick({ type: TYPE_NODE_TEXT, index });
-      },
-    },
-    {
-      title: "تصویر",
-      description: "تصویر خود را بارگزاری کنید.",
-      icon: "gallery",
-      action: (index: number) => {
-        onBtnAddNodeClick({ type: TYPE_NODE_IMAGE, index });
-      },
-    },
-    {
-      title: "ویدیو",
-      description: "ویدیو خود را بارگزاری کنید.",
-      icon: "play-circle",
-      action: (index: number) => {
-        // onBtnAddNodeClick(TYPE_NODE_TEXT, index);
-      },
-    },
-    {
-      title: "فایل یا پوشه",
-      description: "فایل خود را بارگزاری کنید.",
-      icon: "document",
-      action: (index: number) => {
-        // onBtnAddNodeClick(TYPE_NODE_TEXT, index);
-      },
-    },
-    {
-      title: "صوتی",
-      description: "صوت یا ویس خود را بارگزاری کنید.",
-      icon: "volume",
-      action: (index: number) => {
-        // onBtnAddNodeClick(TYPE_NODE_TEXT, index);
-      },
-    },
-    {
-      title: "جداکننده",
-      description: "جداکننده بخش‌های مختلف",
-      icon: "divider",
-      action: (index: number) => {
-        onBtnAddNodeClick({
-          type: TYPE_NODE_DIVIDER,
-          index,
-        });
-      },
-    },
-  ];
 
   editor.setOnJsonEditorUpdateListener({
     onUpdate: (_jsonEditor) => {
@@ -279,12 +283,7 @@ const EditorApp = () => {
         <EditorContext.Provider value={onNodeBehavior}>
           <div className="flex flex-col">
             {jsonEditor.nodes.map((item, i) => (
-              <NodeEditor
-                key={item.id}
-                index={i}
-                node={item}
-                menuList={menuList}
-              />
+              <NodeEditor key={item.id} index={i} node={item} />
             ))}
           </div>
         </EditorContext.Provider>
