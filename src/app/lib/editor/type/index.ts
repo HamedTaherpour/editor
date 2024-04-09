@@ -39,6 +39,7 @@ export class NodeText extends Node {
 export class NodeQuote extends Node {
   text: any;
   plainText: string;
+  baseTag: string = "p";
 
   constructor(text: any = "", plainText: string = "") {
     super(TYPE_NODE_QUOTE);

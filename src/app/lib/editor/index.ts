@@ -1,8 +1,4 @@
-import {
-  JsonEditor,
-  Node,
-  OnJsonEditorUpdateListener,
-} from "@/app/lib/editor/type";
+import { JsonEditor, Node, OnJsonEditorUpdateListener } from "@/app/lib/editor/type";
 
 class Editor {
   jsonEditor: JsonEditor;
@@ -12,9 +8,7 @@ class Editor {
     this.jsonEditor = jsonEditor;
   }
 
-  setOnJsonEditorUpdateListener(
-    onJsonEditorUpdateListener: OnJsonEditorUpdateListener
-  ) {
+  setOnJsonEditorUpdateListener(onJsonEditorUpdateListener: OnJsonEditorUpdateListener) {
     this.onJsonEditorUpdateListener = onJsonEditorUpdateListener;
   }
 
@@ -28,9 +22,7 @@ class Editor {
 
   updateNode(node: Node) {
     if (!this.jsonEditor) return;
-    const index = this.jsonEditor.nodes.findIndex(
-      (item) => item.id === node.id
-    );
+    const index = this.jsonEditor.nodes.findIndex((item) => item.id === node.id);
     if (index > -1) {
       this.jsonEditor.nodes[index] = node;
       this.onJsonEditorUpdateListener?.onUpdate(this.jsonEditor);

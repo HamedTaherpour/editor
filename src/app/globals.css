@@ -48,12 +48,20 @@
   line-height: normal;
 }
 .te-unstyled,
+.te-unordered-list-item,
+.te-ordered-list-item,
 .public-DraftEditorPlaceholder-inner {
   font-size: 14px;
   font-style: normal;
   font-weight: 400;
   line-height: normal;
 }
+
+.public-DraftStyleDefault-ol,
+.public-DraftStyleDefault-ul {
+  @apply !m-0;
+}
+
 .public-DraftEditorPlaceholder-inner {
   @apply opacity-0 app-base-transform;
 }

@@ -1,5 +1,7 @@
 // @ts-ignore
-import { EditorState, RichUtils, ContentBlock } from "draft-js";
+import { EditorState, RichUtils, ContentBlock, convertFromRaw, CompositeDecorator } from "draft-js";
+import { NodeQuote, NodeText } from "@/app/lib/editor/type";
+import Link from "@/app/components/TextEditor/component/Link";
 
 // FOR INLINE STYLES
 export const customStyleMap = {
@@ -77,6 +79,10 @@ export const blockStyleFn = (contentBlock: ContentBlock) => {
       return "te-header-three";
     case "unstyled":
       return "te-unstyled";
+    case "unordered-list-item":
+      return "te-unordered-list-item";
+    case "ordered-list-item":
+      return "te-ordered-list-item";
     default:
       break;
   }
@@ -289,6 +295,48 @@ export const toolsHeadingStyleItems = {
   },
 };
 
+const findLinkEntities = (contentBlock: any, callback: any, contentState: any) => {
+  contentBlock.findEntityRanges((character: any) => {
+    const entityKey = character.getEntity();
+    return entityKey !== null && contentState.getEntity(entityKey).getType() === "LINK";
+  }, callback);
+};
+
+export const editorDecorator = new CompositeDecorator([
+  {
+    strategy: findLinkEntities,
+    component: Link,
+  },
+]);
+
+export const getFirstInitEditorState = (node: NodeText | NodeQuote): EditorState => {
+  let editorState = EditorState.createEmpty(editorDecorator);
+
+  if (!!node.text && !!node.text.blocks) {
+    const content = convertFromRaw(node.text);
+    editorState = EditorState.createWithContent(content, editorDecorator);
+    editorState = EditorState.moveSelectionToEnd(editorState);
+  }
+  return editorState;
+};
+
+export const setBaseTag = (editorState: EditorState, node: NodeText | NodeQuote): EditorState => {
+  if (node.baseTag !== "p" && !!!node.text && !!!node.text.blocks) {
+    const keys: { [key: string]: string } = {
+      h1: "header-one",
+      h2: "header-two",
+      h3: "header-three",
+      "ul-disc": "unordered-list-item",
+      "ul-decimal": "ordered-list-item",
+    };
+    const style = keys[node.baseTag];
+    const blockType = editorState.getCurrentContent().getBlockForKey(editorState.getSelection().getStartKey()).getType();
+    if (blockType !== style) {
+      return setStyle(editorState, style, "block");
+    }
+  }
+};
+
 export const getLineNumberSelected = (editorState: EditorState) => {
   const currentBlockKey = getLineKeySelected(editorState);
   return editorState
@@ -332,11 +380,7 @@ export const getValue = (editorState: EditorState) => {
   return editorState.getCurrentContent().getPlainText("\u0001");
 };
 
-export const setStyle = (
-  editorState: EditorState,
-  style: any,
-  method: string
-): EditorState => {
+export const setStyle = (editorState: EditorState, style: any, method: string): EditorState => {
   if (method === "block") {
     return RichUtils.toggleBlockType(editorState, style);
   } else {
@@ -344,9 +388,7 @@ export const setStyle = (
   }
 };
 
-export const getLastStyleBackgroundColor = (
-  editorState: EditorState
-): boolean => {
+export const getLastStyleBackgroundColor = (editorState: EditorState): boolean => {
   return editorState.getCurrentInlineStyle().find((style: any) => {
     if (!!style) return style.includes("BACKGROUND_");
   });
@@ -358,17 +400,10 @@ export const getLastStyleFontColor = (editorState: EditorState): boolean => {
   });
 };
 
-export const isStyleActive = (
-  editorState: EditorState,
-  style: any,
-  method: string
-): boolean => {
+export const isStyleActive = (editorState: EditorState, style: any, method: string): boolean => {
   if (method === "block") {
     const selection = editorState.getSelection();
-    const blockType = editorState
-      .getCurrentContent()
-      .getBlockForKey(selection.getStartKey())
-      .getType();
+    const blockType = editorState.getCurrentContent().getBlockForKey(selection.getStartKey()).getType();
     return blockType === style;
   } else {
     const currentStyle = editorState.getCurrentInlineStyle();
@@ -376,12 +411,7 @@ export const isStyleActive = (
   }
 };
 
-export const editLink = (
-  editorState: EditorState,
-  entityKey: string,
-  link: string,
-  onActionClick: Function
-): EditorState => {
+export const editLink = (editorState: EditorState, entityKey: string, link: string, onActionClick: Function): EditorState => {
   const contentState = editorState.getCurrentContent();
   const contentStateWithEntity = contentState.replaceEntityData(entityKey, {
     url: link,
@@ -392,18 +422,10 @@ export const editLink = (
     currentContent: contentStateWithEntity,
   });
 
-  return RichUtils.toggleLink(
-    newEditorState,
-    newEditorState.getSelection(),
-    entityKey
-  );
+  return RichUtils.toggleLink(newEditorState, newEditorState.getSelection(), entityKey);
 };
 
-export const setLink = (
-  editorState: EditorState,
-  link: string,
-  onActionClick: Function
-): EditorState => {
+export const setLink = (editorState: EditorState, link: string, onActionClick: Function): EditorState => {
   const contentState = editorState.getCurrentContent();
   const contentStateWithEntity = contentState.createEntity("LINK", "MUTABLE", {
     url: link,
@@ -415,20 +437,14 @@ export const setLink = (
     currentContent: contentStateWithEntity,
   });
 
-  return RichUtils.toggleLink(
-    newEditorState,
-    newEditorState.getSelection(),
-    entityKey
-  );
+  return RichUtils.toggleLink(newEditorState, newEditorState.getSelection(), entityKey);
 };
 
 export const getBlockPositionDOM = (offsetKey: string) => {
   let postion = { x: 0, y: 0 };
   let x = 0;
   let y = 0;
-  let blockEl = document.querySelector(
-    'span[data-offset-key="' + offsetKey + '"]'
-  );
+  let blockEl = document.querySelector('span[data-offset-key="' + offsetKey + '"]');
   if (blockEl) {
     // @ts-ignore
     const blockHeight = blockEl.offsetHeight;

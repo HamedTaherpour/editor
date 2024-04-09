@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { ClipboardEvent, useContext } from "react";
 import { NodeText, OnNodeBehavior } from "@/app/lib/editor/type";
 import DraftEditor from "@/app/components/TextEditor/DraftEditor";
 import { EditorContext } from "@/app/lib/editor/hook/context";

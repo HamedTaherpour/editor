@@ -13,21 +13,7 @@ import NodeEditor from "@/app/components/editor/NodeEditor";
 
 import { EditorContext } from "@/app/lib/editor/hook/context";
 
-import {
-  JsonEditor,
-  TYPE_NODE_TEXT,
-  TYPE_NODE_VOICE,
-  TYPE_NODE_IMAGE,
-  TYPE_NODE_QUOTE,
-  TYPE_NODE_DIVIDER,
-  NodeText,
-  NodeVoice,
-  NodeImage,
-  NodeQuote,
-  NodeDivider,
-  OnNodeBehavior,
-  Node,
-} from "@/app/lib/editor/type";
+import { JsonEditor, TYPE_NODE_TEXT, TYPE_NODE_VOICE, TYPE_NODE_IMAGE, TYPE_NODE_QUOTE, TYPE_NODE_DIVIDER, NodeText, NodeVoice, NodeImage, NodeQuote, NodeDivider, OnNodeBehavior, Node } from "@/app/lib/editor/type";
 
 interface AddNode {
   type: number;
@@ -99,6 +85,26 @@ const EditorApp = () => {
         icon: "quote-up",
         action: (index: number) => {
           onBtnAddNodeClick({ type: TYPE_NODE_QUOTE, index });
+        },
+      },
+      {
+        title: "لیست نقطه‌ای",
+        description: "لیست ساده نقطه‌ای بسازید.",
+        icon: "bulleted",
+        action: (index: number) => {
+          const node = new NodeText();
+          node.baseTag = "ul-disc";
+          onBtnAddNodeClick({ type: TYPE_NODE_TEXT, index, node });
+        },
+      },
+      {
+        title: "لیست شماره‌دار",
+        description: "لیست شماره‌دار ایجاد کنید.",
+        icon: "numbered",
+        action: (index: number) => {
+          const node = new NodeText();
+          node.baseTag = "ul-decimal";
+          onBtnAddNodeClick({ type: TYPE_NODE_TEXT, index, node });
         },
       },
       {
@@ -186,12 +192,7 @@ const EditorApp = () => {
         case "Backspace":
           const node = jsonEditor.nodes[index] as NodeText;
 
-          if (
-            node.text &&
-            node.text.blocks &&
-            node.text.blocks[0].text.length <= 0 &&
-            index > 0
-          ) {
+          if (node.text && node.text.blocks && node.text.blocks[0].text.length <= 0 && index > 0) {
             selectUp(index);
             this.onDelete(jsonEditor.nodes[index]);
           }
@@ -203,12 +204,10 @@ const EditorApp = () => {
       if (!!node) {
         switch (node.type) {
           case TYPE_NODE_TEXT:
-            if (typeTransition === TYPE_NODE_QUOTE)
-              nodeEditorTextModule.transitionToQuote(node as NodeText);
+            if (typeTransition === TYPE_NODE_QUOTE) nodeEditorTextModule.transitionToQuote(node as NodeText);
             break;
           case TYPE_NODE_QUOTE:
-            if (typeTransition === TYPE_NODE_TEXT)
-              nodeEditorQuoteModule.transitionToText(node as NodeQuote);
+            if (typeTransition === TYPE_NODE_TEXT) nodeEditorQuoteModule.transitionToText(node as NodeQuote);
             break;
         }
       }

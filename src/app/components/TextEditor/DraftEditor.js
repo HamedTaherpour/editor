@@ -1,30 +1,10 @@
 import React, { useEffect, useRef, useState, useContext } from "react";
 import { createPortal } from "react-dom";
 
-import {
-  Editor,
-  EditorState,
-  RichUtils,
-  convertToRaw,
-  convertFromRaw,
-  getDefaultKeyBinding,
-} from "draft-js";
-import {
-  getValue,
-  getLineNumberSelected,
-  getLineKeySelected,
-  getLineSize,
-  getPositionOfLine,
-  getValueOfLine,
-  customStyleMap,
-  blockStyleFn,
-  editLink,
-  getBlockPositionDOM,
-  setLink,
-} from "@/app/lib/editor-text/hook/tools";
+import { Editor, EditorState, RichUtils, convertToRaw, convertFromRaw, getDefaultKeyBinding } from "draft-js";
+import { getValue, getLineNumberSelected, getLineKeySelected, getLineSize, getPositionOfLine, getValueOfLine, customStyleMap, blockStyleFn, editLink, getBlockPositionDOM, setLink, getFirstInitEditorState, setBaseTag } from "@/app/lib/editor-text/hook/tools";
 
 import Toolbar from "@/app/components/TextEditor/Toolbar";
-import { editorDecorator } from "@/app/components/TextEditor/index";
 import ToolsMenuNodeEditor from "@/app/components/editor/ToolsMenuNodeEditor";
 import LinkEditConfirm from "@/app/components/TextEditor/component/LinkEditConfirm";
 import LinkConfirm from "@/app/components/TextEditor/component/LinkConfirm";
@@ -39,13 +19,7 @@ var lastKeypressTime = 0;
 const DraftEditor = ({ onChangeText, onChange, placeholder, node, index }) => {
   const onNodeBehavior = useContext(EditorContext);
 
-  let initEditorState = EditorState.createEmpty(editorDecorator);
-  if (!!node.text && !!node.text.blocks) {
-    const content = convertFromRaw(node.text);
-    initEditorState = EditorState.createWithContent(content, editorDecorator);
-    initEditorState = EditorState.moveSelectionToEnd(initEditorState);
-  }
-  const [editorState, setEditorState] = useState(initEditorState);
+  const [editorState, setEditorState] = useState(getFirstInitEditorState(node));
   const [showToolbar, setShowToolbar] = useState(false);
   const [showMenu, setShowMenu] = useState(false);
 
@@ -76,21 +50,8 @@ const DraftEditor = ({ onChangeText, onChange, placeholder, node, index }) => {
   });
   const menuEl = document.getElementById("menu");
 
-  if (node.baseTag !== "p" && !!!node.text && !!!node.text.blocks) {
-    const keys = {
-      h1: "header-one",
-      h2: "header-two",
-      h3: "header-three",
-    };
-    const style = keys[node.baseTag];
-    const blockType = editorState
-      .getCurrentContent()
-      .getBlockForKey(editorState.getSelection().getStartKey())
-      .getType();
-    if (blockType !== style) {
-      setEditorState(RichUtils.toggleBlockType(editorState, style));
-    }
-  }
+  const newEditorState = setBaseTag(editorState, node);
+  if (newEditorState) setEditorState(newEditorState);
 
   useEffect(() => {
     focusEditor();
@@ -124,7 +85,7 @@ const DraftEditor = ({ onChangeText, onChange, placeholder, node, index }) => {
         return;
       }
     } else if (event.key === "Enter") {
-      if (node.type === TYPE_NODE_QUOTE) {
+      if (node.type === TYPE_NODE_QUOTE || node.baseTag === "ul-disc" || node.baseTag === "ul-decimal") {
         var thisKeypressTime = new Date();
         if (thisKeypressTime - lastKeypressTime <= delta) {
           thisKeypressTime = 0;
@@ -178,10 +139,7 @@ const DraftEditor = ({ onChangeText, onChange, placeholder, node, index }) => {
 
   const myOnTransitionNodeListener = () => {
     setShowToolbar(false);
-    onNodeBehavior.onTransition(
-      node.type === TYPE_NODE_TEXT ? TYPE_NODE_QUOTE : TYPE_NODE_TEXT,
-      index
-    );
+    onNodeBehavior.onTransition(node.type === TYPE_NODE_TEXT ? TYPE_NODE_QUOTE : TYPE_NODE_TEXT, index);
   };
 
   const onMouseUp = (e) => {
@@ -202,9 +160,7 @@ const DraftEditor = ({ onChangeText, onChange, placeholder, node, index }) => {
   };
 
   const onBtnSetEditLinkClick = (link) => {
-    setEditorState(
-      editLink(editorState, entityKeyEdit, link, onLinkActionClick)
-    );
+    setEditorState(editLink(editorState, entityKeyEdit, link, onLinkActionClick));
     setShowEditLinkConfirm(false);
   };
 
@@ -216,11 +172,7 @@ const DraftEditor = ({ onChangeText, onChange, placeholder, node, index }) => {
   };
 
   return (
-    <div
-      ref={ref}
-      className={"node-" + node.id + " w-full"}
-      onMouseUp={onMouseUp}
-    >
+    <div ref={ref} className={"node-" + node.id + " w-full"} onMouseUp={onMouseUp}>
       {showMenu
         ? createPortal(
             <div
@@ -231,23 +183,13 @@ const DraftEditor = ({ onChangeText, onChange, placeholder, node, index }) => {
               }}
               className="absolute z-50 bg-white p-2 border border-slate-200 rounded-lg shadow-xl2"
             >
-              <ToolsMenuNodeEditor
-                index={index}
-                onActionClick={() => setShowMenu(false)}
-              />
+              <ToolsMenuNodeEditor index={index} onActionClick={() => setShowMenu(false)} />
             </div>,
             menuEl
           )
         : null}
       <div className="relative">
-        {showToolbar ? (
-          <Toolbar
-            editorState={editorState}
-            setEditorState={setEditorState}
-            onBtnShowLinkConfirmClick={onBtnShowLinkConfirmClick}
-            onTransitionNodeListener={myOnTransitionNodeListener}
-          />
-        ) : null}
+        {showToolbar ? <Toolbar editorState={editorState} setEditorState={setEditorState} onBtnShowLinkConfirmClick={onBtnShowLinkConfirmClick} onTransitionNodeListener={myOnTransitionNodeListener} /> : null}
         {showLinkConfirm ? (
           <div ref={refConfirm} className="absolute z-50">
             <LinkConfirm onBtnSetLinkClick={onBtnSetLinkClick} />
@@ -263,10 +205,7 @@ const DraftEditor = ({ onChangeText, onChange, placeholder, node, index }) => {
                   left: postionLink.x,
                 }}
               >
-                <LinkEditConfirm
-                  onBtnSetEditLinkClick={onBtnSetEditLinkClick}
-                  linkEdit={linkEdit}
-                />
+                <LinkEditConfirm onBtnSetEditLinkClick={onBtnSetEditLinkClick} linkEdit={linkEdit} />
               </div>,
               menuEl
             )

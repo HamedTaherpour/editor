@@ -5,9 +5,7 @@ import useOutsideClick from "@/app/lib/OutsideClick";
 import { getBlockPositionDOM } from "@/app/lib/editor-text/hook/tools";
 
 const Link = (props) => {
-  const { url, onActionClick } = props.contentState
-    .getEntity(props.entityKey)
-    .getData();
+  const { url, onActionClick } = props.contentState.getEntity(props.entityKey).getData();
 
   const menuEl = document.getElementById("menu");
   const [showLink, setShowLink] = useState(false);
@@ -30,13 +28,13 @@ const Link = (props) => {
   const onMouseEnter = (e) => {
     setShowLink(true);
   };
+  const onMouseLeave = () => {
+    setShowLink(false);
+  };
 
   return (
-    <div className="inline-block" onMouseEnter={onMouseEnter}>
-      <a
-        href={url}
-        className="text-blue-600 underline underline-offset-1 cursor-pointer"
-      >
+    <div className="inline-block" onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave}>
+      <a href={url} className="text-blue-600 underline underline-offset-1 cursor-pointer">
         {props.children}
       </a>
       {showLink
@@ -50,17 +48,11 @@ const Link = (props) => {
               }}
             >
               <div className="flex flex-row p-2 rounded-xl border border-gray-2 bg-white shadow-md items-center justify-between">
-                <button
-                  className="flex outline-none"
-                  onClick={() => onBtnEditLink()}
-                >
+                <button className="flex outline-none" onClick={() => onBtnEditLink()}>
                   <AppIcon name="copy" className="size-4 ml-1" />
                   <span className="text-gray-8 text-xs">ویرایش</span>
                 </button>
-                <span
-                  className="text-xs text-gray-8 mr-3 min-w-44 max-w-60 text-left truncate dir-ltr"
-                  title={url}
-                >
+                <span className="text-xs text-gray-8 mr-3 min-w-44 max-w-60 text-left truncate dir-ltr" title={url}>
                   {url}
                 </span>
                 <AppIcon name="global" className="size-4 mr-1" />

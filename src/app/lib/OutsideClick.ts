@@ -1,8 +1,6 @@
 import { LegacyRef, Ref, RefObject, createRef, useEffect, useRef } from "react";
 
-function useOutsideClick<T extends HTMLElement>(
-  callback: Function
-): RefObject<T> {
+function useOutsideClick<T extends HTMLElement>(callback: Function): RefObject<T> {
   const ref = createRef<T>();
 
   useEffect(() => {
