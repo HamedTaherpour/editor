@@ -1,68 +1,67 @@
 // @ts-ignore
 import { EditorState, RichUtils, ContentBlock } from "draft-js";
-import { Node } from "@/app/lib/editor/type";
 
 // FOR INLINE STYLES
 export const customStyleMap = {
   COLOR_YELLOW: {
-    color: "rgba(203, 145, 47, 1)",
+    color: "rgb(203, 145, 47)",
   },
   COLOR_ORAMGE: {
-    color: "rgba(217, 115, 13, 1)",
+    color: "rgb(217, 115, 13)",
   },
   COLOR_BROWN: {
-    color: "rgba(159, 107, 83, 1)",
+    color: "rgb(159, 107, 83)",
   },
   COLOR_GRAY: {
-    color: "rgba(120, 119, 116, 1)",
+    color: "rgb(120, 119, 116)",
   },
   COLOR_DARK: {
-    color: "rgba(36, 36, 36, 1)",
+    color: "rgb(36, 36, 36)",
   },
   COLOR_RED: {
-    color: "rgba(212, 76, 71, 1)",
+    color: "rgb(212, 76, 71)",
   },
   COLOR_PINK: {
-    color: "rgba(193, 76, 138, 1)",
+    color: "rgb(193, 76, 138)",
   },
   COLOR_PURPLE: {
-    color: "rgba(144, 101, 176, 1)",
+    color: "rgb(144, 101, 176)",
   },
   COLOR_BLUE: {
-    color: "rgba(54, 128, 170, 1)",
+    color: "rgb(54, 128, 170)",
   },
   COLOR_GREEN: {
-    color: "rgba(68, 131, 97, 1)",
+    color: "rgb(68, 131, 97)",
   },
   BACKGROUND_YELLOW: {
-    background: "rgba(251, 246, 238, 1)",
+    background: "rgb(251, 246, 238)",
   },
   BACKGROUND_ORAMGE: {
-    background: "rgba(254, 245, 236, 1)",
+    background: "rgb(254, 245, 236)",
   },
   BACKGROUND_BROWN: {
-    background: "rgba(248, 244, 242, 1)",
+    background: "rgb(248, 244, 242)",
   },
   BACKGROUND_GRAY: {
-    background: "rgba(245, 245, 245, 1)",
+    background: "rgb(245, 245, 245)",
   },
   BACKGROUND_DARK: {
-    background: "rgba(255, 255, 255, 1)",
+    background: "rgb(255, 255, 255)",
   },
   BACKGROUND_RED: {
-    background: "rgba(251, 239, 238, 1)",
+    background: "rgb(251, 239, 238)",
   },
   BACKGROUND_PINK: {
-    background: "rgba(250, 240, 245, 1)",
+    background: "rgb(250, 240, 245)",
   },
   BACKGROUND_PURPLE: {
-    background: "rgba(245, 242, 248, 1)",
+    background: "rgb(245, 242, 248)",
   },
   BACKGROUND_BLUE: {
-    background: "rgba(239, 246, 250, 1)",
+    background: "rgb(239, 246, 250)",
   },
   BACKGROUND_GREEN: {
-    background: "rgba(242, 248, 245, 1)",
+    background: "rgb(242, 248, 245)",
   },
 };
 

@@ -176,15 +176,6 @@ const DraftEditor = ({ onChangeText, onChange, placeholder, node, index }) => {
     });
   };
 
-  const handleKeyCommand = (command) => {
-    const newState = RichUtils.handleKeyCommand(editorState, command);
-    if (newState) {
-      setEditorState(newState);
-      return true;
-    }
-    return false;
-  };
-
   const myOnTransitionNodeListener = () => {
     setShowToolbar(false);
     onNodeBehavior.onTransition(
@@ -284,7 +275,6 @@ const DraftEditor = ({ onChangeText, onChange, placeholder, node, index }) => {
       <Editor
         ref={editor}
         placeholder={placeholder}
-        handleKeyCommand={handleKeyCommand}
         editorState={editorState}
         customStyleMap={customStyleMap}
         textDirectionality="RTL"
