@@ -251,7 +251,6 @@ export const toolsColorStyleItems = {
     value: "COLOR_GREEN",
     method: "inline",
     option: {
-      style: "COLOR_GREEN",
       style: {
         color: "COLOR_GREEN",
         background: "BACKGROUND_GREEN",
@@ -426,25 +425,31 @@ export const setLink = (
 
 export const getBlockPositionDOM = (offsetKey: string) => {
   let postion = { x: 0, y: 0 };
-  console.log(offsetKey);
-
   let x = 0;
   let y = 0;
   let blockEl = document.querySelector(
     'span[data-offset-key="' + offsetKey + '"]'
   );
-  const blockHeight = blockEl.offsetHeight;
-  const blockWidth = blockEl.offsetWidth;
-  while (blockEl && !isNaN(blockEl.offsetLeft) && !isNaN(blockEl.offsetTop)) {
-    x += blockEl.offsetLeft - blockEl.scrollLeft;
-    y += blockEl.offsetTop - blockEl.scrollTop;
-    blockEl = blockEl.offsetParent;
-  }
+  if (blockEl) {
+    // @ts-ignore
+    const blockHeight = blockEl.offsetHeight;
+    // @ts-ignore
+    const blockWidth = blockEl.offsetWidth;
+    // @ts-ignore
+    while (blockEl && !isNaN(blockEl.offsetLeft) && !isNaN(blockEl.offsetTop)) {
+      // @ts-ignore
+      x += blockEl.offsetLeft - blockEl.scrollLeft;
+      // @ts-ignore
+      y += blockEl.offsetTop - blockEl.scrollTop;
+      // @ts-ignore
+      blockEl = blockEl.offsetParent;
+    }
 
-  x = x + blockWidth;
-  postion = {
-    x: x,
-    y: y + blockHeight,
-  };
+    x = x + blockWidth;
+    postion = {
+      x: x,
+      y: y + blockHeight,
+    };
+  }
   return postion;
 };
