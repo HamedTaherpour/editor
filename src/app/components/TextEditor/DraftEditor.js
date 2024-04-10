@@ -1,17 +1,18 @@
 import React, { useEffect, useRef, useState, useContext } from "react";
 import { createPortal } from "react-dom";
 
-import { Editor, EditorState, RichUtils, convertToRaw, convertFromRaw, getDefaultKeyBinding } from "draft-js";
+import { Editor, convertToRaw, getDefaultKeyBinding } from "draft-js";
 import { getValue, getLineNumberSelected, getLineKeySelected, getLineSize, getPositionOfLine, getValueOfLine, customStyleMap, blockStyleFn, editLink, getBlockPositionDOM, setLink, getFirstInitEditorState, setBaseTag } from "@/app/lib/editor-text/hook/tools";
 
 import Toolbar from "@/app/components/TextEditor/Toolbar";
-import ToolsMenuNodeEditor from "@/app/components/editor/ToolsMenuNodeEditor";
+import MenuNodeEditor from "@/app/components/editor/MenuNodeEditor";
 import LinkEditConfirm from "@/app/components/TextEditor/component/LinkEditConfirm";
 import LinkConfirm from "@/app/components/TextEditor/component/LinkConfirm";
 import "draft-js/dist/Draft.css";
 import { TYPE_NODE_QUOTE, TYPE_NODE_TEXT } from "@/app/lib/editor/type";
 import { EditorContext } from "@/app/lib/editor/hook/context";
 import useOutsideClick from "@/app/lib/OutsideClick";
+import { getElementPostion } from "@/app/lib/utils";
 
 var delta = 200;
 var lastKeypressTime = 0;
@@ -49,6 +50,10 @@ const DraftEditor = ({ onChangeText, onChange, placeholder, node, index }) => {
     }
   });
   const menuEl = document.getElementById("menu");
+  let rootClazz = "node-" + node.id;
+  if (node.baseTag === "ul-disc" || node.baseTag === "ul-decimal") {
+    rootClazz += " et-bullte";
+  }
 
   const newEditorState = setBaseTag(editorState, node);
   if (newEditorState) setEditorState(newEditorState);
@@ -123,17 +128,16 @@ const DraftEditor = ({ onChangeText, onChange, placeholder, node, index }) => {
     let y = 0;
 
     let el = window.getSelection().focusNode.parentNode;
-    const elHeight = el.offsetHeight;
-    while (el && !isNaN(el.offsetLeft) && !isNaN(el.offsetTop)) {
-      x += el.offsetLeft - el.scrollLeft;
-      y += el.offsetTop - el.scrollTop;
-      el = el.offsetParent;
-    }
-    x = x - 256;
+    const pos = getElementPostion(el);
+    x = pos.x;
+    y = pos.y;
+
+    x -= 256;
+    y += el.offsetHeight;
 
     setPostionMenu({
       x: x,
-      y: y + elHeight,
+      y: y,
     });
   };
 
@@ -172,7 +176,7 @@ const DraftEditor = ({ onChangeText, onChange, placeholder, node, index }) => {
   };
 
   return (
-    <div ref={ref} className={"node-" + node.id + " w-full"} onMouseUp={onMouseUp}>
+    <div ref={ref} className={rootClazz + " w-full"} onMouseUp={onMouseUp}>
       {showMenu
         ? createPortal(
             <div
@@ -183,7 +187,7 @@ const DraftEditor = ({ onChangeText, onChange, placeholder, node, index }) => {
               }}
               className="absolute z-50 bg-white p-2 border border-slate-200 rounded-lg shadow-xl2"
             >
-              <ToolsMenuNodeEditor index={index} onActionClick={() => setShowMenu(false)} />
+              <MenuNodeEditor index={index} onActionClick={() => setShowMenu(false)} />
             </div>,
             menuEl
           )

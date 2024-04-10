@@ -1,10 +1,5 @@
 import NodeEditor from "@/app/lib/editor";
-import {
-  NodeText,
-  TYPE_NODE_TEXT,
-  TYPE_NODE_QUOTE,
-  NodeQuote,
-} from "@/app/lib/editor/type";
+import { NodeText, TYPE_NODE_TEXT, TYPE_NODE_QUOTE, NodeQuote } from "@/app/lib/editor/type";
 
 class NodeEditorTextModule {
   nodeEditor: NodeEditor;
@@ -24,6 +19,7 @@ class NodeEditorTextModule {
   transitionToQuote(node: NodeText) {
     const newNode = new NodeQuote(node.text);
     newNode.id = node.id;
+    newNode.baseTag = node.baseTag;
     this.nodeEditor.updateNode(newNode);
   }
 }

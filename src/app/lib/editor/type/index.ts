@@ -1,4 +1,5 @@
 import { KeyboardEvent } from "react";
+import { ToolsColorStyleItemTextEditor } from "../../editor-text/type";
 
 export const TYPE_NODE_TEXT = 0;
 export const TYPE_NODE_VOICE = 1;
@@ -15,12 +16,16 @@ export class Node {
   type: number;
   id: number;
   clazz?: string;
+  backgroundColor: string;
+  fontColor: string;
   focus?: () => void;
 
   constructor(type: number, clazz?: string) {
     this.id = Date.now();
     this.type = type;
     this.clazz = clazz;
+    this.backgroundColor = "";
+    this.fontColor = "";
   }
 }
 
@@ -61,12 +66,15 @@ export class NodeVoice extends Node {
 export class NodeImage extends Node {
   path: string;
   caption: any;
+  width?: number;
+  verticallyAlign: string;
 
   constructor(path: string = "", caption: string = "") {
     super(TYPE_NODE_IMAGE);
     this.path = path;
     this.caption = caption;
     this.clazz = "my-3";
+    this.verticallyAlign = "center";
   }
 }
 
@@ -82,8 +90,21 @@ export interface OnJsonEditorUpdateListener {
 
 export interface OnNodeBehavior {
   toolsMenu: Array<any>;
+  isClipboardExists(): boolean;
+  onStyle(style: ToolsColorStyleItemTextEditor, type: string, index: number): void;
+  onCopy(node: Node): void;
+  onPast(index: number): void;
   onDelete(node: Node): void;
   onUpdate(node: Node): void;
   onKeyUp(e: KeyboardEvent<HTMLElement>, index: number): void;
   onTransition(typeTransition: number, index: number): void;
+}
+
+export interface ImageVerticallyAlignItems {
+  [key: string]: ImageVerticallyAlign;
+}
+
+export interface ImageVerticallyAlign {
+  clazz: string;
+  icon: string;
 }

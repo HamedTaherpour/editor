@@ -19,6 +19,7 @@ class NodeEditorQuoteModule {
   transitionToText(node: NodeQuote) {
     const newNode = new NodeText(node.text);
     newNode.id = node.id;
+    newNode.baseTag = node.baseTag;
     this.nodeEditor.updateNode(newNode);
   }
 }

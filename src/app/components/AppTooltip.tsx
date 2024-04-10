@@ -1,12 +1,11 @@
 "use client";
 
-import { Children, ReactNode, useEffect, useRef, useState } from "react";
-import { cloneElement } from "react";
-import useOutsideClick from "@/app/lib/OutsideClick";
+import { ReactNode, useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
+import { getElementPostion } from "../lib/utils";
 
 interface Props {
-  activator: ReactNode;
+  activatorToolTip: ReactNode;
   text: string;
   className?: string;
 }
@@ -16,7 +15,7 @@ const AppTooltip = (props: Props) => {
 
   const menuEl = document.getElementById("menu");
 
-  const { activator, text, className } = props;
+  const { activatorToolTip, text, className } = props;
 
   const [open, setOpen] = useState(false);
 
@@ -24,21 +23,24 @@ const AppTooltip = (props: Props) => {
   const refRoot = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (postion.x + postion.y === 0) load();
-  });
+    if (open) load();
+  }, [open]);
 
   const load = () => {
     if (refRoot.current && ref.current) {
-      setPostion({
-        x:
-          refRoot.current.getBoundingClientRect().left -
-          ref.current.clientWidth +
-          refRoot.current.clientHeight,
-        y:
-          refRoot.current.getBoundingClientRect().top -
-          refRoot.current.clientHeight -
-          12,
-      });
+      let x = 0;
+      let y = 0;
+
+      let el = refRoot.current;
+      const pos = getElementPostion(el);
+      x = pos.x;
+      y = pos.y;
+
+      x -= ref.current.clientWidth;
+      x += el.clientWidth;
+      y -= el.offsetHeight + 8;
+
+      setPostion({ x, y });
     }
   };
 
@@ -51,13 +53,8 @@ const AppTooltip = (props: Props) => {
   };
 
   return (
-    <div
-      ref={refRoot}
-      className={className + " relative"}
-      onMouseEnter={onMouseEnter}
-      onMouseLeave={onMouseLeave}
-    >
-      {activator}
+    <div ref={refRoot} className={className + " relative "} onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave}>
+      {activatorToolTip}
       {open && menuEl
         ? createPortal(
             <div

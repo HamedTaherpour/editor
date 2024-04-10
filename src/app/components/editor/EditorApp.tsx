@@ -22,6 +22,8 @@ interface AddNode {
 }
 
 const EditorApp = () => {
+  const [isClipboardExists, setIsClipboardExists] = useState(false);
+  const [clipboard, setClipboard] = useState<Node>();
   const [jsonEditor, setJsonEditor] = useState<JsonEditor>({
     name: "TestA",
     nodes: [],
@@ -159,6 +161,41 @@ const EditorApp = () => {
         },
       },
     ],
+    onStyle(style, type, index) {
+      const node = jsonEditor.nodes[index];
+      if (type === "background") {
+        if (node.backgroundColor === style.value) {
+          node.backgroundColor = "";
+        } else {
+          node.backgroundColor = style.value;
+        }
+      } else if (type === "color") {
+        if (node.fontColor === style.value) {
+          node.fontColor = "";
+        } else {
+          node.fontColor = style.value;
+        }
+      }
+
+      this.onUpdate(node);
+    },
+    isClipboardExists() {
+      return isClipboardExists;
+    },
+    onCopy(node) {
+      setClipboard(Object.assign({}, node));
+      setIsClipboardExists(true);
+    },
+    onPast(index) {
+      if (clipboard) {
+        clipboard.id = Date.now();
+        onBtnAddNodeClick({
+          type: clipboard.type,
+          node: clipboard,
+          index,
+        });
+      }
+    },
     onDelete(node) {
       switch (node.type) {
         case TYPE_NODE_TEXT:
@@ -248,13 +285,13 @@ const EditorApp = () => {
         nodeEditorTextModule.add((node as NodeText) || new NodeText(), _index);
         break;
       case TYPE_NODE_VOICE:
-        nodeEditorVoiceModule.add(new NodeVoice(), _index);
+        nodeEditorVoiceModule.add((node as NodeVoice) || new NodeVoice(), _index);
         break;
       case TYPE_NODE_IMAGE:
-        nodeEditorImageModule.add(new NodeImage(), _index);
+        nodeEditorImageModule.add((node as NodeImage) || new NodeImage(), _index);
         break;
       case TYPE_NODE_QUOTE:
-        nodeEditorQuoteModule.add(new NodeQuote(), _index);
+        nodeEditorQuoteModule.add((node as NodeQuote) || new NodeQuote(), _index);
         break;
       case TYPE_NODE_DIVIDER:
         nodeEditorDividerModule.add(new NodeDivider(), _index);

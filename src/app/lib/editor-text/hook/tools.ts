@@ -2,6 +2,7 @@
 import { EditorState, RichUtils, ContentBlock, convertFromRaw, CompositeDecorator } from "draft-js";
 import { NodeQuote, NodeText } from "@/app/lib/editor/type";
 import Link from "@/app/components/TextEditor/component/Link";
+import { ToolsColorStyleTextEditor } from "../type";
 
 // FOR INLINE STYLES
 export const customStyleMap = {
@@ -115,7 +116,7 @@ export const toolsFontStylsItems = [
   },
 ];
 
-export const toolsColorStyleItems = {
+export const toolsColorStyleItems: ToolsColorStyleTextEditor = {
   COLOR_YELLOW: {
     title: "yellow",
     value: "COLOR_YELLOW",
@@ -329,6 +330,7 @@ export const setBaseTag = (editorState: EditorState, node: NodeText | NodeQuote)
       "ul-disc": "unordered-list-item",
       "ul-decimal": "ordered-list-item",
     };
+
     const style = keys[node.baseTag];
     const blockType = editorState.getCurrentContent().getBlockForKey(editorState.getSelection().getStartKey()).getType();
     if (blockType !== style) {

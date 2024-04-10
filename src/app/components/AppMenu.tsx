@@ -4,11 +4,12 @@ import { Children, ReactNode, useEffect, useRef, useState } from "react";
 import { cloneElement } from "react";
 import useOutsideClick from "@/app/lib/OutsideClick";
 import { createPortal } from "react-dom";
+import { getElementPostion } from "../lib/utils";
 
 interface Props {
   activator: ReactNode;
   menu: ReactNode;
-  className: string;
+  className?: string;
 }
 
 const AppMenu = (props: Props) => {
@@ -27,8 +28,8 @@ const AppMenu = (props: Props) => {
   const refRoot = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (postion.x + postion.y === 0) load();
-  });
+    if (open) load();
+  }, [open]);
 
   const onActivatorClick = () => {
     setOpen(!open);
@@ -36,27 +37,28 @@ const AppMenu = (props: Props) => {
 
   const load = () => {
     if (refRoot.current && ref.current) {
-      refRoot.current.offsetLeft;
-      setPostion({
-        x:
-          refRoot.current.getBoundingClientRect().left -
-          ref.current.clientWidth +
-          refRoot.current.clientHeight,
-        y:
-          refRoot.current.getBoundingClientRect().top +
-          refRoot.current.clientHeight,
-      });
+      let x = 0;
+      let y = 0;
+
+      let el = refRoot.current;
+      const pos = getElementPostion(el);
+      x = pos.x;
+      y = pos.y;
+
+      x -= ref.current.clientWidth;
+      x += el.clientWidth;
+      y += el.offsetHeight;
+
+      setPostion({ x, y });
     }
   };
 
-  const childActivator = Children.only(activator) as React.ReactElement;
+  // const childActivator = Children.only(activator) as React.ReactElement;
   const childMenu = Children.only(menu) as React.ReactElement;
 
   return (
     <div ref={refRoot} className={className + " relative"}>
-      {cloneElement(childActivator, {
-        onClick: onActivatorClick,
-      })}
+      <div onClick={onActivatorClick}>{activator}</div>
       {open && menuEl
         ? createPortal(
             <div
@@ -66,7 +68,7 @@ const AppMenu = (props: Props) => {
                 left: postion.x,
               }}
               onClick={() => setOpen(false)}
-              className="absolute bg-white p-2 border border-slate-200 rounded-lg shadow-xl2 z-50"
+              className="absolute z-50 mt-1"
             >
               {cloneElement(childMenu, {})}
             </div>,

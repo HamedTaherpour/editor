@@ -57,6 +57,10 @@
   line-height: normal;
 }
 
+.et-bullte .public-DraftEditorPlaceholder-inner {
+  @apply pr-5;
+}
+
 .public-DraftStyleDefault-ol,
 .public-DraftStyleDefault-ul {
   @apply !m-0;
