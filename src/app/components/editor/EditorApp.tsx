@@ -146,7 +146,7 @@ const EditorApp = () => {
         description: "صوت یا ویس خود را بارگزاری کنید.",
         icon: "volume",
         action: (index: number) => {
-          // onBtnAddNodeClick(TYPE_NODE_TEXT, index);
+          onBtnAddNodeClick({ type: TYPE_NODE_VOICE, index });
         },
       },
       {

@@ -1,40 +1,114 @@
-import { ChangeEvent, useRef, useContext } from "react";
+import { ChangeEvent, useRef, useContext, useState } from "react";
 import { NodeVoice, OnNodeBehavior } from "@/app/lib/editor/type";
 import { EditorContext } from "@/app/lib/editor/hook/context";
+import AppIcon from "../AppIcon";
+import AppLoadingSpinner from "../AppLoadingSpinner";
 
 interface Props {
   index: number;
   node: NodeVoice;
 }
 
+enum Status {
+  None,
+  Uploading,
+  FileReady,
+}
+
 const NodeEditorVoice = (props: Props) => {
   const { node, index } = props;
   const ref = useRef<HTMLAudioElement>(null);
   const onNodeBehavior = useContext<OnNodeBehavior | undefined>(EditorContext);
+  const [status, setStatus] = useState<Status>(Status.None);
+  const [duration, setDuration] = useState<string>("00:00");
+  const [CurrentDuration, setCurrentDuration] = useState<string>("00:00");
 
   const onChangeFile = (e: ChangeEvent<HTMLInputElement>) => {
     if (!!e.target.files) {
       node.path = URL.createObjectURL(e.target.files[0]);
-      if (ref.current) {
-        ref.current.src = URL.createObjectURL(e.target.files[0]);
-      }
       if (onNodeBehavior) onNodeBehavior.onUpdate(node);
+      setStatus(Status.Uploading);
+      setTimeout(() => {
+        setStatus(Status.FileReady);
+        if (ref.current) {
+          ref.current.src = node.path;
+          ref.current.addEventListener(
+            "loadedmetadata",
+            () => {
+              if (ref.current) setDuration(getDurationFormat(ref.current.duration));
+            },
+            false
+          );
+          ref.current.addEventListener(
+            "timeupdate",
+            () => {
+              if (ref.current) setCurrentDuration(getDurationFormat(ref.current.currentTime));
+            },
+            false
+          );
+        }
+      }, 2000);
+    }
+  };
+
+  const getDurationFormat = (duration: number): string => {
+    let minutes = "0" + Math.floor(duration / 60);
+    let seconds = "0" + Math.floor(duration - parseInt(minutes) * 60);
+    return minutes.substring(-2) + ":" + seconds.substring(-2);
+  };
+
+  const onBtnToggleAudioPlayClick = () => {
+    if (ref.current) {
+      if (ref.current.paused) ref.current.play();
+      else ref.current.pause();
     }
   };
 
   return (
-    <div className="w-full bg-slate-300 rounded px-6 py-2 flex flex-row justify-between">
-      <audio controls ref={ref}>
+    <div>
+      <audio ref={ref} className="hidden">
         <source type=".mp3,.wav" />
         Your browser does not support the audio element.
       </audio>
-
-      <label className="bg-slate-800 rounded-full text-white p-2">
-        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24">
-          <path fill="currentColor" d="M16 11V6h2v5zm-5 6.9q-.875-.25-1.437-.975T9 15.25V6h2zm.75 4.1q-2.6 0-4.425-1.825T5.5 15.75V6.5q0-1.875 1.313-3.187T10 2q1.875 0 3.188 1.313T14.5 6.5V14h-2V6.5q-.025-1.05-.737-1.775T10 4q-1.05 0-1.775.725T7.5 6.5v9.25q-.025 1.775 1.225 3.013T11.75 20q.625 0 1.188-.162T14 19.35v2.225q-.525.2-1.088.313T11.75 22M16 21v-3h-3v-2h3v-3h2v3h3v2h-3v3z" />
-        </svg>
-        <input className="hidden" id="file_input" type="file" accept=".mp3,audio/*" onChange={onChangeFile} />
-      </label>
+      {status === Status.None ? (
+        <label className="flex flex-row items-center rounded-lg bg-gray-2 px-4 h-12 cursor-pointer">
+          <AppIcon name="volume" className="size-6 ml-3" />
+          <span className="text-xs font-semibold text-gray-8 ml-1">فایل صوتی را بارگذاری کنید.</span>
+          <span className="text-xs text-gray-8">mp3. mww فرمت</span>
+          <input className="hidden" id="file_input" type="file" accept=".mp3,audio/*" onChange={onChangeFile} />
+        </label>
+      ) : status === Status.Uploading ? (
+        <div className="flex flex-row items-center rounded-lg bg-gray-2 px-4 h-12 cursor-pointer">
+          <AppIcon name="volume" className="size-6 ml-3" />
+          <div className="flex flex-col flex-1">
+            <span className="text-xs font-semibold">classYoga.mp3</span>
+            <div className="flex flex-row gap-x-1">
+              <span className="text-[11px] text-gray-7">8.3 KB</span>
+              <span className="text-[11px] text-gray-7">-</span>
+              <span className="text-[11px] text-gray-7">34%</span>
+              <AppLoadingSpinner className="size-3 text-gray-7" />
+            </div>
+          </div>
+          <button>
+            <AppIcon name="x" className="size-5 fill-gray-6" />
+          </button>
+        </div>
+      ) : status === Status.FileReady ? (
+        <div className="flex flex-col">
+          <div className="flex flex-row items-center rounded-lg bg-gray-2 px-4 h-12 cursor-pointer">
+            <button className="ml-3" onClick={onBtnToggleAudioPlayClick}>
+              <AppIcon name="play" className="size-6" />
+            </button>
+            <input placeholder="نام فایل را بنویسید..." className="text-xs font-semibold placeholder:text-gray-8 outline-none bg-transparent flex-1" />
+            <div className="text-xs space-x-1">
+              <span>{CurrentDuration}</span>
+              <span>/</span>
+              <span>{duration}</span>
+            </div>
+          </div>
+          <input placeholder="توضیحات مربوط به فایل (اختیاری)" className="text-xs  placeholder:text-gray-6 text-gray-6 mt-1 outline-none" />
+        </div>
+      ) : null}
     </div>
   );
 };
