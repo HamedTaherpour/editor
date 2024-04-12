@@ -42,6 +42,14 @@ class Editor {
       alert("id not found" + id);
     }
   }
+  moveNode(fromIndex: number, toIndex: number) {
+    console.log(fromIndex, toIndex);
+
+    var element = this.jsonEditor.nodes[fromIndex];
+    this.jsonEditor.nodes.splice(fromIndex, 1);
+    this.jsonEditor.nodes.splice(toIndex, 0, element);
+    this.onJsonEditorUpdateListener?.onUpdate(this.jsonEditor);
+  }
 }
 
 export default Editor;

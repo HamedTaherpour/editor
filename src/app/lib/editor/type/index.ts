@@ -6,6 +6,7 @@ export const TYPE_NODE_VOICE = 1;
 export const TYPE_NODE_IMAGE = 2;
 export const TYPE_NODE_QUOTE = 3;
 export const TYPE_NODE_DIVIDER = 4;
+export const TYPE_NODE_FILE = 5;
 
 export interface JsonEditor {
   name: string;
@@ -68,6 +69,22 @@ export class NodeVoice extends Node {
   }
 }
 
+export class NodeFile extends Node {
+  path: string;
+  fileName: string;
+  fileSize: number;
+  description: string;
+
+  constructor(path: string = "") {
+    super(TYPE_NODE_FILE);
+    this.path = path;
+    this.fileName = "";
+    this.description = "";
+    this.fileSize = 0;
+    this.clazz = "my-3";
+  }
+}
+
 export class NodeImage extends Node {
   path: string;
   caption: any;
@@ -103,6 +120,7 @@ export interface OnNodeBehavior {
   onUpdate(node: Node): void;
   onKeyUp(e: KeyboardEvent<HTMLElement>, index: number): void;
   onTransition(typeTransition: number, index: number): void;
+  onMove(fromIndex: number, toIndex: number): void;
 }
 
 export interface ImageVerticallyAlignItems {

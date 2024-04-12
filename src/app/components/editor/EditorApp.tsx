@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import Editor from "@/app/lib/editor";
 import NodeEditorTextModule from "@/app/lib/editor/text/module";
@@ -8,12 +8,13 @@ import NodeEditorVoiceModule from "@/app/lib/editor/voice/module";
 import NodeEditorImageModule from "@/app/lib/editor/image/module";
 import NodeEditorQuoteModule from "@/app/lib/editor/quote/module";
 import NodeEditorDividerModule from "@/app/lib/editor/divider/module";
+import NodeEditorFileModule from "@/app/lib/editor/file/module";
 
 import NodeEditor from "@/app/components/editor/NodeEditor";
 
 import { EditorContext } from "@/app/lib/editor/hook/context";
 
-import { JsonEditor, TYPE_NODE_TEXT, TYPE_NODE_VOICE, TYPE_NODE_IMAGE, TYPE_NODE_QUOTE, TYPE_NODE_DIVIDER, NodeText, NodeVoice, NodeImage, NodeQuote, NodeDivider, OnNodeBehavior, Node } from "@/app/lib/editor/type";
+import { JsonEditor, TYPE_NODE_TEXT, TYPE_NODE_VOICE, TYPE_NODE_IMAGE, TYPE_NODE_QUOTE, TYPE_NODE_DIVIDER, NodeText, NodeVoice, NodeImage, NodeQuote, NodeDivider, OnNodeBehavior, Node, TYPE_NODE_FILE, NodeFile } from "@/app/lib/editor/type";
 
 interface AddNode {
   type: number;
@@ -34,6 +35,7 @@ const EditorApp = () => {
   const nodeEditorImageModule = new NodeEditorImageModule(editor);
   const nodeEditorQuoteModule = new NodeEditorQuoteModule(editor);
   const nodeEditorDividerModule = new NodeEditorDividerModule(editor);
+  const nodeEditorFileModule = new NodeEditorFileModule(editor);
 
   useEffect(() => {
     if (jsonEditor.nodes.length <= 0) {
@@ -138,7 +140,7 @@ const EditorApp = () => {
         description: "فایل خود را بارگزاری کنید.",
         icon: "document",
         action: (index: number) => {
-          // onBtnAddNodeClick(TYPE_NODE_TEXT, index);
+          onBtnAddNodeClick({ type: TYPE_NODE_FILE, index });
         },
       },
       {
@@ -213,6 +215,9 @@ const EditorApp = () => {
         case TYPE_NODE_DIVIDER:
           nodeEditorDividerModule.delete(node.id);
           break;
+        case TYPE_NODE_FILE:
+          nodeEditorFileModule.delete(node.id);
+          break;
       }
     },
     onKeyUp(e, index) {
@@ -266,13 +271,19 @@ const EditorApp = () => {
         case TYPE_NODE_DIVIDER:
           nodeEditorDividerModule.update(node as NodeDivider);
           break;
+        case TYPE_NODE_FILE:
+          nodeEditorFileModule.update(node as NodeFile);
+          break;
       }
+    },
+    onMove(fromIndex, toIndex) {
+      editor.moveNode(fromIndex, toIndex);
     },
   };
 
   editor.setOnJsonEditorUpdateListener({
     onUpdate: (_jsonEditor) => {
-      setJsonEditor({ ..._jsonEditor });
+      setJsonEditor(Object.assign({}, _jsonEditor));
     },
   });
 
@@ -296,6 +307,9 @@ const EditorApp = () => {
       case TYPE_NODE_DIVIDER:
         nodeEditorDividerModule.add(new NodeDivider(), _index);
         break;
+      case TYPE_NODE_FILE:
+        nodeEditorFileModule.add((node as NodeFile) || new NodeFile(), _index);
+        break;
     }
   };
 
@@ -317,9 +331,9 @@ const EditorApp = () => {
     <div className="flex flex-col min-h-screen et-container mx-auto">
       <div className="flex flex-col min-h-96 mt-16 w-full">
         <EditorContext.Provider value={onNodeBehavior}>
-          <div className="flex flex-col">
+          <div className="flex flex-col nodes">
             {jsonEditor.nodes.map((item, i) => (
-              <NodeEditor key={item.id} index={i} node={item} />
+              <NodeEditor key={item.id + "" + i} index={i} node={item} />
             ))}
           </div>
         </EditorContext.Provider>
