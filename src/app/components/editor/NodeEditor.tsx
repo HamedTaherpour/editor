@@ -94,7 +94,7 @@ const NodeEditor = (props: Props) => {
             <AppTooltip
               text="برای منو کلیک کنید"
               activatorToolTip={
-                <button className="size-6 rounded-lg hover:bg-gray-2" onMouseDown={onBtnOptionMouseDown}>
+                <button className="size-6 rounded-lg hover:bg-gray-2">
                   <AppIcon name="grip" className="size-6 fill-gray-6" />
                 </button>
               }
