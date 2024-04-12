@@ -68,7 +68,7 @@ const NodeEditor = (props: Props) => {
   };
 
   return (
-    <div draggable data-index={indexState} className={node.clazz + " flex flex-row items-start justify-start group node-row"}>
+    <div data-index={indexState} className={node.clazz + " flex flex-row items-start justify-start group node-row"}>
       <div className="flex flex-row app-base-transform opacity-0 group-hover:opacity-100 mr-0.5 h-full w-12">
         <AppMenu
           className="h-6"
