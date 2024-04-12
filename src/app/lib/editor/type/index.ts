@@ -1,5 +1,5 @@
 import { KeyboardEvent } from "react";
-import { ToolsColorStyleItemTextEditor } from "../../editor-text/type";
+import { ToolsColorStyleItemTextEditor } from "@/app/lib/editor-text/type";
 
 export const TYPE_NODE_TEXT = 0;
 export const TYPE_NODE_VOICE = 1;
@@ -56,10 +56,15 @@ export class NodeQuote extends Node {
 
 export class NodeVoice extends Node {
   path: string;
+  fileName: string;
+  description: string;
 
   constructor(path: string = "") {
     super(TYPE_NODE_VOICE);
     this.path = path;
+    this.fileName = "";
+    this.description = "";
+    this.clazz = "my-3";
   }
 }
 

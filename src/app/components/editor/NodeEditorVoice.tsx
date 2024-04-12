@@ -1,4 +1,4 @@
-import { ChangeEvent, useRef, useContext, useState } from "react";
+import { ChangeEvent, useRef, useContext, useState, useEffect } from "react";
 import { NodeVoice, OnNodeBehavior } from "@/app/lib/editor/type";
 import { EditorContext } from "@/app/lib/editor/hook/context";
 import AppIcon from "../AppIcon";
@@ -22,31 +22,41 @@ const NodeEditorVoice = (props: Props) => {
   const [status, setStatus] = useState<Status>(Status.None);
   const [duration, setDuration] = useState<string>("00:00");
   const [CurrentDuration, setCurrentDuration] = useState<string>("00:00");
+  const [fileName, setFileName] = useState<string>("");
+  const [description, setDescription] = useState<string>("");
+
+  useEffect(() => {
+    console.log(node.path);
+
+    if (status === Status.None && node.path) {
+      setVoice(node.path);
+      setFileName(node.fileName);
+      setDescription(node.description);
+    }
+  }, [node.path]);
+
+  const onChangeDescription = (value: any) => {
+    setDescription(value);
+    node.description = value;
+    if (onNodeBehavior) onNodeBehavior.onUpdate(node);
+  };
+
+  const onChangeFileName = (value: any) => {
+    setFileName(value);
+    node.fileName = value;
+    if (onNodeBehavior) onNodeBehavior.onUpdate(node);
+  };
 
   const onChangeFile = (e: ChangeEvent<HTMLInputElement>) => {
     if (!!e.target.files) {
       node.path = URL.createObjectURL(e.target.files[0]);
       if (onNodeBehavior) onNodeBehavior.onUpdate(node);
+
+      onChangeFileName(e.target.files[0].name);
+
       setStatus(Status.Uploading);
       setTimeout(() => {
-        setStatus(Status.FileReady);
-        if (ref.current) {
-          ref.current.src = node.path;
-          ref.current.addEventListener(
-            "loadedmetadata",
-            () => {
-              if (ref.current) setDuration(getDurationFormat(ref.current.duration));
-            },
-            false
-          );
-          ref.current.addEventListener(
-            "timeupdate",
-            () => {
-              if (ref.current) setCurrentDuration(getDurationFormat(ref.current.currentTime));
-            },
-            false
-          );
-        }
+        setVoice(node.path);
       }, 2000);
     }
   };
@@ -61,6 +71,27 @@ const NodeEditorVoice = (props: Props) => {
     if (ref.current) {
       if (ref.current.paused) ref.current.play();
       else ref.current.pause();
+    }
+  };
+
+  const setVoice = (src: string) => {
+    setStatus(Status.FileReady);
+    if (ref.current) {
+      ref.current.src = src;
+      ref.current.addEventListener(
+        "loadedmetadata",
+        () => {
+          if (ref.current) setDuration(getDurationFormat(ref.current.duration));
+        },
+        false
+      );
+      ref.current.addEventListener(
+        "timeupdate",
+        () => {
+          if (ref.current) setCurrentDuration(getDurationFormat(ref.current.currentTime));
+        },
+        false
+      );
     }
   };
 
@@ -81,7 +112,7 @@ const NodeEditorVoice = (props: Props) => {
         <div className="flex flex-row items-center rounded-lg bg-gray-2 px-4 h-12 cursor-pointer">
           <AppIcon name="volume" className="size-6 ml-3" />
           <div className="flex flex-col flex-1">
-            <span className="text-xs font-semibold">classYoga.mp3</span>
+            <span className="text-xs font-semibold truncate ml-4">{fileName}</span>
             <div className="flex flex-row gap-x-1">
               <span className="text-[11px] text-gray-7">8.3 KB</span>
               <span className="text-[11px] text-gray-7">-</span>
@@ -99,14 +130,14 @@ const NodeEditorVoice = (props: Props) => {
             <button className="ml-3" onClick={onBtnToggleAudioPlayClick}>
               <AppIcon name="play" className="size-6" />
             </button>
-            <input placeholder="نام فایل را بنویسید..." className="text-xs font-semibold placeholder:text-gray-8 outline-none bg-transparent flex-1" />
+            <input value={fileName} onChange={(e) => onChangeFileName(e.target.value)} placeholder="نام فایل را بنویسید..." className="text-xs font-semibold placeholder:text-gray-8 outline-none bg-transparent flex-1 truncate ml-4" />
             <div className="text-xs space-x-1">
               <span>{CurrentDuration}</span>
               <span>/</span>
               <span>{duration}</span>
             </div>
           </div>
-          <input placeholder="توضیحات مربوط به فایل (اختیاری)" className="text-xs  placeholder:text-gray-6 text-gray-6 mt-1 outline-none" />
+          <input value={description} onChange={(e) => onChangeDescription(e.target.value)} placeholder="توضیحات مربوط به فایل (اختیاری)" className="text-xs  placeholder:text-gray-6 text-gray-6 mt-1 outline-none" />
         </div>
       ) : null}
     </div>
