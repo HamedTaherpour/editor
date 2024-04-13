@@ -1,7 +1,7 @@
+import dynamic from "next/dynamic";
 // @ts-ignore
 import { EditorState, RichUtils, ContentBlock, convertFromRaw, CompositeDecorator } from "draft-js";
 import { NodeQuote, NodeText } from "@/app/lib/editor/type";
-import Link from "@/app/components/TextEditor/component/Link";
 import { ToolsColorStyleTextEditor } from "../type";
 
 // FOR INLINE STYLES
@@ -306,16 +306,22 @@ const findLinkEntities = (contentBlock: any, callback: any, contentState: any) =
 export const editorDecorator = new CompositeDecorator([
   {
     strategy: findLinkEntities,
-    component: Link,
+    component: dynamic(() => import("@/app/components/TextEditor/component/Link")),
   },
 ]);
-
-export const getFirstInitEditorState = (node: NodeText | NodeQuote): EditorState => {
-  let editorState = EditorState.createEmpty(editorDecorator);
+export const readonlyDecorator = new CompositeDecorator([
+  {
+    strategy: findLinkEntities,
+    component: dynamic(() => import("@/app/components/TextEditor/component/read-only/LinkReadonly")),
+  },
+]);
+export const getFirstInitEditorState = (node: NodeText | NodeQuote, readonly: boolean): EditorState => {
+  const decorator = readonly ? readonlyDecorator : editorDecorator;
+  let editorState = EditorState.createEmpty(decorator);
 
   if (!!node.text && !!node.text.blocks) {
     const content = convertFromRaw(node.text);
-    editorState = EditorState.createWithContent(content, editorDecorator);
+    editorState = EditorState.createWithContent(content, decorator);
     editorState = EditorState.moveSelectionToEnd(editorState);
   }
   return editorState;

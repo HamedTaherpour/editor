@@ -26,8 +26,6 @@ const NodeEditorVoice = (props: Props) => {
   const [description, setDescription] = useState<string>("");
 
   useEffect(() => {
-    console.log(node.path);
-
     if (status === Status.None && node.path) {
       setVoice(node.path);
       setFileName(node.fileName);

@@ -21,10 +21,10 @@ export class Node {
   fontColor: string;
   focus?: () => void;
 
-  constructor(type: number, clazz?: string) {
+  constructor(type: number, clazz: string = "Hm") {
     this.id = Date.now();
     this.type = type;
-    this.clazz = clazz;
+    this.clazz = clazz || "hamed";
     this.backgroundColor = "";
     this.fontColor = "";
   }

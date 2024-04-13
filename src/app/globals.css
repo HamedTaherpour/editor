@@ -57,6 +57,10 @@
   line-height: normal;
 }
 
+.te-unstyled .public-DraftStyleDefault-rtl {
+  text-align: justify !important;
+}
+
 .et-bullte .public-DraftEditorPlaceholder-inner {
   @apply pr-5;
 }

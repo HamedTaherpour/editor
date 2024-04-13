@@ -26,7 +26,7 @@ const NodeEditorFile = (props: Props) => {
 
   useEffect(() => {
     if (status === Status.None && node.path) {
-      setVoice(node.path);
+      setFile(node.path);
       setFileName(node.fileName);
       setDescription(node.description);
       setFileSize(getFileSizeFormat(node.fileSize));
@@ -56,12 +56,12 @@ const NodeEditorFile = (props: Props) => {
 
       setStatus(Status.Uploading);
       setTimeout(() => {
-        setVoice(node.path);
+        setFile(node.path);
       }, 2000);
     }
   };
 
-  const setVoice = (src: string) => {
+  const setFile = (src: string) => {
     setStatus(Status.FileReady);
   };
 
