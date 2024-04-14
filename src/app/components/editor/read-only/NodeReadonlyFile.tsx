@@ -16,18 +16,16 @@ const NodeReadonlyFile = (props: Props) => {
   });
 
   return (
-    <div>
-      <div className="flex flex-col">
-        <div className="flex flex-row items-center rounded-lg bg-gray-2 px-4 h-12">
-          <AppIcon name="document-upload" className="size-6 ml-3" />
-          <input value={node.fileName} readOnly className="text-xs font-semibold placeholder:text-gray-8 outline-none bg-transparent flex-1 truncate ml-4" />
-          <a href={node.path} download className="text-xs space-x-1">
-            <span>{fileSize}</span>
-          </a>
+    <a href={node.path} download className="flex flex-col">
+      <div className="flex flex-row items-center rounded-lg bg-gray-2 px-4 h-12">
+        <AppIcon name="document-upload" className="size-6 ml-3" />
+        <p className="text-xs font-semibold placeholder:text-gray-8 outline-none bg-transparent flex-1 truncate ml-4">{node.fileName}</p>
+        <div className="text-xs space-x-1">
+          <span>{fileSize}</span>
         </div>
-        <input value={node.description} readOnly className="text-xs  placeholder:text-gray-6 text-gray-6 mt-1 outline-none" />
       </div>
-    </div>
+      <span className="text-xs placeholder:text-gray-6 text-gray-6 mt-1 outline-none">{node.description}</span>
+    </a>
   );
 };
 

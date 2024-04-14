@@ -1,7 +1,5 @@
-import EditorApp from "@/app/components/editor/EditorApp";
-
-export default function Home() {
-  const json = {
+const data = {
+  1: {
     name: "TestA",
     nodes: [
       {
@@ -271,14 +269,14 @@ export default function Home() {
             },
           ],
           entityMap: {
-            "0": {
+            0: {
               type: "LINK",
               mutability: "MUTABLE",
               data: {
                 url: "https://www.zoomit.ir/os/419515-windows-10-sst-driver-issues-upgrade-windows-11/",
               },
             },
-            "1": {
+            1: {
               type: "LINK",
               mutability: "MUTABLE",
               data: {
@@ -345,10 +343,10 @@ export default function Home() {
         description: "آهنگ",
       },
     ],
-  };
-  return (
-    <main>
-      <EditorApp />
-    </main>
-  );
+  },
+};
+
+export async function GET(req) {
+  let res = data[req.nextUrl.searchParams.get("id")];
+  return Response.json(res);
 }

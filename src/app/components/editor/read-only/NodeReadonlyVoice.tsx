@@ -60,14 +60,14 @@ const NodeReadonlyVoice = (props: Props) => {
           <button className="ml-3" onClick={onBtnToggleAudioPlayClick}>
             <AppIcon name="play" className="size-6" />
           </button>
-          <input value={node.fileName} readOnly className="text-xs font-semibold placeholder:text-gray-8 outline-none bg-transparent flex-1 truncate ml-4" />
+          <p className="text-xs font-semibold placeholder:text-gray-8 outline-none bg-transparent flex-1 truncate ml-4">{node.fileName}</p>
           <div className="text-xs space-x-1">
             <span>{CurrentDuration}</span>
             <span>/</span>
             <span>{duration}</span>
           </div>
         </div>
-        <input value={node.description} readOnly className="text-xs  placeholder:text-gray-6 text-gray-6 mt-1 outline-none" />
+        <span className="text-xs placeholder:text-gray-6 text-gray-6 mt-1 outline-none">{node.description}</span>
       </div>
     </div>
   );

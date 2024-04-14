@@ -37,7 +37,10 @@ const NodeReadonlyImage = (props: Props) => {
   return (
     <div className="w-full rounded flex flex-col">
       <div className={imageVerticallyAlignItems[node.verticallyAlign].clazz + " w-full flex"}>
-        <img ref={ref} className="w-full h-full min-w-9 rounded-2xl" />
+        <div className="flex flex-col">
+          <img ref={ref} className="min-w-9 rounded-2xl" />
+          <p className="text-sm text-gray-7 pt-1.5 pb-4 px-4 outline-none text-center resize-none">{node.caption}</p>
+        </div>
       </div>
     </div>
   );
