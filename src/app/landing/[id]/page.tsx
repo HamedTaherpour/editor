@@ -349,6 +349,101 @@ const Page = ({ params }: { params: { id: any } }) => {
         },
       ],
     },
+    2: {
+      name: "TestA",
+      nodes: [
+        {
+          id: 1713095988565,
+          type: 0,
+          clazz: "Hm",
+          backgroundColor: "",
+          fontColor: "",
+          baseTag: "p",
+          text: {
+            blocks: [
+              {
+                key: "3r7q0",
+                text: "ادوبی ظاهراً برای آموزش مدل Firefly از تصاویر Midjourney استفاده کرده است",
+                type: "header-two",
+                depth: 0,
+                inlineStyleRanges: [],
+                entityRanges: [],
+                data: {},
+              },
+            ],
+            entityMap: {},
+          },
+          plainText: "ادوبی ظاهراً برای آموزش مدل Firefly از تصاویر Midjourney استفاده کرده است",
+        },
+        {
+          id: 1713096139261,
+          type: 0,
+          clazz: "Hm",
+          backgroundColor: "COLOR_BLUE",
+          fontColor: "",
+          baseTag: "p",
+          text: {
+            blocks: [
+              {
+                key: "3kg1h",
+                text: "به گفته نماینده ادوبی، برای آموزش هوش مصنوعی Firefly از 5 درصد تصاویر تولیدشده توسط مدل‌های دیگر استفاده شده است.",
+                type: "unstyled",
+                depth: 0,
+                inlineStyleRanges: [],
+                entityRanges: [],
+                data: {},
+              },
+            ],
+            entityMap: {},
+          },
+          plainText: "به گفته نماینده ادوبی، برای آموزش هوش مصنوعی Firefly از 5 درصد تصاویر تولیدشده توسط مدل‌های دیگر استفاده شده است.",
+        },
+        {
+          id: 1713096150893,
+          type: 2,
+          clazz: "my-3",
+          backgroundColor: "",
+          fontColor: "",
+          path: "blob:http://localhost:3000/3ef9a53b-6efa-41ec-9b39-cac74a748475",
+          caption: "",
+          verticallyAlign: "center",
+          width: 432,
+        },
+        {
+          id: 1713096158669,
+          type: 3,
+          clazz: "my-3",
+          backgroundColor: "",
+          fontColor: "COLOR_BLUE",
+          baseTag: "p",
+          text: {
+            blocks: [
+              {
+                key: "ohr5",
+                text: "تصاویر ساخته‌شده با هوش مصنوعی در Adobe Stock تنها بخش کوچکی از مجموعه داده آموزشی Firefly هستند.",
+                type: "unstyled",
+                depth: 0,
+                inlineStyleRanges: [],
+                entityRanges: [],
+                data: {},
+              },
+            ],
+            entityMap: {},
+          },
+          plainText: "تصاویر ساخته‌شده با هوش مصنوعی در Adobe Stock تنها بخش کوچکی از مجموعه داده آموزشی Firefly هستند.",
+        },
+        {
+          id: 1713096200118,
+          type: 1,
+          clazz: "my-3",
+          backgroundColor: "COLOR_BLUE",
+          fontColor: "COLOR_ORAMGE",
+          path: "blob:http://localhost:3000/143f347f-9109-4bc6-937f-41776b71619f",
+          fileName: "RAYE_Escapism._feat._070_Shake_0EBw-CWc4Uw_140.mp3",
+          description: "",
+        },
+      ],
+    },
   };
 
   // @ts-ignore
