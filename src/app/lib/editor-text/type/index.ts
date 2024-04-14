@@ -16,3 +16,7 @@ export interface ToolsColorStyleItemTextEditor {
     };
   };
 }
+
+export interface OnTextEditorBehavior {
+  onBtnLinkEditClick(url: string, entityKey: string, offsetKey: string): void;
+}

@@ -11,6 +11,8 @@ import LinkConfirm from "@/app/components/TextEditor/component/LinkConfirm";
 import "draft-js/dist/Draft.css";
 import { TYPE_NODE_QUOTE, TYPE_NODE_TEXT } from "@/app/lib/editor/type";
 import { EditorContext } from "@/app/lib/editor/hook/context";
+import { TextEditorContext } from "@/app/lib/editor-text/hook/context";
+
 import useOutsideClick from "@/app/lib/OutsideClick";
 import { getElementPostion } from "@/app/lib/utils";
 
@@ -19,6 +21,15 @@ var lastKeypressTime = 0;
 
 const DraftEditor = ({ onChangeText, onChange, placeholder, node, index }) => {
   const onNodeBehavior = useContext(EditorContext);
+
+  const onTextEditorBehavior = {
+    onBtnLinkEditClick(url, entityKey, offsetKey) {
+      setEntityKeyEdit(entityKey);
+      setOffseKeyEdit(offsetKey);
+      setLinkEdit(url);
+      setShowEditLinkConfirm(true);
+    },
+  };
 
   const [editorState, setEditorState] = useState(getFirstInitEditorState(node));
   const [showToolbar, setShowToolbar] = useState(false);
@@ -159,77 +170,72 @@ const DraftEditor = ({ onChangeText, onChange, placeholder, node, index }) => {
   };
 
   const onBtnSetLinkClick = (link) => {
-    setEditorState(setLink(editorState, link, onLinkActionClick));
+    setEditorState(setLink(editorState, link));
     setShowLinkConfirm(false);
   };
 
   const onBtnSetEditLinkClick = (link) => {
-    setEditorState(editLink(editorState, entityKeyEdit, link, onLinkActionClick));
+    setEditorState(editLink(editorState, entityKeyEdit, link));
     setShowEditLinkConfirm(false);
-  };
-
-  const onLinkActionClick = (url, entityKey, offsetKey) => {
-    setEntityKeyEdit(entityKey);
-    setOffseKeyEdit(offsetKey);
-    setLinkEdit(url);
-    setShowEditLinkConfirm(true);
   };
 
   return (
     <div ref={ref} className={rootClazz + " w-full"} onMouseUp={onMouseUp}>
-      {showMenu
-        ? createPortal(
-            <div
-              ref={refMenu}
-              style={{
-                top: postionMenu.y,
-                left: postionMenu.x,
-              }}
-              className="absolute z-50 bg-white p-2 border border-slate-200 rounded-lg shadow-xl2"
-            >
-              <MenuNodeEditor index={index} onActionClick={() => setShowMenu(false)} />
-            </div>,
-            menuEl
-          )
-        : null}
-      <div className="relative">
-        {showToolbar ? <Toolbar editorState={editorState} setEditorState={setEditorState} onBtnShowLinkConfirmClick={onBtnShowLinkConfirmClick} onTransitionNodeListener={myOnTransitionNodeListener} /> : null}
-        {showLinkConfirm ? (
-          <div ref={refConfirm} className="absolute z-50">
-            <LinkConfirm onBtnSetLinkClick={onBtnSetLinkClick} />
-          </div>
-        ) : null}
-        {showEditLinkConfirm
+      <TextEditorContext.Provider value={onTextEditorBehavior}>
+        {showMenu
           ? createPortal(
               <div
-                ref={refEditConfirm}
-                className="absolute z-50"
+                ref={refMenu}
                 style={{
-                  top: postionLink.y,
-                  left: postionLink.x,
+                  top: postionMenu.y,
+                  left: postionMenu.x,
                 }}
+                className="absolute z-50 bg-white p-2 border border-slate-200 rounded-lg shadow-xl2"
               >
-                <LinkEditConfirm onBtnSetEditLinkClick={onBtnSetEditLinkClick} linkEdit={linkEdit} />
+                <MenuNodeEditor index={index} onActionClick={() => setShowMenu(false)} />
               </div>,
               menuEl
             )
           : null}
-      </div>
-      <Editor
-        ref={editor}
-        placeholder={placeholder}
-        editorState={editorState}
-        customStyleMap={customStyleMap}
-        textDirectionality="RTL"
-        blockStyleFn={blockStyleFn}
-        keyBindingFn={myKeyBindingFn}
-        onChange={(editorState) => {
-          const contentState = editorState.getCurrentContent();
-          onChange(convertToRaw(contentState));
-          onChangeText(getValue(editorState));
-          setEditorState(editorState);
-        }}
-      />
+        <div className="relative">
+          {showToolbar ? <Toolbar editorState={editorState} setEditorState={setEditorState} onBtnShowLinkConfirmClick={onBtnShowLinkConfirmClick} onTransitionNodeListener={myOnTransitionNodeListener} /> : null}
+          {showLinkConfirm ? (
+            <div ref={refConfirm} className="absolute z-50">
+              <LinkConfirm onBtnSetLinkClick={onBtnSetLinkClick} />
+            </div>
+          ) : null}
+          {showEditLinkConfirm
+            ? createPortal(
+                <div
+                  ref={refEditConfirm}
+                  className="absolute z-50"
+                  style={{
+                    top: postionLink.y,
+                    left: postionLink.x,
+                  }}
+                >
+                  <LinkEditConfirm onBtnSetEditLinkClick={onBtnSetEditLinkClick} linkEdit={linkEdit} />
+                </div>,
+                menuEl
+              )
+            : null}
+        </div>
+        <Editor
+          ref={editor}
+          placeholder={placeholder}
+          editorState={editorState}
+          customStyleMap={customStyleMap}
+          textDirectionality="RTL"
+          blockStyleFn={blockStyleFn}
+          keyBindingFn={myKeyBindingFn}
+          onChange={(editorState) => {
+            const contentState = editorState.getCurrentContent();
+            onChange(convertToRaw(contentState));
+            onChangeText(getValue(editorState));
+            setEditorState(editorState);
+          }}
+        />
+      </TextEditorContext.Provider>
     </div>
   );
 };

@@ -1,11 +1,13 @@
 import AppIcon from "@/app/components/AppIcon";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import { createPortal } from "react-dom";
 import useOutsideClick from "@/app/lib/OutsideClick";
 import { getBlockPositionDOM } from "@/app/lib/editor-text/hook/tools";
+import { TextEditorContext } from "@/app/lib/editor-text/hook/context";
 
 const Link = (props) => {
-  const { url, onActionClick } = props.contentState.getEntity(props.entityKey).getData();
+  const { url } = props.contentState.getEntity(props.entityKey).getData();
+  const onTextEditorBehavior = useContext(TextEditorContext);
 
   const menuEl = document.getElementById("menu");
   const [showLink, setShowLink] = useState(false);
@@ -23,7 +25,7 @@ const Link = (props) => {
   }, [showLink]);
 
   const onBtnEditLink = () => {
-    onActionClick(url, props.entityKey, props.offsetKey);
+    onTextEditorBehavior.onBtnLinkEditClick(url, props.entityKey, props.offsetKey);
   };
   const onMouseEnter = (e) => {
     setShowLink(true);

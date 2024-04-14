@@ -419,11 +419,10 @@ export const isStyleActive = (editorState: EditorState, style: any, method: stri
   }
 };
 
-export const editLink = (editorState: EditorState, entityKey: string, link: string, onActionClick: Function): EditorState => {
+export const editLink = (editorState: EditorState, entityKey: string, link: string): EditorState => {
   const contentState = editorState.getCurrentContent();
   const contentStateWithEntity = contentState.replaceEntityData(entityKey, {
     url: link,
-    onActionClick,
   });
 
   const newEditorState = EditorState.set(editorState, {
@@ -433,11 +432,10 @@ export const editLink = (editorState: EditorState, entityKey: string, link: stri
   return RichUtils.toggleLink(newEditorState, newEditorState.getSelection(), entityKey);
 };
 
-export const setLink = (editorState: EditorState, link: string, onActionClick: Function): EditorState => {
+export const setLink = (editorState: EditorState, link: string): EditorState => {
   const contentState = editorState.getCurrentContent();
   const contentStateWithEntity = contentState.createEntity("LINK", "MUTABLE", {
     url: link,
-    onActionClick,
   });
   const entityKey = contentStateWithEntity.getLastCreatedEntityKey();
 

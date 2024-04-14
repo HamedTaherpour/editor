@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 
 import Editor from "@/app/lib/editor";
 import NodeEditorTextModule from "@/app/lib/editor/text/module";
@@ -14,7 +14,7 @@ import NodeEditor from "@/app/components/editor/NodeEditor";
 
 import { EditorContext } from "@/app/lib/editor/hook/context";
 
-import { JsonEditor, TYPE_NODE_TEXT, TYPE_NODE_VOICE, TYPE_NODE_IMAGE, TYPE_NODE_QUOTE, TYPE_NODE_DIVIDER, NodeText, NodeVoice, NodeImage, NodeQuote, NodeDivider, OnNodeBehavior, Node, TYPE_NODE_FILE, NodeFile } from "@/app/lib/editor/type";
+import { JsonEditor, OnJsonEditorUpdateListener, TYPE_NODE_TEXT, TYPE_NODE_VOICE, TYPE_NODE_IMAGE, TYPE_NODE_QUOTE, TYPE_NODE_DIVIDER, NodeText, NodeVoice, NodeImage, NodeQuote, NodeDivider, OnNodeBehavior, Node, TYPE_NODE_FILE, NodeFile } from "@/app/lib/editor/type";
 
 interface AddNode {
   type: number;
@@ -22,13 +22,22 @@ interface AddNode {
   index?: number;
 }
 
-const EditorApp = () => {
+interface Props {
+  value?: JsonEditor;
+  onJsonEditorUpdateListener: OnJsonEditorUpdateListener;
+}
+
+const EditorApp = (props: Props) => {
+  const { value, onJsonEditorUpdateListener } = props;
   const [isClipboardExists, setIsClipboardExists] = useState(false);
   const [clipboard, setClipboard] = useState<Node>();
-  const [jsonEditor, setJsonEditor] = useState<JsonEditor>({
-    name: "TestA",
-    nodes: [],
-  });
+  const [jsonEditor, setJsonEditor] = useState<JsonEditor>(
+    value || {
+      name: "TestA",
+      nodes: [],
+    }
+  );
+
   const editor = new Editor(jsonEditor);
   const nodeEditorTextModule = new NodeEditorTextModule(editor);
   const nodeEditorVoiceModule = new NodeEditorVoiceModule(editor);
@@ -284,6 +293,7 @@ const EditorApp = () => {
   editor.setOnJsonEditorUpdateListener({
     onUpdate: (_jsonEditor) => {
       setJsonEditor(Object.assign({}, _jsonEditor));
+      onJsonEditorUpdateListener.onUpdate(_jsonEditor);
     },
   });
 
