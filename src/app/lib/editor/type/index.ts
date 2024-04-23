@@ -21,10 +21,10 @@ export class Node {
   fontColor: string;
   focus?: () => void;
 
-  constructor(type: number, clazz: string = "Hm") {
+  constructor(type: number, clazz: string = "") {
     this.id = Date.now();
     this.type = type;
-    this.clazz = clazz || "hamed";
+    this.clazz = clazz;
     this.backgroundColor = "";
     this.fontColor = "";
   }
@@ -86,14 +86,14 @@ export class NodeFile extends Node {
 }
 
 export class NodeImage extends Node {
-  path: string;
+  url: string;
   caption: any;
   width?: number;
   verticallyAlign: string;
 
-  constructor(path: string = "", caption: string = "") {
+  constructor(url: string = "", caption: string = "") {
     super(TYPE_NODE_IMAGE);
-    this.path = path;
+    this.url = url;
     this.caption = caption;
     this.clazz = "my-3";
     this.verticallyAlign = "center";
@@ -121,6 +121,11 @@ export interface OnNodeBehavior {
   onKeyUp(e: KeyboardEvent<HTMLElement>, index: number): void;
   onTransition(typeTransition: number, index: number): void;
   onMove(fromIndex: number, toIndex: number): void;
+  onUploadFile(file: File): Promise<any>;
+}
+
+export interface OnUploadFileListener {
+  onUploadFile(file: File): Promise<any>;
 }
 
 export interface ImageVerticallyAlignItems {

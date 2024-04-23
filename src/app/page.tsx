@@ -1,7 +1,7 @@
 "use client";
 
 import dynamic from "next/dynamic";
-import { OnJsonEditorUpdateListener } from "./lib/editor/type";
+import { OnJsonEditorUpdateListener, OnUploadFileListener } from "./lib/editor/type";
 
 const EditorApp = dynamic(() => import("@/app/components/editor/EditorApp"), { ssr: false });
 
@@ -453,9 +453,19 @@ export default function Home() {
     onUpdate(jsonEditor) {},
   };
 
+  const onUploadFileListener: OnUploadFileListener = {
+    onUploadFile(file) {
+      return new Promise((resolve, reject) => {
+        setTimeout(() => {
+          resolve({ url: "https://s3.cointelegraph.com/uploads/2024-04/8fdd3d0b-924f-491e-83f2-d96220ce0037.jpg" });
+        }, 3000);
+      });
+    },
+  };
+
   return (
     <main>
-      <EditorApp value={data[1]} onJsonEditorUpdateListener={listener} />
+      <EditorApp onJsonEditorUpdateListener={listener} onUploadFileListener={onUploadFileListener} />
     </main>
   );
 }

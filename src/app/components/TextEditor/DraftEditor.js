@@ -66,9 +66,6 @@ const DraftEditor = ({ onChangeText, onChange, placeholder, node, index }) => {
     rootClazz += " et-bullte";
   }
 
-  const newEditorState = setBaseTag(editorState, node);
-  if (newEditorState) setEditorState(newEditorState);
-
   useEffect(() => {
     focusEditor();
 

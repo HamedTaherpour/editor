@@ -33,8 +33,8 @@ const NodeEditorImage = (props: Props) => {
   });
 
   useEffect(() => {
-    if (node.path) {
-      setImage(node.path);
+    if (node.url) {
+      setImage(node.url);
       setShowFileSelected(false);
     }
   }, []);
@@ -73,8 +73,12 @@ const NodeEditorImage = (props: Props) => {
 
   const onChangeFile = (e: ChangeEvent<HTMLInputElement>) => {
     if (!!e.target.files) {
-      node.path = URL.createObjectURL(e.target.files[0]);
-      setImage(node.path);
+      if (onNodeBehavior)
+        onNodeBehavior.onUploadFile(e.target.files[0]).then((response) => {
+          setImage(response.url);
+        });
+      node.url = URL.createObjectURL(e.target.files[0]);
+      setImage(node.url);
     }
   };
 
@@ -83,7 +87,7 @@ const NodeEditorImage = (props: Props) => {
   };
 
   const setImage = (url: string) => {
-    node.path = url;
+    node.url = url;
     if (ref.current) {
       ref.current.src = url;
       const img = new Image();

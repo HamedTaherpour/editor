@@ -324,10 +324,12 @@ export const getFirstInitEditorState = (node: NodeText | NodeQuote, readonly: bo
     editorState = EditorState.createWithContent(content, decorator);
     editorState = EditorState.moveSelectionToEnd(editorState);
   }
+  editorState = setBaseTag(editorState, node);
   return editorState;
 };
 
 export const setBaseTag = (editorState: EditorState, node: NodeText | NodeQuote): EditorState => {
+  let newEditorState = editorState;
   if (node.baseTag !== "p" && !!!node.text && !!!node.text.blocks) {
     const keys: { [key: string]: string } = {
       h1: "header-one",
@@ -340,9 +342,10 @@ export const setBaseTag = (editorState: EditorState, node: NodeText | NodeQuote)
     const style = keys[node.baseTag];
     const blockType = editorState.getCurrentContent().getBlockForKey(editorState.getSelection().getStartKey()).getType();
     if (blockType !== style) {
-      return setStyle(editorState, style, "block");
+      newEditorState = setStyle(editorState, style, "block");
     }
   }
+  return newEditorState;
 };
 
 export const getLineNumberSelected = (editorState: EditorState) => {

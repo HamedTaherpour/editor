@@ -14,7 +14,7 @@ import NodeEditor from "@/app/components/editor/NodeEditor";
 
 import { EditorContext } from "@/app/lib/editor/hook/context";
 
-import { JsonEditor, OnJsonEditorUpdateListener, TYPE_NODE_TEXT, TYPE_NODE_VOICE, TYPE_NODE_IMAGE, TYPE_NODE_QUOTE, TYPE_NODE_DIVIDER, NodeText, NodeVoice, NodeImage, NodeQuote, NodeDivider, OnNodeBehavior, Node, TYPE_NODE_FILE, NodeFile } from "@/app/lib/editor/type";
+import { JsonEditor, OnJsonEditorUpdateListener, OnUploadFileListener, TYPE_NODE_TEXT, TYPE_NODE_VOICE, TYPE_NODE_IMAGE, TYPE_NODE_QUOTE, TYPE_NODE_DIVIDER, NodeText, NodeVoice, NodeImage, NodeQuote, NodeDivider, OnNodeBehavior, Node, TYPE_NODE_FILE, NodeFile } from "@/app/lib/editor/type";
 
 interface AddNode {
   type: number;
@@ -25,10 +25,11 @@ interface AddNode {
 interface Props {
   value?: JsonEditor;
   onJsonEditorUpdateListener: OnJsonEditorUpdateListener;
+  onUploadFileListener: OnUploadFileListener;
 }
 
 const EditorApp = (props: Props) => {
-  const { value, onJsonEditorUpdateListener } = props;
+  const { value, onJsonEditorUpdateListener, onUploadFileListener } = props;
   const [isClipboardExists, setIsClipboardExists] = useState(false);
   const [clipboard, setClipboard] = useState<Node>();
   const [jsonEditor, setJsonEditor] = useState<JsonEditor>(
@@ -121,27 +122,11 @@ const EditorApp = (props: Props) => {
         },
       },
       {
-        title: "لینک",
-        description: "صوت یا ویس خود را بارگزاری کنید.",
-        icon: "link",
-        action: (index: number) => {
-          onBtnAddNodeClick({ type: TYPE_NODE_TEXT, index });
-        },
-      },
-      {
         title: "تصویر",
         description: "تصویر خود را بارگزاری کنید.",
         icon: "gallery",
         action: (index: number) => {
           onBtnAddNodeClick({ type: TYPE_NODE_IMAGE, index });
-        },
-      },
-      {
-        title: "ویدیو",
-        description: "ویدیو خود را بارگزاری کنید.",
-        icon: "play-circle",
-        action: (index: number) => {
-          // onBtnAddNodeClick(TYPE_NODE_TEXT, index);
         },
       },
       {
@@ -288,12 +273,15 @@ const EditorApp = (props: Props) => {
     onMove(fromIndex, toIndex) {
       editor.moveNode(fromIndex, toIndex);
     },
+    onUploadFile(file) {
+      return onUploadFileListener.onUploadFile(file);
+    },
   };
 
   editor.setOnJsonEditorUpdateListener({
     onUpdate: (_jsonEditor) => {
       setJsonEditor(Object.assign({}, _jsonEditor));
-      onJsonEditorUpdateListener.onUpdate(_jsonEditor);
+      if (onJsonEditorUpdateListener) onJsonEditorUpdateListener.onUpdate(_jsonEditor);
     },
   });
 
