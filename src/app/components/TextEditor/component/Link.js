@@ -35,10 +35,8 @@ const Link = (props) => {
   };
 
   return (
-    <div className="inline-block" onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave}>
-      <a href={url} className="text-blue-600 underline underline-offset-1 cursor-pointer">
-        {props.children}
-      </a>
+    <div className="inline-block text-blue-600 underline underline-offset-1 cursor-pointer" onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave} onClick={onBtnEditLink}>
+      {props.children}
       {showLink
         ? createPortal(
             <div
