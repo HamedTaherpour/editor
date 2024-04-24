@@ -195,7 +195,7 @@ const DraftEditor = ({ onChangeText, onChange, placeholder, node, index }) => {
             )
           : null}
         <div className="relative">
-          {showToolbar ? <Toolbar editorState={editorState} setEditorState={setEditorState} onBtnShowLinkConfirmClick={onBtnShowLinkConfirmClick} onTransitionNodeListener={myOnTransitionNodeListener} /> : null}
+          {showToolbar ? <Toolbar node={node} editorState={editorState} setEditorState={setEditorState} onBtnShowLinkConfirmClick={onBtnShowLinkConfirmClick} onTransitionNodeListener={myOnTransitionNodeListener} /> : null}
           {showLinkConfirm ? (
             <div ref={refConfirm} className="absolute z-50">
               <LinkConfirm onBtnSetLinkClick={onBtnSetLinkClick} />

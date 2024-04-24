@@ -2,8 +2,9 @@ import React, { useState } from "react";
 import AppDropDownMenu from "@/app/components/AppDropDownMenu";
 import { toolsFontStylsItems, toolsColorStyleItems, toolsHeadingStyleItems, getLastStyleFontColor, getLastStyleBackgroundColor, setStyle, isStyleActive } from "@/app/lib/editor-text/hook/tools";
 import AppIcon from "@/app/components/AppIcon";
+import { TYPE_NODE_QUOTE } from "@/app/lib/editor/type";
 
-const Toolbar = ({ editorState, setEditorState, onTransitionNodeListener, onBtnShowLinkConfirmClick }) => {
+const Toolbar = ({ editorState, setEditorState, onTransitionNodeListener, onBtnShowLinkConfirmClick, node }) => {
   const [colorSelected, setColorSelected] = useState("COLOR_DARK");
 
   const onBtnHeadingItemClick = (item) => {
@@ -99,7 +100,7 @@ const Toolbar = ({ editorState, setEditorState, onTransitionNodeListener, onBtnS
               <AppIcon name={item.icon} className="size-5" />
             </button>
           ))}
-          <button className="px-1.5 flex-none hover:bg-gray-2 app-base-transform h-full" onClick={() => onBtnToggleQuoteClick()}>
+          <button className={(node.type === TYPE_NODE_QUOTE ? "bg-gray-2" : "") + " px-1.5 flex-none hover:bg-gray-2 app-base-transform h-full"} onClick={() => onBtnToggleQuoteClick()}>
             <AppIcon name="quote-up" className="size-5" />
           </button>
         </div>
