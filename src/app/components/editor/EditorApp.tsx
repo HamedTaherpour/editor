@@ -337,7 +337,7 @@ const EditorApp = (props: Props) => {
         <EditorContext.Provider value={onNodeBehavior}>
           <div className="flex flex-col nodes">
             {jsonEditor.nodes.map((item, i) => (
-              <NodeEditor key={item.id + "" + i} index={i} node={item} />
+              <NodeEditor key={item.id} index={i} node={item} />
             ))}
           </div>
         </EditorContext.Provider>

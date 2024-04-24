@@ -71,7 +71,7 @@ const Toolbar = ({ editorState, setEditorState, onTransitionNodeListener, onBtnS
         <div className="border-x border-gray-2 h-full flex items-center">
           <AppDropDownMenu
             className="px-3 hover:bg-gray-2 app-base-transform h-full"
-            activator={<div className={toolsColorStyleItems[colorSelected].option.class.background + " w-4 h-4 rounded"}></div>}
+            activator={<div>{Object.keys(toolsColorStyleItems).map((item, i) => (isStyleActive(editorState, toolsColorStyleItems[item].option.style.color, item.method) ? <div key={item} className={toolsColorStyleItems[item].option.class.background + " w-4 h-4 rounded"}></div> : null))}</div>}
             menu={
               <div className="p-2 flex flex-col w-40">
                 <div className="grid grid-cols-5 gap-1">
