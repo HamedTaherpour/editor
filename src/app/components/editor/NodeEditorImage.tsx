@@ -234,7 +234,7 @@ const NodeEditorImage = (props: Props) => {
                 />
                 <div className={(loading ? "" : "invisible") + " bg-black/80 rounded-lg flex flex-row px-2 py-1 items-center"}>
                   <AppLoadingSpinner className="size-3 text-white ml-2" />
-                  <span className="text-[10px] text-white animate-pulse">در حال بارگزاری . . .</span>
+                  <span className="text-[10px] text-white animate-pulse">در حال بارگذاری . . .</span>
                 </div>
               </div>
               <div className="flex flex-row justify-between items-center h-2/6">
