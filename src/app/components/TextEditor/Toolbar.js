@@ -52,7 +52,7 @@ const Toolbar = ({ editorState, setEditorState, onTransitionNodeListener, onBtnS
   };
 
   return (
-    <div className="absolute bottom-0 pb-3 z-50 ignore">
+    <div className="absolute bottom-0 pb-3 z-50 ignore text-gray-9">
       <div className="rounded-lg shadow-md flex flex-row items-center h-11 border border-gray-2 bg-white">
         <AppDropDownMenu
           className="px-3 hover:bg-gray-2 app-base-transform h-full"
@@ -107,9 +107,9 @@ const Toolbar = ({ editorState, setEditorState, onTransitionNodeListener, onBtnS
           <span className="text-sm">لینک</span>
           <AppIcon name="arrow-right-up" className="size-5 opacity-50" />
         </button>
-        <button className="px-3 hover:bg-gray-2 app-base-transform h-full">
+        {/* <button className="px-3 hover:bg-gray-2 app-base-transform h-full">
           <AppIcon name="more" className="size-5 opacity-50" />
-        </button>
+        </button> */}
       </div>
     </div>
   );

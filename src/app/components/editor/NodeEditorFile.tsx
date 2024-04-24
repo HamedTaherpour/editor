@@ -23,15 +23,18 @@ const NodeEditorFile = (props: Props) => {
   const [fileSize, setFileSize] = useState<string>("0");
   const [fileName, setFileName] = useState<string>("");
   const [description, setDescription] = useState<string>("");
+  const refFile = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
-    if (status === Status.None && node.path) {
-      setFile(node.path);
+    if (status === Status.None && node.url) {
+      setFile(node.url);
       setFileName(node.fileName);
       setDescription(node.description);
       setFileSize(getFileSizeFormat(node.fileSize));
+    } else if (refFile.current) {
+      refFile.current.click();
     }
-  }, [node.path]);
+  }, [node.url]);
 
   const onChangeDescription = (value: any) => {
     setDescription(value);
@@ -47,21 +50,26 @@ const NodeEditorFile = (props: Props) => {
 
   const onChangeFile = (e: ChangeEvent<HTMLInputElement>) => {
     if (!!e.target.files) {
-      node.path = URL.createObjectURL(e.target.files[0]);
       node.fileSize = e.target.files[0].size;
-      if (onNodeBehavior) onNodeBehavior.onUpdate(node);
-
       onChangeFileName(e.target.files[0].name);
-      setFileSize(getFileSizeFormat(e.target.files[0].size));
-
-      setStatus(Status.Uploading);
-      setTimeout(() => {
-        setFile(node.path);
-      }, 2000);
+      setFileSize(getFileSizeFormat(node.fileSize));
+      if (onNodeBehavior) {
+        setStatus(Status.Uploading);
+        onNodeBehavior
+          .onUploadFile(e.target.files[0])
+          .then((response) => {
+            setFile(response.url);
+          })
+          .catch(() => {
+            onNodeBehavior.onDelete(node);
+          });
+      }
     }
   };
 
-  const setFile = (src: string) => {
+  const setFile = (url: string) => {
+    node.url = url;
+    if (onNodeBehavior) onNodeBehavior.onUpdate(node);
     setStatus(Status.FileReady);
   };
 
@@ -72,7 +80,7 @@ const NodeEditorFile = (props: Props) => {
           <AppIcon name="document-upload" className="size-6 ml-3" />
           <span className="text-xs font-semibold text-gray-8 ml-1">فایل خود را بارگذاری کنید.</span>
           <span className="text-xs text-gray-8">pdf . jpj فرمت</span>
-          <input className="hidden" id="file_input" type="file" accept="image/*,.pdf" onChange={onChangeFile} />
+          <input ref={refFile} className="hidden" type="file" accept="image/*,.pdf" onChange={onChangeFile} />
         </label>
       ) : status === Status.Uploading ? (
         <div className="flex flex-row items-center rounded-lg bg-gray-2 px-4 h-12 cursor-pointer">
@@ -80,9 +88,6 @@ const NodeEditorFile = (props: Props) => {
           <div className="flex flex-col flex-1">
             <span className="text-xs font-semibold truncate ml-4">{fileName}</span>
             <div className="flex flex-row gap-x-1">
-              <span className="text-[11px] text-gray-7">8.3 KB</span>
-              <span className="text-[11px] text-gray-7">-</span>
-              <span className="text-[11px] text-gray-7">34%</span>
               <AppLoadingSpinner className="size-3 text-gray-7" />
             </div>
           </div>
@@ -95,7 +100,7 @@ const NodeEditorFile = (props: Props) => {
           <div className="flex flex-row items-center rounded-lg bg-gray-2 px-4 h-12">
             <AppIcon name="document-upload" className="size-6 ml-3" />
             <input value={fileName} onChange={(e) => onChangeFileName(e.target.value)} placeholder="نام فایل را بنویسید..." className="text-xs font-semibold placeholder:text-gray-8 outline-none bg-transparent flex-1 truncate ml-4" />
-            <a href={node.path} download className="text-xs space-x-1">
+            <a href={node.url} download className="text-xs space-x-1">
               <span>{fileSize}</span>
             </a>
           </div>

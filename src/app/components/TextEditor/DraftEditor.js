@@ -60,7 +60,7 @@ const DraftEditor = ({ onChangeText, onChange, placeholder, node, index }) => {
       setShowEditLinkConfirm(false);
     }
   });
-  const menuEl = document.getElementById("menu");
+  const menuEl = document.body;
   let rootClazz = "node-" + node.id;
   if (node.baseTag === "ul-disc" || node.baseTag === "ul-decimal") {
     rootClazz += " et-bullte";

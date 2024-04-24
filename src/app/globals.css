@@ -73,6 +73,8 @@
 .public-DraftEditorPlaceholder-inner {
   @apply opacity-0 app-base-transform;
 }
+
+.empty-editor .public-DraftEditorPlaceholder-inner,
 .public-DraftEditorPlaceholder-hasFocus .public-DraftEditorPlaceholder-inner {
   @apply opacity-100;
 }

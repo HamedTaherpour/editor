@@ -9,7 +9,7 @@ const Link = (props) => {
   const { url } = props.contentState.getEntity(props.entityKey).getData();
   const onTextEditorBehavior = useContext(TextEditorContext);
 
-  const menuEl = document.getElementById("menu");
+  const menuEl = document.body;
   const [showLink, setShowLink] = useState(false);
   const [position, setPosition] = useState({ x: 0, y: 0 });
   const refLink = useOutsideClick((e) => {

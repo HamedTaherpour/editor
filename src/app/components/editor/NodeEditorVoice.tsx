@@ -24,14 +24,17 @@ const NodeEditorVoice = (props: Props) => {
   const [CurrentDuration, setCurrentDuration] = useState<string>("00:00");
   const [fileName, setFileName] = useState<string>("");
   const [description, setDescription] = useState<string>("");
+  const refFile = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
-    if (status === Status.None && node.path) {
-      setVoice(node.path);
+    if (status === Status.None && node.url) {
+      setVoice(node.url);
       setFileName(node.fileName);
       setDescription(node.description);
+    } else if (refFile.current) {
+      refFile.current.click();
     }
-  }, [node.path]);
+  }, [node.url]);
 
   const onChangeDescription = (value: any) => {
     setDescription(value);
@@ -47,15 +50,18 @@ const NodeEditorVoice = (props: Props) => {
 
   const onChangeFile = (e: ChangeEvent<HTMLInputElement>) => {
     if (!!e.target.files) {
-      node.path = URL.createObjectURL(e.target.files[0]);
-      if (onNodeBehavior) onNodeBehavior.onUpdate(node);
-
       onChangeFileName(e.target.files[0].name);
-
-      setStatus(Status.Uploading);
-      setTimeout(() => {
-        setVoice(node.path);
-      }, 2000);
+      if (onNodeBehavior) {
+        setStatus(Status.Uploading);
+        onNodeBehavior
+          .onUploadVoice(e.target.files[0])
+          .then((response) => {
+            setVoice(response.url);
+          })
+          .catch(() => {
+            onNodeBehavior.onDelete(node);
+          });
+      }
     }
   };
 
@@ -72,10 +78,12 @@ const NodeEditorVoice = (props: Props) => {
     }
   };
 
-  const setVoice = (src: string) => {
+  const setVoice = (url: string) => {
+    node.url = url;
+    if (onNodeBehavior) onNodeBehavior.onUpdate(node);
     setStatus(Status.FileReady);
     if (ref.current) {
-      ref.current.src = src;
+      ref.current.src = url;
       ref.current.addEventListener(
         "loadedmetadata",
         () => {
@@ -104,7 +112,7 @@ const NodeEditorVoice = (props: Props) => {
           <AppIcon name="volume" className="size-6 ml-3" />
           <span className="text-xs font-semibold text-gray-8 ml-1">فایل صوتی را بارگذاری کنید.</span>
           <span className="text-xs text-gray-8">mp3. mww فرمت</span>
-          <input className="hidden" id="file_input" type="file" accept=".mp3,audio/*" onChange={onChangeFile} />
+          <input ref={refFile} className="hidden" type="file" accept=".mp3,audio/*" onChange={onChangeFile} />
         </label>
       ) : status === Status.Uploading ? (
         <div className="flex flex-row items-center rounded-lg bg-gray-2 px-4 h-12 cursor-pointer">
@@ -112,9 +120,6 @@ const NodeEditorVoice = (props: Props) => {
           <div className="flex flex-col flex-1">
             <span className="text-xs font-semibold truncate ml-4">{fileName}</span>
             <div className="flex flex-row gap-x-1">
-              <span className="text-[11px] text-gray-7">8.3 KB</span>
-              <span className="text-[11px] text-gray-7">-</span>
-              <span className="text-[11px] text-gray-7">34%</span>
               <AppLoadingSpinner className="size-3 text-gray-7" />
             </div>
           </div>

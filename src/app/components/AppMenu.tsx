@@ -15,7 +15,7 @@ interface Props {
 const AppMenu = (props: Props) => {
   const [postion, setPostion] = useState({ x: 0, y: 0 });
 
-  const menuEl = document.getElementById("menu");
+  const menuEl = document.body;
 
   const { activator, menu, className } = props;
 

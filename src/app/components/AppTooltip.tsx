@@ -13,7 +13,7 @@ interface Props {
 const AppTooltip = (props: Props) => {
   const [postion, setPostion] = useState({ x: 0, y: 0 });
 
-  const menuEl = document.getElementById("menu");
+  const menuEl = document.body;
 
   const { activatorToolTip, text, className } = props;
 

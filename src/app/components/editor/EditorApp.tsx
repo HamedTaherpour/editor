@@ -276,6 +276,12 @@ const EditorApp = (props: Props) => {
     onUploadFile(file) {
       return onUploadFileListener.onUploadFile(file);
     },
+    onUploadImage(file) {
+      return onUploadFileListener.onUploadImage(file);
+    },
+    onUploadVoice(file) {
+      return onUploadFileListener.onUploadVoice(file);
+    },
   };
 
   editor.setOnJsonEditorUpdateListener({
@@ -326,7 +332,7 @@ const EditorApp = (props: Props) => {
   };
 
   return (
-    <div className="flex flex-col min-h-screen et-container mx-auto">
+    <div className={(jsonEditor.nodes.length <= 1 ? "empty-editor " : "") + " flex flex-col min-h-screen et-container mx-auto"}>
       <div className="flex flex-col min-h-96 mt-16 w-full">
         <EditorContext.Provider value={onNodeBehavior}>
           <div className="flex flex-col nodes">

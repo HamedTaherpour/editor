@@ -6,6 +6,7 @@ import useOutsideClick from "@/app/lib/OutsideClick";
 import AppIcon from "../AppIcon";
 import AppMenu from "../AppMenu";
 import { imageVerticallyAlignItems } from "@/app/lib/editor/image/utils";
+import AppLoadingSpinner from "../AppLoadingSpinner";
 
 interface Props {
   node: NodeImage;
@@ -27,7 +28,9 @@ const NodeEditorImage = (props: Props) => {
   const [fileTypeSelected, setFileTypeSelected] = useState(FILE_TYPE_UPLOAD);
   const [link, setLink] = useState("");
   const [enabledCaption, setEnabledCaption] = useState(false);
+  const [loading, setLoading] = useState(false);
   const refCaption = useRef<HTMLDivElement>(null);
+  const refFile = useRef<HTMLInputElement>(null);
   const rootRef = useOutsideClick<HTMLDivElement>(() => {
     // setShowFileSelected(false);
   });
@@ -36,6 +39,8 @@ const NodeEditorImage = (props: Props) => {
     if (node.url) {
       setImage(node.url);
       setShowFileSelected(false);
+    } else if (refFile.current) {
+      refFile.current.click();
     }
   }, []);
 
@@ -73,10 +78,18 @@ const NodeEditorImage = (props: Props) => {
 
   const onChangeFile = (e: ChangeEvent<HTMLInputElement>) => {
     if (!!e.target.files) {
-      if (onNodeBehavior)
-        onNodeBehavior.onUploadFile(e.target.files[0]).then((response) => {
-          setImage(response.url);
-        });
+      if (onNodeBehavior) {
+        setLoading(true);
+        onNodeBehavior
+          .onUploadImage(e.target.files[0])
+          .then((response) => {
+            setImage(response.url);
+          })
+          .catch(() => {
+            onNodeBehavior.onDelete(node);
+          })
+          .finally(() => setLoading(false));
+      }
       node.url = URL.createObjectURL(e.target.files[0]);
       setImage(node.url);
     }
@@ -138,8 +151,7 @@ const NodeEditorImage = (props: Props) => {
           </svg>
           <span className="text-xs font-semibold text-gray-8 ml-1">فایل خود را بارگذاری کنید.</span>
           <span className="text-xs text-gray-8">pdf . jpj فرمت</span>
-          <input className="hidden" id="file_input" type="file" accept="image/png, image/jpeg" onChange={onChangeFile} />
-
+          <input ref={refFile} className="hidden" type="file" accept="image/png, image/jpeg" onChange={onChangeFile} />
           {/* <div className="pt-4 pb-3 px-3 rounded-xl bg-white shadow-xs border border-gray-3 flex flex-col w-96 absolute top-9 z-50">
             <div className="flex flex-row gap-x-4 border-b border-gray-5 mb-4">
               <button className={"text-sm  pb-2 " + (fileTypeSelected === FILE_TYPE_UPLOAD ? " border-b border-black" : "")} onClick={() => setFileTypeSelected(FILE_TYPE_UPLOAD)}>
@@ -184,8 +196,8 @@ const NodeEditorImage = (props: Props) => {
         <div className="flex flex-col" style={{ width: size.x }}>
           <div className="relative">
             <img ref={ref} className="w-full h-full min-w-9 rounded-2xl" />
-            <div className="absolute w-full h-full inset-0 flex flex-col justify-between p-2   hover:opacity-100 app-base-transform">
-              <div className="flex flex-row justify-start items-start h-2/6">
+            <div className="absolute w-full h-full inset-0 flex flex-col justify-between p-2 hover:opacity-100 app-base-transform">
+              <div className="flex flex-row justify-between items-start h-2/6">
                 <AppMenu
                   activator={
                     <div className="bg-black/80 rounded-lg px-1.5 flex flex-row items-center gap-x-2 py-1">
@@ -202,7 +214,7 @@ const NodeEditorImage = (props: Props) => {
                       <AppTooltip
                         className="h-6"
                         activatorToolTip={
-                          <button onClick={onBtnAddCaptionClick}>
+                          <button>
                             <AppIcon name="align-vertically" className="fill-white size-6" />
                           </button>
                         }
@@ -220,6 +232,10 @@ const NodeEditorImage = (props: Props) => {
                     </div>
                   }
                 />
+                <div className={(loading ? "" : "invisible") + " bg-black/80 rounded-lg flex flex-row px-2 py-1 items-center"}>
+                  <AppLoadingSpinner className="size-3 text-white ml-2" />
+                  <span className="text-[10px] text-white animate-pulse">در حال بارگزاری . . .</span>
+                </div>
               </div>
               <div className="flex flex-row justify-between items-center h-2/6">
                 <button className="cursor-move bg-black/60 border border-gray-2 rounded-full w-1.5 h-full flex-none" type="button" onMouseDown={(e) => handler(e, true)}></button>

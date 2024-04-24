@@ -13,7 +13,7 @@ const NodeReadonlyVoice = (props: Props) => {
   const [CurrentDuration, setCurrentDuration] = useState<string>("00:00");
 
   useEffect(() => {
-    setVoice(node.path);
+    setVoice(node.url);
   });
 
   const getDurationFormat = (duration: number): string => {

@@ -56,13 +56,13 @@ export class NodeQuote extends Node {
 }
 
 export class NodeVoice extends Node {
-  path: string;
+  url: string;
   fileName: string;
   description: string;
 
-  constructor(path: string = "") {
+  constructor(url: string = "") {
     super(TYPE_NODE_VOICE);
-    this.path = path;
+    this.url = url;
     this.fileName = "";
     this.description = "";
     this.clazz = "my-3";
@@ -70,14 +70,14 @@ export class NodeVoice extends Node {
 }
 
 export class NodeFile extends Node {
-  path: string;
+  url: string;
   fileName: string;
   fileSize: number;
   description: string;
 
-  constructor(path: string = "") {
+  constructor(url: string = "") {
     super(TYPE_NODE_FILE);
-    this.path = path;
+    this.url = url;
     this.fileName = "";
     this.description = "";
     this.fileSize = 0;
@@ -122,10 +122,14 @@ export interface OnNodeBehavior {
   onTransition(typeTransition: number, index: number): void;
   onMove(fromIndex: number, toIndex: number): void;
   onUploadFile(file: File): Promise<any>;
+  onUploadImage(file: File): Promise<any>;
+  onUploadVoice(file: File): Promise<any>;
 }
 
 export interface OnUploadFileListener {
   onUploadFile(file: File): Promise<any>;
+  onUploadImage(file: File): Promise<any>;
+  onUploadVoice(file: File): Promise<any>;
 }
 
 export interface ImageVerticallyAlignItems {

@@ -16,7 +16,7 @@ const NodeReadonlyFile = (props: Props) => {
   });
 
   return (
-    <a href={node.path} download className="flex flex-col">
+    <a href={node.url} download className="flex flex-col">
       <div className="flex flex-row items-center rounded-lg bg-gray-2 px-4 h-12">
         <AppIcon name="document-upload" className="size-6 ml-3" />
         <p className="text-xs font-semibold placeholder:text-gray-8 outline-none bg-transparent flex-1 truncate ml-4">{node.fileName}</p>

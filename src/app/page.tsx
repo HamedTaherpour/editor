@@ -457,7 +457,21 @@ export default function Home() {
     onUploadFile(file) {
       return new Promise((resolve, reject) => {
         setTimeout(() => {
+          resolve({ url: "https://www.w3schools.com/html/horse.ogg" });
+        }, 3000);
+      });
+    },
+    onUploadImage(file) {
+      return new Promise((resolve, reject) => {
+        setTimeout(() => {
           resolve({ url: "https://s3.cointelegraph.com/uploads/2024-04/8fdd3d0b-924f-491e-83f2-d96220ce0037.jpg" });
+        }, 3000);
+      });
+    },
+    onUploadVoice(file) {
+      return new Promise((resolve, reject) => {
+        setTimeout(() => {
+          resolve({ url: "https://www.w3schools.com/html/horse.ogg" });
         }, 3000);
       });
     },

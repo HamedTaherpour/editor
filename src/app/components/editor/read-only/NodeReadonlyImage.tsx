@@ -12,7 +12,7 @@ const NodeReadonlyImage = (props: Props) => {
   const maxWidth = 432;
 
   useEffect(() => {
-    setImage(node.path);
+    setImage(node.url);
   });
 
   const setImage = (url: string) => {
