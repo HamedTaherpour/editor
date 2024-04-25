@@ -104,7 +104,7 @@ const NodeEditorFile = (props: Props) => {
               <span>{fileSize}</span>
             </a>
           </div>
-          <input value={description} onChange={(e) => onChangeDescription(e.target.value)} placeholder="توضیحات مربوط به فایل (اختیاری)" className="text-xs  placeholder:text-gray-6 text-gray-6 mt-1 outline-none" />
+          <input value={description} onChange={(e) => onChangeDescription(e.target.value)} placeholder="توضیحات مربوط به فایل (اختیاری)" className="text-xs  placeholder:text-gray-6 mt-1 outline-none" />
         </div>
       ) : null}
     </div>

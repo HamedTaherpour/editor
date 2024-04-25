@@ -79,8 +79,8 @@ const NodeEditorVideo = (props: Props) => {
         <label className="flex flex-row items-center rounded-lg bg-gray-2 px-4 h-12 cursor-pointer">
           <AppIcon name="document-upload" className="size-6 ml-3" />
           <span className="text-xs font-semibold text-gray-8 ml-1">ویدیو خود را بارگذاری کنید.</span>
-          <span className="text-xs text-gray-8">pdf . jpj فرمت</span>
-          <input ref={refFile} className="hidden" type="file" accept="image/*,.pdf" onChange={onChangeFile} />
+          <span className="text-xs text-gray-8">.mp4 فرمت</span>
+          <input ref={refFile} className="hidden" type="file" accept="video/*,.mp4" onChange={onChangeFile} />
         </label>
       ) : status === Status.Uploading ? (
         <div className="flex flex-row items-center rounded-lg bg-gray-2 px-4 h-12 cursor-pointer">
@@ -104,7 +104,7 @@ const NodeEditorVideo = (props: Props) => {
               <span>{fileSize}</span>
             </a>
           </div>
-          <input value={description} onChange={(e) => onChangeDescription(e.target.value)} placeholder="توضیحات مربوط به ویدیو (اختیاری)" className="text-xs  placeholder:text-gray-6 text-gray-6 mt-1 outline-none" />
+          <input value={description} onChange={(e) => onChangeDescription(e.target.value)} placeholder="توضیحات مربوط به ویدیو (اختیاری)" className="text-xs  placeholder:text-gray-6 mt-1 outline-none" />
         </div>
       ) : null}
     </div>

@@ -475,6 +475,13 @@ export default function Home() {
         }, 3000);
       });
     },
+    onUploadVideo(file) {
+      return new Promise((resolve, reject) => {
+        setTimeout(() => {
+          resolve({ url: "https://www.w3schools.com/html/horse.ogg" });
+        }, 3000);
+      });
+    },
   };
 
   return (

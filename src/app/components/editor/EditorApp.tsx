@@ -298,6 +298,9 @@ const EditorApp = (props: Props) => {
     onUploadVoice(file) {
       return onUploadFileListener.onUploadVoice(file);
     },
+    onUploadVideo(file) {
+      return onUploadFileListener.onUploadVideo(file);
+    },
   };
 
   editor.setOnJsonEditorUpdateListener({
