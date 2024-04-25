@@ -9,12 +9,13 @@ import NodeEditorImageModule from "@/app/lib/editor/image/module";
 import NodeEditorQuoteModule from "@/app/lib/editor/quote/module";
 import NodeEditorDividerModule from "@/app/lib/editor/divider/module";
 import NodeEditorFileModule from "@/app/lib/editor/file/module";
+import NodeEditorVideoModule from "@/app/lib/editor/video/module";
 
 import NodeEditor from "@/app/components/editor/NodeEditor";
 
 import { EditorContext } from "@/app/lib/editor/hook/context";
 
-import { JsonEditor, OnJsonEditorUpdateListener, OnUploadFileListener, TYPE_NODE_TEXT, TYPE_NODE_VOICE, TYPE_NODE_IMAGE, TYPE_NODE_QUOTE, TYPE_NODE_DIVIDER, NodeText, NodeVoice, NodeImage, NodeQuote, NodeDivider, OnNodeBehavior, Node, TYPE_NODE_FILE, NodeFile } from "@/app/lib/editor/type";
+import { JsonEditor, OnJsonEditorUpdateListener, OnUploadFileListener, TYPE_NODE_TEXT, TYPE_NODE_VOICE, TYPE_NODE_IMAGE, TYPE_NODE_QUOTE, TYPE_NODE_DIVIDER, NodeText, NodeVoice, NodeImage, NodeQuote, NodeDivider, OnNodeBehavior, Node, TYPE_NODE_FILE, NodeFile, TYPE_NODE_VIDEO, NodeVideo } from "@/app/lib/editor/type";
 
 interface AddNode {
   type: number;
@@ -46,6 +47,7 @@ const EditorApp = (props: Props) => {
   const nodeEditorQuoteModule = new NodeEditorQuoteModule(editor);
   const nodeEditorDividerModule = new NodeEditorDividerModule(editor);
   const nodeEditorFileModule = new NodeEditorFileModule(editor);
+  const nodeEditorVideoModule = new NodeEditorVideoModule(editor);
 
   useEffect(() => {
     if (jsonEditor.nodes.length <= 0) {
@@ -123,15 +125,23 @@ const EditorApp = (props: Props) => {
       },
       {
         title: "تصویر",
-        description: "تصویر خود را بارگزاری کنید.",
+        description: "تصویر خود را بارگذاری کنید.",
         icon: "gallery",
         action: (index: number) => {
           onBtnAddNodeClick({ type: TYPE_NODE_IMAGE, index });
         },
       },
       {
+        title: "ویدیو",
+        description: "ویدیو خود را بارگذاری کنید.",
+        icon: "play-circle",
+        action: (index: number) => {
+          onBtnAddNodeClick({ type: TYPE_NODE_VIDEO, index });
+        },
+      },
+      {
         title: "فایل یا پوشه",
-        description: "فایل خود را بارگزاری کنید.",
+        description: "فایل خود را بارگذاری کنید.",
         icon: "document",
         action: (index: number) => {
           onBtnAddNodeClick({ type: TYPE_NODE_FILE, index });
@@ -139,7 +149,7 @@ const EditorApp = (props: Props) => {
       },
       {
         title: "صوتی",
-        description: "صوت یا ویس خود را بارگزاری کنید.",
+        description: "صوت یا ویس خود را بارگذاری کنید.",
         icon: "volume",
         action: (index: number) => {
           onBtnAddNodeClick({ type: TYPE_NODE_VOICE, index });
@@ -212,6 +222,9 @@ const EditorApp = (props: Props) => {
         case TYPE_NODE_FILE:
           nodeEditorFileModule.delete(node.id);
           break;
+        case TYPE_NODE_VIDEO:
+          nodeEditorVideoModule.delete(node.id);
+          break;
       }
     },
     onKeyUp(e, index) {
@@ -268,6 +281,9 @@ const EditorApp = (props: Props) => {
         case TYPE_NODE_FILE:
           nodeEditorFileModule.update(node as NodeFile);
           break;
+        case TYPE_NODE_VIDEO:
+          nodeEditorVideoModule.update(node as NodeVideo);
+          break;
       }
     },
     onMove(fromIndex, toIndex) {
@@ -313,6 +329,9 @@ const EditorApp = (props: Props) => {
         break;
       case TYPE_NODE_FILE:
         nodeEditorFileModule.add((node as NodeFile) || new NodeFile(), _index);
+        break;
+      case TYPE_NODE_VIDEO:
+        nodeEditorVideoModule.add((node as NodeVideo) || new NodeVideo(), _index);
         break;
     }
   };

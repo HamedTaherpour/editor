@@ -7,6 +7,7 @@ export const TYPE_NODE_IMAGE = 2;
 export const TYPE_NODE_QUOTE = 3;
 export const TYPE_NODE_DIVIDER = 4;
 export const TYPE_NODE_FILE = 5;
+export const TYPE_NODE_VIDEO = 6;
 
 export interface JsonEditor {
   name: string;
@@ -85,6 +86,22 @@ export class NodeFile extends Node {
   }
 }
 
+export class NodeVideo extends Node {
+  url: string;
+  fileName: string;
+  fileSize: number;
+  description: string;
+
+  constructor(url: string = "") {
+    super(TYPE_NODE_FILE);
+    this.url = url;
+    this.fileName = "";
+    this.description = "";
+    this.fileSize = 0;
+    this.clazz = "my-3";
+  }
+}
+
 export class NodeImage extends Node {
   url: string;
   caption: any;
@@ -124,12 +141,14 @@ export interface OnNodeBehavior {
   onUploadFile(file: File): Promise<any>;
   onUploadImage(file: File): Promise<any>;
   onUploadVoice(file: File): Promise<any>;
+  onUploadVideo(file: File): Promise<any>;
 }
 
 export interface OnUploadFileListener {
   onUploadFile(file: File): Promise<any>;
   onUploadImage(file: File): Promise<any>;
   onUploadVoice(file: File): Promise<any>;
+  onUploadVideo(file: File): Promise<any>;
 }
 
 export interface ImageVerticallyAlignItems {

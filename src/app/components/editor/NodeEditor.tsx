@@ -11,11 +11,12 @@ import AppIcon from "@/app/components/AppIcon";
 import { EditorContext } from "@/app/lib/editor/hook/context";
 import { nodeDragAndDropHandler, OnDragEndListener } from "@/app/lib/editor/hook/NodeDragAndDropHandler";
 
-import { NodeText, NodeVoice, NodeImage, NodeQuote, Node, TYPE_NODE_TEXT, TYPE_NODE_VOICE, TYPE_NODE_IMAGE, TYPE_NODE_QUOTE, TYPE_NODE_DIVIDER, TYPE_NODE_FILE, NodeDivider, OnNodeBehavior, NodeFile } from "@/app/lib/editor/type";
+import { NodeText, NodeVoice, NodeImage, NodeQuote, Node, TYPE_NODE_TEXT, TYPE_NODE_VOICE, TYPE_NODE_IMAGE, TYPE_NODE_QUOTE, TYPE_NODE_DIVIDER, TYPE_NODE_FILE, NodeDivider, OnNodeBehavior, NodeFile, TYPE_NODE_VIDEO, NodeVideo } from "@/app/lib/editor/type";
 import AppTooltip from "../AppTooltip";
 import { MouseEvent, useContext, useEffect, useState } from "react";
 import { ToolsColorStyleItemTextEditor } from "@/app/lib/editor-text/type";
 import { toolsColorStyleItems } from "@/app/lib/editor-text/hook/tools";
+import NodeEditorVideo from "./NodeEditorVideo";
 
 interface Props {
   index: number;
@@ -110,6 +111,7 @@ const NodeEditor = (props: Props) => {
         {node.type === TYPE_NODE_IMAGE ? <NodeEditorImage node={node as NodeImage} index={index} /> : null}
         {node.type === TYPE_NODE_DIVIDER ? <NodeEditorDivider node={node as NodeDivider} index={index} /> : null}
         {node.type === TYPE_NODE_FILE ? <NodeEditorFile node={node as NodeFile} index={index} /> : null}
+        {node.type === TYPE_NODE_VIDEO ? <NodeEditorVideo node={node as NodeVideo} index={index} /> : null}
       </div>
     </div>
   );
