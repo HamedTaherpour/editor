@@ -100,7 +100,7 @@ const NodeEditorFile = (props: Props) => {
           <div className="flex flex-row items-center rounded-lg bg-gray-2 px-4 h-12">
             <AppIcon name="document-upload" className="size-6 ml-3" />
             <input value={fileName} onChange={(e) => onChangeFileName(e.target.value)} placeholder="نام فایل را بنویسید..." className="text-xs font-semibold placeholder:text-gray-8 outline-none bg-transparent flex-1 truncate ml-4" />
-            <a href={node.url} download className="text-xs space-x-1">
+            <a href={node.url} target="_blank" className="text-xs space-x-1">
               <span>{fileSize}</span>
             </a>
           </div>
