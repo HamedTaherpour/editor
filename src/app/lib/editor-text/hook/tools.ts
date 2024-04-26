@@ -128,6 +128,7 @@ export const toolsColorStyleItems: ToolsColorStyleTextEditor = {
       },
       class: {
         color: "text-yellow",
+        bgColor: "bg-yellow",
         background: "bg-yellow-bg",
       },
     },
@@ -143,6 +144,7 @@ export const toolsColorStyleItems: ToolsColorStyleTextEditor = {
       },
       class: {
         color: "text-orange",
+        bgColor: "bg-orange",
         background: "bg-orange-bg",
       },
     },
@@ -158,6 +160,7 @@ export const toolsColorStyleItems: ToolsColorStyleTextEditor = {
       },
       class: {
         color: "text-brown",
+        bgColor: "bg-brown",
         background: "bg-brown-bg",
       },
     },
@@ -173,6 +176,7 @@ export const toolsColorStyleItems: ToolsColorStyleTextEditor = {
       },
       class: {
         color: "text-gray",
+        bgColor: "bg-gray",
         background: "bg-gray-bg",
       },
     },
@@ -188,6 +192,7 @@ export const toolsColorStyleItems: ToolsColorStyleTextEditor = {
       },
       class: {
         color: "text-dark",
+        bgColor: "bg-dark",
         background: "bg-dark-bg",
       },
     },
@@ -203,6 +208,7 @@ export const toolsColorStyleItems: ToolsColorStyleTextEditor = {
       },
       class: {
         color: "text-red",
+        bgColor: "bg-red",
         background: "bg-red-bg",
       },
     },
@@ -218,6 +224,7 @@ export const toolsColorStyleItems: ToolsColorStyleTextEditor = {
       },
       class: {
         color: "text-pink",
+        bgColor: "bg-pink",
         background: "bg-pink-bg",
       },
     },
@@ -233,6 +240,7 @@ export const toolsColorStyleItems: ToolsColorStyleTextEditor = {
       },
       class: {
         color: "text-purple",
+        bgColor: "bg-purple",
         background: "bg-purple-bg",
       },
     },
@@ -248,6 +256,7 @@ export const toolsColorStyleItems: ToolsColorStyleTextEditor = {
       },
       class: {
         color: "text-blue",
+        bgColor: "bg-blue",
         background: "bg-blue-bg",
       },
     },
@@ -263,6 +272,7 @@ export const toolsColorStyleItems: ToolsColorStyleTextEditor = {
       },
       class: {
         color: "text-green",
+        bgColor: "bg-green",
         background: "bg-green-bg",
       },
     },

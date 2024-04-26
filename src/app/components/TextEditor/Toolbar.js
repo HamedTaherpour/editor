@@ -52,6 +52,15 @@ const Toolbar = ({ editorState, setEditorState, onTransitionNodeListener, onBtnS
     return newEditorState;
   };
 
+  const classNameDDMColor = () => {
+    const colorName = Object.keys(toolsColorStyleItems).find((item) => isStyleActive(editorState, toolsColorStyleItems[item].option.style.color, item.method));
+    if (colorName) {
+      return toolsColorStyleItems[colorName].option.class.bgColor;
+    } else {
+      return "bg-dark";
+    }
+  };
+
   return (
     <div className="absolute bottom-0 pb-3 z-50 ignore text-gray-9">
       <div className="rounded-lg shadow-md flex flex-row items-center h-11 border border-gray-2 bg-white">
@@ -72,7 +81,8 @@ const Toolbar = ({ editorState, setEditorState, onTransitionNodeListener, onBtnS
         <div className="border-x border-gray-2 h-full flex items-center">
           <AppDropDownMenu
             className="px-3 hover:bg-gray-2 app-base-transform h-full"
-            activator={<div>{Object.keys(toolsColorStyleItems).map((item, i) => (isStyleActive(editorState, toolsColorStyleItems[item].option.style.color, item.method) ? <div key={item} className={toolsColorStyleItems[item].option.class.background + " w-4 h-4 rounded"}></div> : null))}</div>}
+            activator={<div className={classNameDDMColor() + " w-4 h-4 rounded"}></div>}
+            classNameDDMColor
             menu={
               <div className="p-2 flex flex-col w-40">
                 <div className="grid grid-cols-5 gap-1">

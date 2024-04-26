@@ -12,6 +12,7 @@ export interface ToolsColorStyleItemTextEditor {
     };
     class: {
       color: string;
+      bgColor: string;
       background: string;
     };
   };
