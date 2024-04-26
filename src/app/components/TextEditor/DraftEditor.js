@@ -125,7 +125,9 @@ const DraftEditor = ({ onChangeText, onChange, placeholder, node, index }) => {
         onNodeBehavior.onKeyUp(event, index);
       }
     } else if (event.key === "/") {
-      openKeySlash(event);
+      setTimeout(() => {
+        openKeySlash(event);
+      }, 100);
     }
     return getDefaultKeyBinding(event);
   }
