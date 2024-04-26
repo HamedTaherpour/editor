@@ -89,7 +89,7 @@ const NodeEditor = (props: Props) => {
           menu={<ToolsMenuNodeEditor node={node} onBtnSetStyleClick={onBtnSetStyleClick} onBtnPastClick={onBtnPastClick} onBtnDuplicateClick={onBtnDuplicateClick} onBtnDeleteClick={onBtnDeleteClick} isClipboardExists={!!onNodeBehavior?.isClipboardExists()} />}
         />
       </div>
-      <div className={clazz + " et-wrapper"}>
+      <div className={clazz + " et-wrapper  rounded"}>
         {node.type === TYPE_NODE_TEXT ? <NodeEditorText node={node as NodeText} index={index} /> : null}
         {node.type === TYPE_NODE_QUOTE ? <NodeEditorQuote node={node as NodeQuote} index={index} /> : null}
         {node.type === TYPE_NODE_VOICE ? <NodeEditorVoice node={node as NodeVoice} index={index} /> : null}

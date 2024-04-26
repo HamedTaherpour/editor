@@ -191,7 +191,7 @@ const NodeEditorImage = (props: Props) => {
               <div className="h-2/6"></div>
             </div>
           </div>
-          {enabledCaption ? <p ref={refCaption} onKeyUp={onKeyUp} data-ph="یک کپشن منویسید" contentEditable="true" onInput={onChangeCaption} className="text-sm text-gray-7 pt-1.5 pb-4 px-4 outline-none text-center resize-none"></p> : null}
+          {enabledCaption ? <p ref={refCaption} data-ph="یک کپشن منویسید" contentEditable="true" onInput={onChangeCaption} className="text-sm text-gray-7 pt-1.5 pb-4 px-4 outline-none text-center resize-none"></p> : null}
         </div>
       </div>
     </div>
