@@ -6,7 +6,7 @@ import { useState } from "react";
 
 interface Props {
   onBtnPastClick: Function;
-  onBtnCopyClick: Function;
+  onBtnDuplicateClick: Function;
   onBtnDeleteClick: Function;
   onBtnSetStyleClick: Function;
   isClipboardExists: boolean;
@@ -14,7 +14,7 @@ interface Props {
 }
 
 const ToolsMenuNodeEditor = (props: Props) => {
-  const { node, onBtnSetStyleClick, onBtnCopyClick, onBtnDeleteClick, onBtnPastClick, isClipboardExists } = props;
+  const { node, onBtnSetStyleClick, onBtnDuplicateClick, onBtnDeleteClick, onBtnPastClick, isClipboardExists } = props;
 
   const [openColor, setOpenColor] = useState(false);
 
@@ -49,13 +49,9 @@ const ToolsMenuNodeEditor = (props: Props) => {
         <AppIcon name="trash" className="size-4" />
         <span className="text-xs">حذف</span>
       </button>
-      <button className="flex flex-row items-center rounded-md hover:bg-gray-2 gap-x-1 w-28 h-7 p-1 app-base-transform" onClick={() => onBtnCopyClick()}>
+      <button className="flex flex-row items-center rounded-md hover:bg-gray-2 gap-x-1 w-28 h-7 p-1 app-base-transform" onClick={() => onBtnDuplicateClick()}>
         <AppIcon name="copy" className="size-4" />
         <span className="text-xs">کپی</span>
-      </button>
-      <button className={(!isClipboardExists ? "opacity-50 pointer-events-none" : "") + " flex flex-row items-center rounded-md hover:bg-gray-2 gap-x-1 w-28 h-7 p-1 app-base-transform"} onClick={() => onBtnPastClick()}>
-        <AppIcon name="check" className="size-4" />
-        <span className="text-xs">پیس</span>
       </button>
       <div className="flex flex-row items-center rounded-md hover:bg-gray-2 gap-x-1 w-28 h-7 p-1 relative" onMouseEnter={onColorMouseEnter} onMouseLeave={onColorMouseLeave}>
         <AppIcon name="paint-roller" className="size-4" />

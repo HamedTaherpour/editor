@@ -132,6 +132,7 @@ export interface OnNodeBehavior {
   isClipboardExists(): boolean;
   onStyle(style: ToolsColorStyleItemTextEditor, type: string, index: number): void;
   onCopy(node: Node): void;
+  onDuplicate(index: number): void;
   onPast(index: number): void;
   onDelete(node: Node): void;
   onUpdate(node: Node): void;

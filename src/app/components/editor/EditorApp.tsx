@@ -227,6 +227,15 @@ const EditorApp = (props: Props) => {
           break;
       }
     },
+    onDuplicate(index) {
+      const node = Object.assign({}, jsonEditor.nodes[index]);
+      node.id = Date.now(); // new id
+      onBtnAddNodeClick({
+        type: node.type,
+        node: node,
+        index: index + 1,
+      });
+    },
     onKeyUp(e, index) {
       switch (e.key) {
         case "ArrowDown":

@@ -51,8 +51,11 @@ const NodeEditor = (props: Props) => {
     if (onNodeBehavior) onNodeBehavior.onDelete(node);
   };
 
-  const onBtnCopyClick = () => {
-    if (onNodeBehavior) onNodeBehavior.onCopy(node);
+  // Duplicate
+  const onBtnDuplicateClick = () => {
+    if (onNodeBehavior) {
+      onNodeBehavior.onDuplicate(index);
+    }
   };
 
   const onBtnPastClick = () => {
@@ -101,7 +104,7 @@ const NodeEditor = (props: Props) => {
               }
             />
           }
-          menu={<ToolsMenuNodeEditor node={node} onBtnSetStyleClick={onBtnSetStyleClick} onBtnPastClick={onBtnPastClick} onBtnCopyClick={onBtnCopyClick} onBtnDeleteClick={onBtnDeleteClick} isClipboardExists={!!onNodeBehavior?.isClipboardExists()} />}
+          menu={<ToolsMenuNodeEditor node={node} onBtnSetStyleClick={onBtnSetStyleClick} onBtnPastClick={onBtnPastClick} onBtnDuplicateClick={onBtnDuplicateClick} onBtnDeleteClick={onBtnDeleteClick} isClipboardExists={!!onNodeBehavior?.isClipboardExists()} />}
         />
       </div>
       <div className={clazz + " et-wrapper"}>
