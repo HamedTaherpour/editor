@@ -74,7 +74,7 @@ const NodeEditorFile = (props: Props) => {
   };
 
   return (
-    <div>
+    <div className={node.clazz}>
       {status === Status.None ? (
         <label className="flex flex-row items-center rounded-lg bg-gray-2 px-4 h-12 cursor-pointer">
           <AppIcon name="document-upload" className="size-6 ml-3" />

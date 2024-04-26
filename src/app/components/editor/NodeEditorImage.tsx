@@ -21,19 +21,12 @@ const NodeEditorImage = (props: Props) => {
   const ref = useRef<HTMLImageElement>(null);
 
   const maxWidth = 432;
-  const FILE_TYPE_UPLOAD = 0;
-  const FILE_TYPE_URL = 1;
   const [size, setSize] = useState({ x: 0 });
   const [showFileSelected, setShowFileSelected] = useState(true);
-  const [fileTypeSelected, setFileTypeSelected] = useState(FILE_TYPE_UPLOAD);
-  const [link, setLink] = useState("");
   const [enabledCaption, setEnabledCaption] = useState(false);
   const [loading, setLoading] = useState(false);
   const refCaption = useRef<HTMLDivElement>(null);
   const refFile = useRef<HTMLInputElement>(null);
-  const rootRef = useOutsideClick<HTMLDivElement>(() => {
-    // setShowFileSelected(false);
-  });
 
   useEffect(() => {
     if (node.url) {
@@ -72,10 +65,6 @@ const NodeEditorImage = (props: Props) => {
     document.body.addEventListener("mouseup", onMouseUp, { once: true });
   };
 
-  const onKeyUp = (e: KeyboardEvent<HTMLElement>) => {
-    console.log(e);
-  };
-
   const onChangeFile = (e: ChangeEvent<HTMLInputElement>) => {
     if (!!e.target.files) {
       if (onNodeBehavior) {
@@ -93,10 +82,6 @@ const NodeEditorImage = (props: Props) => {
       node.url = URL.createObjectURL(e.target.files[0]);
       setImage(node.url);
     }
-  };
-
-  const onSetLink = () => {
-    setImage(link);
   };
 
   const setImage = (url: string) => {
@@ -140,7 +125,7 @@ const NodeEditorImage = (props: Props) => {
   };
 
   return (
-    <div ref={rootRef} className="w-full rounded flex flex-col">
+    <div className="w-full rounded flex flex-col">
       {showFileSelected ? (
         <label className="px-3 rounded-xl bg-gray-2 flex flex-row items-center cursor-pointer h-12 w-full relative">
           <svg className="ml-3" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -152,44 +137,6 @@ const NodeEditorImage = (props: Props) => {
           <span className="text-xs font-semibold text-gray-8 ml-1">فایل خود را بارگذاری کنید.</span>
           <span className="text-xs text-gray-8">pdf . jpj فرمت</span>
           <input ref={refFile} className="hidden" type="file" accept="image/png, image/jpeg" onChange={onChangeFile} />
-          {/* <div className="pt-4 pb-3 px-3 rounded-xl bg-white shadow-xs border border-gray-3 flex flex-col w-96 absolute top-9 z-50">
-            <div className="flex flex-row gap-x-4 border-b border-gray-5 mb-4">
-              <button className={"text-sm  pb-2 " + (fileTypeSelected === FILE_TYPE_UPLOAD ? " border-b border-black" : "")} onClick={() => setFileTypeSelected(FILE_TYPE_UPLOAD)}>
-                بارگذاری
-              </button>
-              <button className={"text-sm  pb-2 " + (fileTypeSelected === FILE_TYPE_URL ? " border-b border-black" : "")} onClick={() => setFileTypeSelected(FILE_TYPE_URL)}>
-                Embed link
-              </button>
-            </div>
-            {fileTypeSelected === FILE_TYPE_UPLOAD ? (
-              <div className="flex flex-col">
-                <label className="text-sm text-white p-2 bg-blue-600 rounded-lg text-center cursor-pointer">
-                  فایل رو انتخاب کن
-                  <input className="hidden" id="file_input" type="file" accept="image/png, image/jpeg" onChange={onChangeFile} />
-                </label>
-
-                <span className="text-xs text-gray-7 mt-2">حداکثر سایز فایل 5MB</span>
-              </div>
-            ) : null}
-            {fileTypeSelected === FILE_TYPE_URL ? (
-              <div className="flex flex-row  gap-x-1.5">
-                {link ? (
-                  <button
-                    className="size-9 rounded bg-slate-100 p-1.5"
-                    onClick={() => {
-                      onSetLink();
-                    }}
-                  >
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                      <path d="M20.2835 6.21967C20.5722 6.51256 20.5722 6.98744 20.2835 7.28033L9.93569 17.7803C9.64704 18.0732 9.17905 18.0732 8.8904 17.7803L3.71649 12.5303C3.42784 12.2374 3.42784 11.7626 3.71649 11.4697C4.00513 11.1768 4.47313 11.1768 4.76177 11.4697L9.41304 16.1893L19.2382 6.21967C19.5269 5.92678 19.9949 5.92678 20.2835 6.21967Z" fill="#171717" />
-                    </svg>
-                  </button>
-                ) : null}
-
-                <input placeholder="لینک را اینجا بنویسید." onChange={(e) => setLink(e.target.value)} className="placeholder:text-slate-400 text-sm px-3 h-9 py-1 rounded-lg border border-slate-200 w-full outline-none" />
-              </div>
-            ) : null}
-          </div> */}
         </label>
       ) : null}
       <div className={showFileSelected ? "hidden" : "" + " " + imageVerticallyAlignItems[node.verticallyAlign].clazz + " w-full flex"}>

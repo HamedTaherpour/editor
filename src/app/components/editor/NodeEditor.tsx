@@ -9,11 +9,10 @@ import ToolsMenuNodeEditor from "@/app/components/editor/ToolsMenuNodeEditor";
 import AppMenu from "@/app/components/AppMenu";
 import AppIcon from "@/app/components/AppIcon";
 import { EditorContext } from "@/app/lib/editor/hook/context";
-import { nodeDragAndDropHandler, OnDragEndListener } from "@/app/lib/editor/hook/NodeDragAndDropHandler";
 
 import { NodeText, NodeVoice, NodeImage, NodeQuote, Node, TYPE_NODE_TEXT, TYPE_NODE_VOICE, TYPE_NODE_IMAGE, TYPE_NODE_QUOTE, TYPE_NODE_DIVIDER, TYPE_NODE_FILE, NodeDivider, OnNodeBehavior, NodeFile, TYPE_NODE_VIDEO, NodeVideo } from "@/app/lib/editor/type";
 import AppTooltip from "../AppTooltip";
-import { MouseEvent, useContext, useEffect, useState } from "react";
+import { useContext } from "react";
 import { ToolsColorStyleItemTextEditor } from "@/app/lib/editor-text/type";
 import { toolsColorStyleItems } from "@/app/lib/editor-text/hook/tools";
 import NodeEditorVideo from "./NodeEditorVideo";
@@ -25,7 +24,6 @@ interface Props {
 
 const NodeEditor = (props: Props) => {
   const { index, node } = props;
-  const [indexState, setIndexState] = useState<number>(index);
   const onNodeBehavior = useContext<OnNodeBehavior | undefined>(EditorContext);
 
   let clazz = "";
@@ -37,21 +35,10 @@ const NodeEditor = (props: Props) => {
     clazz += toolsColorStyleItems[node.fontColor].option.class.color;
   }
 
-  useEffect(() => {
-    setIndexState(index);
-  }, [index]);
-
-  const onDragEndListener: OnDragEndListener = {
-    onEnd(toIndex) {
-      if (onNodeBehavior) onNodeBehavior.onMove(index, toIndex);
-    },
-  };
-
   const onBtnDeleteClick = () => {
     if (onNodeBehavior) onNodeBehavior.onDelete(node);
   };
 
-  // Duplicate
   const onBtnDuplicateClick = () => {
     if (onNodeBehavior) {
       onNodeBehavior.onDuplicate(index);
@@ -66,13 +53,8 @@ const NodeEditor = (props: Props) => {
     if (onNodeBehavior) onNodeBehavior.onStyle(item, type, index);
   };
 
-  const onBtnOptionMouseDown = (e: MouseEvent<HTMLElement>) => {
-    // @ts-ignore
-    nodeDragAndDropHandler(e.target.closest(".nodes"), onDragEndListener);
-  };
-
   return (
-    <div data-index={indexState} className={node.clazz + " flex flex-row items-start justify-start group node-row"}>
+    <div className={node.clazz + " flex flex-row items-start justify-start group node-row"}>
       <div className="flex flex-row app-base-transform opacity-0 group-hover:opacity-100 mr-0.5 h-full w-12">
         <AppMenu
           className="h-6"

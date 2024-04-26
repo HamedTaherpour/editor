@@ -107,7 +107,7 @@ const NodeEditorVoice = (props: Props) => {
   };
 
   return (
-    <div>
+    <div className={node.clazz}>
       <audio ref={ref} className="hidden">
         <source type=".mp3,.wav" />
         Your browser does not support the audio element.

@@ -53,6 +53,7 @@ export class NodeQuote extends Node {
     this.text = text;
     this.plainText = plainText;
     this.clazz = "my-3";
+    this.backgroundColor = "COLOR_GRAY";
   }
 }
 

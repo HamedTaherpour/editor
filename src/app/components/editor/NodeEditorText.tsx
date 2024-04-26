@@ -23,7 +23,11 @@ const NodeEditorText = (props: Props) => {
     if (onNodeBehavior) onNodeBehavior.onUpdate(node);
   };
 
-  return <DraftEditor onChangeText={onChangeText} onChange={onChange} node={node} index={index} placeholder="متن را اینجا بنوسید..." />;
+  return (
+    <div className={node.clazz}>
+      <DraftEditor onChangeText={onChangeText} onChange={onChange} node={node} index={index} placeholder="متن را اینجا بنوسید..." />
+    </div>
+  );
 };
 
 export default NodeEditorText;
