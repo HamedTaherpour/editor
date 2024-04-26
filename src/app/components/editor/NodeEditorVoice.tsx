@@ -24,6 +24,7 @@ const NodeEditorVoice = (props: Props) => {
   const [CurrentDuration, setCurrentDuration] = useState<string>("00:00");
   const [fileName, setFileName] = useState<string>("");
   const [description, setDescription] = useState<string>("");
+  const [isVoicePause, setIsVoicePause] = useState<boolean>(false);
   const refFile = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
@@ -75,6 +76,7 @@ const NodeEditorVoice = (props: Props) => {
     if (ref.current) {
       if (ref.current.paused) ref.current.play();
       else ref.current.pause();
+      setIsVoicePause(!ref.current.paused);
     }
   };
 
@@ -98,6 +100,9 @@ const NodeEditorVoice = (props: Props) => {
         },
         false
       );
+      ref.current.addEventListener("ended", () => {
+        setIsVoicePause(false);
+      });
     }
   };
 
@@ -131,7 +136,7 @@ const NodeEditorVoice = (props: Props) => {
         <div className="flex flex-col">
           <div className="flex flex-row items-center rounded-lg bg-gray-2 px-4 h-12 cursor-pointer">
             <button className="ml-3" onClick={onBtnToggleAudioPlayClick}>
-              <AppIcon name="play" className="size-6" />
+              {isVoicePause ? <AppIcon name="union" className="size-6" /> : <AppIcon name="play" className="size-6" />}
             </button>
             <input value={fileName} onChange={(e) => onChangeFileName(e.target.value)} placeholder="نام فایل را بنویسید..." className="text-xs font-semibold placeholder:text-gray-8 outline-none bg-transparent flex-1 truncate ml-4" />
             <div className="text-xs space-x-1">
