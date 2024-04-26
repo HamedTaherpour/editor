@@ -198,40 +198,40 @@ const NodeEditorImage = (props: Props) => {
             <img ref={ref} className="w-full h-full min-w-9 rounded-2xl" />
             <div className="absolute w-full h-full inset-0 flex flex-col justify-between p-2 hover:opacity-100 app-base-transform">
               <div className="flex flex-row justify-between items-start h-2/6">
-                <AppMenu
-                  activator={
-                    <div className="bg-black/80 rounded-lg px-1.5 flex flex-row items-center gap-x-2 py-1">
-                      <AppTooltip
-                        className="h-6"
-                        activatorToolTip={
-                          <button onClick={onBtnAddCaptionClick} className="size-6 text-white">
-                            C
-                          </button>
-                        }
-                        text="اضافه کردن کپشن"
-                      />
-                      <div className="w-[1px] h-3 bg-gray-9"></div>
+                <div className="bg-black/80 rounded-lg px-1.5 flex flex-row items-center gap-x-2 py-1">
+                  <AppTooltip
+                    className="h-6"
+                    activatorToolTip={
+                      <button onClick={onBtnAddCaptionClick} className="size-6 text-white">
+                        C
+                      </button>
+                    }
+                    text="اضافه کردن کپشن"
+                  />
+                  <div className="w-[1px] h-3 bg-gray-9"></div>
+                  <AppMenu
+                    activator={
                       <AppTooltip
                         className="h-6"
                         activatorToolTip={
                           <button>
-                            <AppIcon name="align-vertically" className="fill-white size-6" />
+                            <AppIcon name={imageVerticallyAlignItems[node.verticallyAlign].icon} className="fill-white size-6" />
                           </button>
                         }
                         text="چیدمان"
                       />
-                    </div>
-                  }
-                  menu={
-                    <div className="bg-black/80 rounded-lg px-1.5 flex flex-row items-center gap-x-2 py-1">
-                      {Object.keys(imageVerticallyAlignItems).map((key) => (
-                        <button key={key} onClick={() => onBtnSetVerticallyAlignClick(key)}>
-                          <AppIcon name={imageVerticallyAlignItems[key].icon} className={(node.verticallyAlign !== key ? "opacity-50" : "") + " fill-white size-6"} />
-                        </button>
-                      ))}
-                    </div>
-                  }
-                />
+                    }
+                    menu={
+                      <div className="bg-black/80 rounded-lg px-1.5 flex flex-row items-center gap-x-2 py-1">
+                        {Object.keys(imageVerticallyAlignItems).map((key) => (
+                          <button key={key} onClick={() => onBtnSetVerticallyAlignClick(key)}>
+                            <AppIcon name={imageVerticallyAlignItems[key].icon} className={(node.verticallyAlign !== key ? "opacity-50" : "") + " fill-white size-6"} />
+                          </button>
+                        ))}
+                      </div>
+                    }
+                  />
+                </div>
                 <div className={(loading ? "" : "invisible") + " bg-black/80 rounded-lg flex flex-row px-2 py-1 items-center"}>
                   <AppLoadingSpinner className="size-3 text-white ml-2" />
                   <span className="text-[10px] text-white animate-pulse">در حال بارگذاری . . .</span>
