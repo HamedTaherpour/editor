@@ -4,6 +4,7 @@ import { EditorContext } from "@/app/lib/editor/hook/context";
 import { getFileSizeFormat } from "@/app/lib/utils";
 import AppIcon from "@/app/components/AppIcon";
 import AppLoadingSpinner from "@/app/components/AppLoadingSpinner";
+import useOutsideClick from "@/app/lib/OutsideClick";
 
 interface Props {
   index: number;
@@ -24,6 +25,12 @@ const NodeEditorVideo = (props: Props) => {
   const [fileName, setFileName] = useState<string>("");
   const [description, setDescription] = useState<string>("");
   const refFile = useRef<HTMLInputElement>(null);
+  const [tempFileName, setTempFileName] = useState("");
+  const rootRef = useOutsideClick<HTMLDivElement>(() => {
+    if (status !== Status.None && fileName.length <= 0) {
+      onChangeFileName(tempFileName);
+    }
+  });
 
   useEffect(() => {
     if (status === Status.None && node.url) {
@@ -51,7 +58,7 @@ const NodeEditorVideo = (props: Props) => {
   const onChangeFile = (e: ChangeEvent<HTMLInputElement>) => {
     if (!!e.target.files) {
       node.fileSize = e.target.files[0].size;
-      onChangeFileName(e.target.files[0].name);
+      setTempFileName(e.target.files[0].name);
       setFileSize(getFileSizeFormat(node.fileSize));
       if (onNodeBehavior) {
         setStatus(Status.Uploading);
@@ -74,7 +81,7 @@ const NodeEditorVideo = (props: Props) => {
   };
 
   return (
-    <div className={node.clazz}>
+    <div ref={rootRef}>
       {status === Status.None ? (
         <label className="flex flex-row items-center rounded-lg bg-gray-2 px-4 h-12 cursor-pointer">
           <AppIcon name="document-upload" className="size-6 ml-3" />
@@ -86,7 +93,7 @@ const NodeEditorVideo = (props: Props) => {
         <div className="flex flex-row items-center rounded-lg bg-gray-2 px-4 h-12 cursor-pointer">
           <AppIcon name="document-upload" className="size-6 ml-3" />
           <div className="flex flex-col flex-1">
-            <span className="text-xs font-semibold truncate ml-4">{fileName}</span>
+            <input value={fileName} onChange={(e) => onChangeFileName(e.target.value)} placeholder="نام فایل را بنویسید..." className="text-xs font-semibold placeholder:text-gray-8 outline-none bg-transparent flex-1 truncate ml-4" />
             <div className="flex flex-row gap-x-1">
               <AppLoadingSpinner className="size-3 text-gray-7" />
             </div>

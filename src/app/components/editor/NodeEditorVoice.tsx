@@ -3,6 +3,7 @@ import { NodeVoice, OnNodeBehavior } from "@/app/lib/editor/type";
 import { EditorContext } from "@/app/lib/editor/hook/context";
 import AppIcon from "../AppIcon";
 import AppLoadingSpinner from "../AppLoadingSpinner";
+import useOutsideClick from "@/app/lib/OutsideClick";
 
 interface Props {
   index: number;
@@ -26,6 +27,12 @@ const NodeEditorVoice = (props: Props) => {
   const [description, setDescription] = useState<string>("");
   const [isVoicePause, setIsVoicePause] = useState<boolean>(false);
   const refFile = useRef<HTMLInputElement>(null);
+  const [tempFileName, setTempFileName] = useState("");
+  const rootRef = useOutsideClick<HTMLDivElement>(() => {
+    if (status !== Status.None && fileName.length <= 0) {
+      onChangeFileName(tempFileName);
+    }
+  });
 
   useEffect(() => {
     if (status === Status.None && node.url) {
@@ -51,7 +58,7 @@ const NodeEditorVoice = (props: Props) => {
 
   const onChangeFile = (e: ChangeEvent<HTMLInputElement>) => {
     if (!!e.target.files) {
-      onChangeFileName(e.target.files[0].name);
+      setTempFileName(e.target.files[0].name);
       if (onNodeBehavior) {
         setStatus(Status.Uploading);
         onNodeBehavior
@@ -107,7 +114,7 @@ const NodeEditorVoice = (props: Props) => {
   };
 
   return (
-    <div className={node.clazz}>
+    <div ref={rootRef}>
       <audio ref={ref} className="hidden">
         <source type=".mp3,.wav" />
         Your browser does not support the audio element.
@@ -123,7 +130,7 @@ const NodeEditorVoice = (props: Props) => {
         <div className="flex flex-row items-center rounded-lg bg-gray-2 px-4 h-12 cursor-pointer">
           <AppIcon name="volume" className="size-6 ml-3" />
           <div className="flex flex-col flex-1">
-            <span className="text-xs font-semibold truncate ml-4">{fileName}</span>
+            <input value={fileName} onChange={(e) => onChangeFileName(e.target.value)} placeholder="نام فایل را بنویسید..." className="text-xs font-semibold placeholder:text-gray-8 outline-none bg-transparent flex-1 truncate ml-4" />
             <div className="flex flex-row gap-x-1">
               <AppLoadingSpinner className="size-3 text-gray-7" />
             </div>

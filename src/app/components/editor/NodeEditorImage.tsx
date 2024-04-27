@@ -2,7 +2,6 @@ import { ChangeEvent, KeyboardEvent, MouseEvent, useContext, useEffect, useRef, 
 import { NodeImage, OnNodeBehavior } from "@/app/lib/editor/type";
 import AppTooltip from "@/app/components/AppTooltip";
 import { EditorContext } from "@/app/lib/editor/hook/context";
-import useOutsideClick from "@/app/lib/OutsideClick";
 import AppIcon from "../AppIcon";
 import AppMenu from "../AppMenu";
 import { imageVerticallyAlignItems } from "@/app/lib/editor/image/utils";
