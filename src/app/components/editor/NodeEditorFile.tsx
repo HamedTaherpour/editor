@@ -25,7 +25,7 @@ const NodeEditorFile = (props: Props) => {
   const [fileName, setFileName] = useState<string>("");
   const [description, setDescription] = useState<string>("");
   const refFile = useRef<HTMLInputElement>(null);
-  let [tempFileName, setTempFileName] = useState("");
+  const [tempFileName, setTempFileName] = useState("");
   const rootRef = useOutsideClick<HTMLDivElement>(() => {
     if (status !== Status.None && fileName.length <= 0) {
       onChangeFileName(tempFileName);

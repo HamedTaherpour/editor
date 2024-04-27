@@ -53,7 +53,7 @@ const EditorApp = (props: Props) => {
     if (jsonEditor.nodes.length <= 0) {
       onBtnAddNodeClick({ type: TYPE_NODE_TEXT });
     }
-  });
+  }, []);
 
   const onNodeBehavior: OnNodeBehavior = {
     toolsMenu: [
@@ -194,7 +194,6 @@ const EditorApp = (props: Props) => {
     },
     onPast(index) {
       if (clipboard) {
-        clipboard.id = Date.now();
         onBtnAddNodeClick({
           type: clipboard.type,
           node: clipboard,
@@ -229,7 +228,6 @@ const EditorApp = (props: Props) => {
     },
     onDuplicate(index) {
       const node = Object.assign({}, jsonEditor.nodes[index]);
-      node.id = Date.now(); // new id
       onBtnAddNodeClick({
         type: node.type,
         node: node,
@@ -345,6 +343,20 @@ const EditorApp = (props: Props) => {
       case TYPE_NODE_VIDEO:
         nodeEditorVideoModule.add((node as NodeVideo) || new NodeVideo(), _index);
         break;
+    }
+    if (_index + 1 === jsonEditor.nodes.length) {
+      for (let x = 0; x <= 4; x++) {
+        nodeEditorTextModule.add((node as NodeText) || new NodeText());
+      }
+      setTimeout(() => {
+        // @ts-ignore
+        if (jsonEditor.nodes[_index].focus) {
+          jsonEditor.nodes[_index].focus();
+        } else if (jsonEditor.nodes[_index + 1].focus) {
+          // @ts-ignore
+          jsonEditor.nodes[_index + 1].focus();
+        }
+      }, 10);
     }
   };
 

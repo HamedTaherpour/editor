@@ -13,15 +13,14 @@ class Editor {
   }
 
   addNode(node: Node, index: number = -1) {
-    if (this.jsonEditor) {
-      if (index > 0) this.jsonEditor.nodes.splice(index, 0, node);
-      else this.jsonEditor.nodes.push(node);
-      this.onJsonEditorUpdateListener?.onUpdate(this.jsonEditor);
-    }
+    node.id = this.generateUniqueID();
+    if (index > 0) this.jsonEditor.nodes.splice(index, 0, node);
+    else this.jsonEditor.nodes.push(node);
+
+    this.onJsonEditorUpdateListener?.onUpdate(this.jsonEditor);
   }
 
   updateNode(node: Node) {
-    if (!this.jsonEditor) return;
     const index = this.jsonEditor.nodes.findIndex((item) => item.id === node.id);
     if (index > -1) {
       this.jsonEditor.nodes[index] = node;
@@ -32,7 +31,6 @@ class Editor {
   }
 
   deleteNode(id: number) {
-    if (!this.jsonEditor) return;
     const index = this.jsonEditor.nodes.findIndex((item) => item.id === id);
 
     if (index > -1) {
@@ -42,11 +40,18 @@ class Editor {
       alert("id not found" + id);
     }
   }
+
   moveNode(fromIndex: number, toIndex: number) {
     var element = this.jsonEditor.nodes[fromIndex];
     this.jsonEditor.nodes.splice(fromIndex, 1);
     this.jsonEditor.nodes.splice(toIndex, 0, element);
     this.onJsonEditorUpdateListener?.onUpdate(this.jsonEditor);
+  }
+
+  generateUniqueID() {
+    const time = new Date().getTime().toString().slice(6, 10);
+    const randomeNumber = Math.floor(Math.random() * (9 - 0) + 0);
+    return parseInt(`${time}${randomeNumber}${this.jsonEditor.nodes.length}`);
   }
 }
 

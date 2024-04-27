@@ -23,7 +23,7 @@ export class Node {
   focus?: () => void;
 
   constructor(type: number, clazz: string = "") {
-    this.id = Date.now();
+    this.id = 1; // set from Editor Class
     this.type = type;
     this.clazz = clazz;
     this.backgroundColor = "";
