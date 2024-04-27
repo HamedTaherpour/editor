@@ -349,8 +349,8 @@ const EditorApp = (props: Props) => {
         nodeEditorTextModule.add((node as NodeText) || new NodeText());
       }
       setTimeout(() => {
-        // @ts-ignore
         if (jsonEditor.nodes[_index].focus) {
+          // @ts-ignore
           jsonEditor.nodes[_index].focus();
         } else if (jsonEditor.nodes[_index + 1].focus) {
           // @ts-ignore
