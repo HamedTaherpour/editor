@@ -1,10 +1,10 @@
-"use client";
+'use client';
 
-import { Children, ReactNode, useEffect, useRef, useState } from "react";
-import { cloneElement } from "react";
-import useOutsideClick from "@/app/lib/OutsideClick";
-import { createPortal } from "react-dom";
-import { getElementPostion } from "../lib/utils";
+import React, { Children, ReactNode, useEffect, useRef, useState } from 'react';
+import { cloneElement } from 'react';
+import useOutsideClick from '../lib/helpers/OutsideClick';
+import { createPortal } from 'react-dom';
+import { getElementPostion } from '../lib/helpers';
 
 interface Props {
   activator: ReactNode;
@@ -57,7 +57,7 @@ const AppMenu = (props: Props) => {
   const childMenu = Children.only(menu) as React.ReactElement;
 
   return (
-    <div ref={refRoot} className={className + " relative"}>
+    <div ref={refRoot} className={className + ' menu-root'}>
       <div onClick={onActivatorClick}>{activator}</div>
       {open && menuEl
         ? createPortal(
@@ -68,7 +68,7 @@ const AppMenu = (props: Props) => {
                 left: postion.x,
               }}
               onClick={() => setOpen(false)}
-              className="absolute z-50 mt-1"
+              className="portal"
             >
               {cloneElement(childMenu, {})}
             </div>,

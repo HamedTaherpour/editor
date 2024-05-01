@@ -1,5 +1,5 @@
-import NodeEditor from "@/app/lib/editor";
-import { NodeVideo, TYPE_NODE_VIDEO } from "@/app/lib/editor/type";
+import NodeEditor from '../../index';
+import { NodeVideo, TYPE_NODE_VIDEO } from '../../type';
 
 class NodeEditorVideoModule {
   nodeEditor: NodeEditor;

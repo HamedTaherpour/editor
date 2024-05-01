@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { NodeFile } from '../../../lib/editor/type';
 import { getFileSizeFormat } from '../../../lib/helpers';
 import AppIcon from '../../AppIcon';
+import { NodeVideo } from '../../../lib/editor/type';
 
 interface Props {
-  node: NodeFile;
+  node: NodeVideo;
 }
 
-const NodeReadonlyFile = (props: Props) => {
+const NodeReadonlyVideo = (props: Props) => {
   const { node } = props;
   const [fileSize, setFileSize] = useState<string>('0');
 
@@ -29,4 +29,4 @@ const NodeReadonlyFile = (props: Props) => {
   );
 };
 
-export default NodeReadonlyFile;
+export default NodeReadonlyVideo;

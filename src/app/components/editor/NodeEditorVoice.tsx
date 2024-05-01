@@ -1,9 +1,9 @@
-import { ChangeEvent, useRef, useContext, useState, useEffect } from "react";
-import { NodeVoice, OnNodeBehavior } from "@/app/lib/editor/type";
-import { EditorContext } from "@/app/lib/editor/hook/context";
-import AppIcon from "../AppIcon";
-import AppLoadingSpinner from "../AppLoadingSpinner";
-import useOutsideClick from "@/app/lib/OutsideClick";
+import React, { ChangeEvent, useRef, useContext, useState, useEffect } from 'react';
+import { NodeVoice, OnNodeBehavior } from '../../lib/editor/type';
+import { EditorContext } from '../../lib/editor/hook/context';
+import AppIcon from '../AppIcon';
+import AppLoadingSpinner from '../AppLoadingSpinner';
+import useOutsideClick from '../../lib/helpers/OutsideClick';
 
 interface Props {
   index: number;
@@ -21,13 +21,13 @@ const NodeEditorVoice = (props: Props) => {
   const ref = useRef<HTMLAudioElement>(null);
   const onNodeBehavior = useContext<OnNodeBehavior | undefined>(EditorContext);
   const [status, setStatus] = useState<Status>(Status.None);
-  const [duration, setDuration] = useState<string>("00:00");
-  const [CurrentDuration, setCurrentDuration] = useState<string>("00:00");
-  const [fileName, setFileName] = useState<string>("");
-  const [description, setDescription] = useState<string>("");
+  const [duration, setDuration] = useState<string>('00:00');
+  const [currentDuration, setCurrentDuration] = useState<string>('00:00');
+  const [fileName, setFileName] = useState<string>('');
+  const [description, setDescription] = useState<string>('');
   const [isVoicePause, setIsVoicePause] = useState<boolean>(false);
   const refFile = useRef<HTMLInputElement>(null);
-  const [tempFileName, setTempFileName] = useState("");
+  const [tempFileName, setTempFileName] = useState('');
   const rootRef = useOutsideClick<HTMLDivElement>(() => {
     if (status !== Status.None && fileName.length <= 0) {
       onChangeFileName(tempFileName);
@@ -74,9 +74,9 @@ const NodeEditorVoice = (props: Props) => {
   };
 
   const getDurationFormat = (duration: number): string => {
-    let minutes = "0" + Math.floor(duration / 60);
-    let seconds = "0" + Math.floor(duration - parseInt(minutes) * 60);
-    return minutes.substring(-2) + ":" + seconds.substring(-2);
+    let minutes = '0' + Math.floor(duration / 60);
+    let seconds = '0' + Math.floor(duration - parseInt(minutes) * 60);
+    return minutes.substring(-2) + ':' + seconds.substring(-2);
   };
 
   const onBtnToggleAudioPlayClick = () => {
@@ -94,65 +94,63 @@ const NodeEditorVoice = (props: Props) => {
     if (ref.current) {
       ref.current.src = url;
       ref.current.addEventListener(
-        "loadedmetadata",
+        'loadedmetadata',
         () => {
           if (ref.current) setDuration(getDurationFormat(ref.current.duration));
         },
         false
       );
       ref.current.addEventListener(
-        "timeupdate",
+        'timeupdate',
         () => {
           if (ref.current) setCurrentDuration(getDurationFormat(ref.current.currentTime));
         },
         false
       );
-      ref.current.addEventListener("ended", () => {
+      ref.current.addEventListener('ended', () => {
         setIsVoicePause(false);
       });
     }
   };
 
   return (
-    <div ref={rootRef}>
-      <audio ref={ref} className="hidden">
+    <div ref={rootRef} className="node-file-root">
+      <audio ref={ref}>
         <source type=".mp3,.wav" />
         Your browser does not support the audio element.
       </audio>
       {status === Status.None ? (
-        <label className="flex flex-row items-center rounded-lg bg-gray-2 px-4 h-12 cursor-pointer">
-          <AppIcon name="volume" className="size-6 ml-3" />
-          <span className="text-xs font-semibold text-gray-8 ml-1">فایل صوتی را بارگذاری کنید.</span>
-          <span className="text-xs text-gray-8">mp3. mww فرمت</span>
-          <input ref={refFile} className="hidden" type="file" accept=".mp3,audio/*" onChange={onChangeFile} />
+        <label className="node-file-none">
+          <AppIcon name="document-upload" className="icon" />
+          <span className="title">فایل صوتی را بارگذاری کنید.</span>
+          <span className="type">mp3. mww فرمت</span>
+          <input ref={refFile} type="file" accept=".mp3,audio/*" onChange={onChangeFile} />
         </label>
       ) : status === Status.Uploading ? (
-        <div className="flex flex-row items-center rounded-lg bg-gray-2 px-4 h-12 cursor-pointer">
-          <AppIcon name="volume" className="size-6 ml-3" />
-          <div className="flex flex-col flex-1">
-            <input value={fileName} onChange={(e) => onChangeFileName(e.target.value)} placeholder="نام فایل را بنویسید..." className="text-xs font-semibold placeholder:text-gray-8 outline-none bg-transparent flex-1 truncate ml-4" />
-            <div className="flex flex-row gap-x-1">
-              <AppLoadingSpinner className="size-3 text-gray-7" />
+        <div className="node-file-uploading">
+          <AppIcon name="document-upload" className="icon" />
+          <div className="node-file-uploading-container">
+            <input value={fileName} onChange={(e) => onChangeFileName(e.target.value)} placeholder="نام فایل را بنویسید..." className="title" />
+            <div className="node-file-uploading-loading-box">
+              <AppLoadingSpinner className="loading" />
             </div>
           </div>
           <button>
-            <AppIcon name="x" className="size-5 fill-gray-6" />
+            <AppIcon name="x" className="icon" />
           </button>
         </div>
       ) : status === Status.FileReady ? (
-        <div className="flex flex-col">
-          <div className="flex flex-row items-center rounded-lg bg-gray-2 px-4 h-12 cursor-pointer">
-            <button className="ml-3" onClick={onBtnToggleAudioPlayClick}>
-              {isVoicePause ? <AppIcon name="union" className="size-6" /> : <AppIcon name="play" className="size-6" />}
-            </button>
-            <input value={fileName} onChange={(e) => onChangeFileName(e.target.value)} placeholder="نام فایل را بنویسید..." className="text-xs font-semibold placeholder:text-gray-8 outline-none bg-transparent flex-1 truncate ml-4" />
-            <div className="text-xs space-x-1">
-              <span>{CurrentDuration}</span>
+        <div className="node-file-ready">
+          <div className="node-file-ready-container">
+            <button onClick={onBtnToggleAudioPlayClick}>{isVoicePause ? <AppIcon name="union" className="icon" /> : <AppIcon name="play" className="icon" />}</button>
+            <input value={fileName} onChange={(e) => onChangeFileName(e.target.value)} placeholder="نام فایل را بنویسید..." className="title" />
+            <div className="subtitle">
+              <span>{currentDuration}</span>
               <span>/</span>
               <span>{duration}</span>
             </div>
           </div>
-          <input value={description} onChange={(e) => onChangeDescription(e.target.value)} placeholder="توضیحات مربوط به فایل (اختیاری)" className="text-xs  placeholder:text-gray-6 mt-1 outline-none" />
+          <input value={description} onChange={(e) => onChangeDescription(e.target.value)} placeholder="توضیحات مربوط به فایل (اختیاری)" className="description" />
         </div>
       ) : null}
     </div>

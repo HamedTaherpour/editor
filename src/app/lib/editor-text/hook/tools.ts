@@ -1,89 +1,92 @@
-import dynamic from "next/dynamic";
-// @ts-ignore
-import { EditorState, RichUtils, ContentBlock, convertFromRaw, CompositeDecorator } from "draft-js";
-import { NodeQuote, NodeText } from "@/app/lib/editor/type";
-import { ToolsColorStyleTextEditor } from "../type";
+import { EditorState, RichUtils, ContentBlock, convertFromRaw, CompositeDecorator } from 'draft-js';
+import { NodeQuote, NodeText } from '../../editor/type';
+import { ToolsColorStyleTextEditor } from '../type';
+
+import LinkComponent from '../../../components/TextEditor/component/Link';
+import LinkReadonlyComponent from '../../../components/TextEditor/component/read-only/LinkReadonly';
 
 // FOR INLINE STYLES
 export const customStyleMap = {
   COLOR_YELLOW: {
-    color: "rgb(203, 145, 47)",
+    color: '#CB912F',
   },
   COLOR_ORAMGE: {
-    color: "rgb(217, 115, 13)",
+    color: '#D9730D',
   },
   COLOR_BROWN: {
-    color: "rgb(159, 107, 83)",
+    color: '#9F6B53',
   },
   COLOR_GRAY: {
-    color: "rgb(120, 119, 116)",
+    color: '#787774',
   },
   COLOR_DARK: {
-    color: "rgb(36, 36, 36)",
+    color: '#242424',
   },
   COLOR_RED: {
-    color: "rgb(212, 76, 71)",
+    color: '#d44c47',
   },
   COLOR_PINK: {
-    color: "rgb(193, 76, 138)",
+    color: '#c14c8a',
   },
   COLOR_PURPLE: {
-    color: "rgb(144, 101, 176)",
+    color: '#9065B0',
   },
   COLOR_BLUE: {
-    color: "rgb(54, 128, 170)",
+    color: '#3680AA',
   },
   COLOR_GREEN: {
-    color: "rgb(68, 131, 97)",
+    color: '#448361',
   },
+
   BACKGROUND_YELLOW: {
-    background: "rgb(251, 246, 238)",
+    backgroundColor: '#FBF6EE',
   },
   BACKGROUND_ORAMGE: {
-    background: "rgb(254, 245, 236)",
+    backgroundColor: '#FEF5EC',
   },
   BACKGROUND_BROWN: {
-    background: "rgb(248, 244, 242)",
+    backgroundColor: '#F8F4F2',
   },
   BACKGROUND_GRAY: {
-    background: "rgb(245, 245, 245)",
+    backgroundColor: '#F5F5F5',
   },
   BACKGROUND_DARK: {
-    background: "rgb(255, 255, 255)",
+    backgroundColor: '#FFFFFF',
   },
   BACKGROUND_RED: {
-    background: "rgb(251, 239, 238)",
+    backgroundColor: '#FBEFEE',
   },
   BACKGROUND_PINK: {
-    background: "rgb(250, 240, 245)",
+    backgroundColor: '#FAF0F5',
   },
   BACKGROUND_PURPLE: {
-    background: "rgb(245, 242, 248)",
+    backgroundColor: '#F5F2F8',
   },
   BACKGROUND_BLUE: {
-    background: "rgb(239, 246, 250)",
+    backgroundColor: '#EFF6FA',
   },
   BACKGROUND_GREEN: {
-    background: "rgb(242, 248, 245)",
+    backgroundColor: '#F2F8F5',
   },
 };
 
 // FOR BLOCK LEVEL STYLES(Returns CSS Class From DraftEditor.css)
+// @ts-ignore
 export const blockStyleFn = (contentBlock: ContentBlock) => {
   const type = contentBlock.getType();
   switch (type) {
-    case "header-one":
-      return "te-header-one";
-    case "header-two":
-      return "te-header-two";
-    case "header-three":
-      return "te-header-three";
-    case "unstyled":
-      return "te-unstyled";
-    case "unordered-list-item":
-      return "te-unordered-list-item";
-    case "ordered-list-item":
-      return "te-ordered-list-item";
+    case 'header-one':
+      return 'te-header-one';
+    case 'header-two':
+      return 'te-header-two';
+    case 'header-three':
+      return 'te-header-three';
+    case 'unstyled':
+      return 'te-unstyled';
+    case 'unordered-list-item':
+      return 'te-unordered-list-item';
+    case 'ordered-list-item':
+      return 'te-ordered-list-item';
     default:
       break;
   }
@@ -91,189 +94,189 @@ export const blockStyleFn = (contentBlock: ContentBlock) => {
 
 export const toolsFontStylsItems = [
   {
-    label: "bold",
-    style: "BOLD",
-    icon: "text-bold",
-    method: "inline",
+    label: 'bold',
+    style: 'BOLD',
+    icon: 'text-bold',
+    method: 'inline',
   },
   {
-    label: "underline",
-    style: "UNDERLINE",
-    icon: "underline",
-    method: "inline",
+    label: 'underline',
+    style: 'UNDERLINE',
+    icon: 'underline',
+    method: 'inline',
   },
   {
-    label: "italic",
-    style: "ITALIC",
-    icon: "italic",
-    method: "inline",
+    label: 'italic',
+    style: 'ITALIC',
+    icon: 'italic',
+    method: 'inline',
   },
   {
-    label: "strike-through",
-    style: "STRIKETHROUGH",
-    icon: "text-cross",
-    method: "inline",
+    label: 'strike-through',
+    style: 'STRIKETHROUGH',
+    icon: 'text-cross',
+    method: 'inline',
   },
 ];
 
 export const toolsColorStyleItems: ToolsColorStyleTextEditor = {
   COLOR_YELLOW: {
-    title: "yellow",
-    value: "COLOR_YELLOW",
-    method: "inline",
+    title: 'yellow',
+    value: 'COLOR_YELLOW',
+    method: 'inline',
     option: {
       style: {
-        color: "COLOR_YELLOW",
-        background: "BACKGROUND_YELLOW",
+        color: 'COLOR_YELLOW',
+        background: 'BACKGROUND_YELLOW',
       },
       class: {
-        color: "text-yellow",
-        bgColor: "bg-yellow",
-        background: "bg-yellow-bg",
+        color: 'et-text-yellow',
+        bgColor: 'et-bg-yellow',
+        background: 'et-bg-yellow-bg',
       },
     },
   },
   COLOR_ORAMGE: {
-    title: "orange",
-    value: "COLOR_ORAMGE",
-    method: "inline",
+    title: 'orange',
+    value: 'COLOR_ORAMGE',
+    method: 'inline',
     option: {
       style: {
-        color: "COLOR_ORAMGE",
-        background: "BACKGROUND_ORAMGE",
+        color: 'COLOR_ORAMGE',
+        background: 'BACKGROUND_ORAMGE',
       },
       class: {
-        color: "text-orange",
-        bgColor: "bg-orange",
-        background: "bg-orange-bg",
+        color: 'et-text-orange',
+        bgColor: 'et-bg-orange',
+        background: 'et-bg-orange-bg',
       },
     },
   },
   COLOR_BROWN: {
-    title: "brown",
-    value: "COLOR_BROWN",
-    method: "inline",
+    title: 'brown',
+    value: 'COLOR_BROWN',
+    method: 'inline',
     option: {
       style: {
-        color: "COLOR_BROWN",
-        background: "BACKGROUND_BROWN",
+        color: 'COLOR_BROWN',
+        background: 'BACKGROUND_BROWN',
       },
       class: {
-        color: "text-brown",
-        bgColor: "bg-brown",
-        background: "bg-brown-bg",
+        color: 'et-text-brown',
+        bgColor: 'et-bg-brown',
+        background: 'et-bg-brown-bg',
       },
     },
   },
   COLOR_GRAY: {
-    title: "gray",
-    value: "COLOR_GRAY",
-    method: "inline",
+    title: 'gray',
+    value: 'COLOR_GRAY',
+    method: 'inline',
     option: {
       style: {
-        color: "COLOR_GRAY",
-        background: "BACKGROUND_GRAY",
+        color: 'COLOR_GRAY',
+        background: 'BACKGROUND_GRAY',
       },
       class: {
-        color: "text-gray",
-        bgColor: "bg-gray",
-        background: "bg-gray-bg",
+        color: 'et-text-gray',
+        bgColor: 'et-bg-gray',
+        background: 'et-bg-gray-bg',
       },
     },
   },
   COLOR_DARK: {
-    title: "dark",
-    value: "COLOR_DARK",
-    method: "inline",
+    title: 'dark',
+    value: 'COLOR_DARK',
+    method: 'inline',
     option: {
       style: {
-        color: "COLOR_DARK",
-        background: "BACKGROUND_DARK",
+        color: 'COLOR_DARK',
+        background: 'BACKGROUND_DARK',
       },
       class: {
-        color: "text-dark",
-        bgColor: "bg-dark",
-        background: "bg-dark-bg",
+        color: 'et-text-dark',
+        bgColor: 'et-bg-dark',
+        background: 'et-bg-dark-bg',
       },
     },
   },
   COLOR_RED: {
-    title: "red",
-    value: "COLOR_RED",
-    method: "inline",
+    title: 'red',
+    value: 'COLOR_RED',
+    method: 'inline',
     option: {
       style: {
-        color: "COLOR_RED",
-        background: "BACKGROUND_RED",
+        color: 'COLOR_RED',
+        background: 'BACKGROUND_RED',
       },
       class: {
-        color: "text-red",
-        bgColor: "bg-red",
-        background: "bg-red-bg",
+        color: 'et-text-red',
+        bgColor: 'et-bg-red',
+        background: 'et-bg-red-bg',
       },
     },
   },
   COLOR_PINK: {
-    title: "pink",
-    value: "COLOR_PINK",
-    method: "inline",
+    title: 'pink',
+    value: 'COLOR_PINK',
+    method: 'inline',
     option: {
       style: {
-        color: "COLOR_PINK",
-        background: "BACKGROUND_PINK",
+        color: 'COLOR_PINK',
+        background: 'BACKGROUND_PINK',
       },
       class: {
-        color: "text-pink",
-        bgColor: "bg-pink",
-        background: "bg-pink-bg",
+        color: 'et-text-pink',
+        bgColor: 'et-bg-pink',
+        background: 'et-bg-pink-bg',
       },
     },
   },
   COLOR_PURPLE: {
-    title: "purple",
-    value: "COLOR_PURPLE",
-    method: "inline",
+    title: 'purple',
+    value: 'COLOR_PURPLE',
+    method: 'inline',
     option: {
       style: {
-        color: "COLOR_PURPLE",
-        background: "BACKGROUND_PURPLE",
+        color: 'COLOR_PURPLE',
+        background: 'BACKGROUND_PURPLE',
       },
       class: {
-        color: "text-purple",
-        bgColor: "bg-purple",
-        background: "bg-purple-bg",
+        color: 'et-text-purple',
+        bgColor: 'et-bg-purple',
+        background: 'et-bg-purple-bg',
       },
     },
   },
   COLOR_BLUE: {
-    title: "blue",
-    value: "COLOR_BLUE",
-    method: "inline",
+    title: 'blue',
+    value: 'COLOR_BLUE',
+    method: 'inline',
     option: {
       style: {
-        color: "COLOR_BLUE",
-        background: "BACKGROUND_BLUE",
+        color: 'COLOR_BLUE',
+        background: 'BACKGROUND_BLUE',
       },
       class: {
-        color: "text-blue",
-        bgColor: "bg-blue",
-        background: "bg-blue-bg",
+        color: 'et-text-blue',
+        bgColor: 'et-bg-blue',
+        background: 'et-bg-blue-bg',
       },
     },
   },
   COLOR_GREEN: {
-    title: "green",
-    value: "COLOR_GREEN",
-    method: "inline",
+    title: 'green',
+    value: 'COLOR_GREEN',
+    method: 'inline',
     option: {
       style: {
-        color: "COLOR_GREEN",
-        background: "BACKGROUND_GREEN",
+        color: 'COLOR_GREEN',
+        background: 'BACKGROUND_GREEN',
       },
       class: {
-        color: "text-green",
-        bgColor: "bg-green",
-        background: "bg-green-bg",
+        color: 'et-text-green',
+        bgColor: 'et-bg-green',
+        background: 'et-bg-green-bg',
       },
     },
   },
@@ -281,50 +284,52 @@ export const toolsColorStyleItems: ToolsColorStyleTextEditor = {
 
 export const toolsHeadingStyleItems = {
   h1: {
-    title: "عنوان بزرگ",
-    value: "h1",
-    style: "header-one",
-    method: "block",
+    title: 'عنوان بزرگ',
+    value: 'h1',
+    style: 'header-one',
+    method: 'block',
   },
   h2: {
-    title: "عنوان متوسط",
-    value: "h2",
-    style: "header-two",
-    method: "block",
+    title: 'عنوان متوسط',
+    value: 'h2',
+    style: 'header-two',
+    method: 'block',
   },
   h3: {
-    title: "عنوان کوچک",
-    value: "h3",
-    style: "header-three",
-    method: "block",
+    title: 'عنوان کوچک',
+    value: 'h3',
+    style: 'header-three',
+    method: 'block',
   },
   p: {
-    title: "متن",
-    value: "p",
-    style: "unstyled",
-    method: "block",
+    title: 'متن',
+    value: 'p',
+    style: 'unstyled',
+    method: 'block',
   },
 };
 
 const findLinkEntities = (contentBlock: any, callback: any, contentState: any) => {
   contentBlock.findEntityRanges((character: any) => {
     const entityKey = character.getEntity();
-    return entityKey !== null && contentState.getEntity(entityKey).getType() === "LINK";
+    return entityKey !== null && contentState.getEntity(entityKey).getType() === 'LINK';
   }, callback);
 };
 
 export const editorDecorator = new CompositeDecorator([
   {
     strategy: findLinkEntities,
-    component: dynamic(() => import("@/app/components/TextEditor/component/Link")),
+    component: LinkComponent,
   },
 ]);
+
 export const readonlyDecorator = new CompositeDecorator([
   {
     strategy: findLinkEntities,
-    component: dynamic(() => import("@/app/components/TextEditor/component/read-only/LinkReadonly")),
+    component: LinkReadonlyComponent,
   },
 ]);
+
 export const getFirstInitEditorState = (node: NodeText | NodeQuote, readonly: boolean): EditorState => {
   const decorator = readonly ? readonlyDecorator : editorDecorator;
   let editorState = EditorState.createEmpty(decorator);
@@ -340,19 +345,19 @@ export const getFirstInitEditorState = (node: NodeText | NodeQuote, readonly: bo
 
 export const setBaseTag = (editorState: EditorState, node: NodeText | NodeQuote): EditorState => {
   let newEditorState = editorState;
-  if (node.baseTag !== "p" && !!!node.text && !!!node.text.blocks) {
+  if (node.baseTag !== 'p' && !!!node.text && !!!node.text.blocks) {
     const keys: { [key: string]: string } = {
-      h1: "header-one",
-      h2: "header-two",
-      h3: "header-three",
-      "ul-disc": "unordered-list-item",
-      "ul-decimal": "ordered-list-item",
+      h1: 'header-one',
+      h2: 'header-two',
+      h3: 'header-three',
+      'ul-disc': 'unordered-list-item',
+      'ul-decimal': 'ordered-list-item',
     };
 
     const style = keys[node.baseTag];
     const blockType = editorState.getCurrentContent().getBlockForKey(editorState.getSelection().getStartKey()).getType();
     if (blockType !== style) {
-      newEditorState = setStyle(editorState, style, "block");
+      newEditorState = setStyle(editorState, style, 'block');
     }
   }
   return newEditorState;
@@ -398,31 +403,31 @@ export const getValueOfLine = (editorState: EditorState, lineKey: any) => {
 };
 
 export const getValue = (editorState: EditorState) => {
-  return editorState.getCurrentContent().getPlainText("\u0001");
+  return editorState.getCurrentContent().getPlainText('\u0001');
 };
 
 export const setStyle = (editorState: EditorState, style: any, method: string): EditorState => {
-  if (method === "block") {
+  if (method === 'block') {
     return RichUtils.toggleBlockType(editorState, style);
   } else {
     return RichUtils.toggleInlineStyle(editorState, style);
   }
 };
 
-export const getLastStyleBackgroundColor = (editorState: EditorState): boolean => {
+export const getLastStyleBackgroundColor = (editorState: EditorState): any => {
   return editorState.getCurrentInlineStyle().find((style: any) => {
-    if (!!style) return style.includes("BACKGROUND_");
+    if (!!style) return style.includes('BACKGROUND_');
   });
 };
 
-export const getLastStyleFontColor = (editorState: EditorState): boolean => {
+export const getLastStyleFontColor = (editorState: EditorState): any => {
   return editorState.getCurrentInlineStyle().find((style: any) => {
-    if (!!style) return style.includes("COLOR_");
+    if (!!style) return style.includes('COLOR_');
   });
 };
 
 export const isStyleActive = (editorState: EditorState, style: any, method: string): boolean => {
-  if (method === "block") {
+  if (method === 'block') {
     const selection = editorState.getSelection();
     const blockType = editorState.getCurrentContent().getBlockForKey(selection.getStartKey()).getType();
     return blockType === style;
@@ -447,7 +452,7 @@ export const editLink = (editorState: EditorState, entityKey: string, link: stri
 
 export const setLink = (editorState: EditorState, link: string): EditorState => {
   const contentState = editorState.getCurrentContent();
-  const contentStateWithEntity = contentState.createEntity("LINK", "MUTABLE", {
+  const contentStateWithEntity = contentState.createEntity('LINK', 'MUTABLE', {
     url: link,
   });
   const entityKey = contentStateWithEntity.getLastCreatedEntityKey();

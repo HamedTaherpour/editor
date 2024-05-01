@@ -1,21 +1,18 @@
-"use client";
+import React, { useEffect, useState } from 'react';
 
-import { useEffect, useState } from "react";
+import Editor from '../../lib/editor';
+import NodeEditorTextModule from '../..//lib/editor/text/module';
+import NodeEditorVoiceModule from '../../lib/editor/voice/module';
+import NodeEditorImageModule from '../../lib/editor/image/module';
+import NodeEditorQuoteModule from '../../lib/editor/quote/module';
+import NodeEditorDividerModule from '../../lib/editor/divider/module';
+import NodeEditorFileModule from '../../lib/editor/file/module';
+import NodeEditorVideoModule from '../../lib/editor/video/module';
 
-import Editor from "@/app/lib/editor";
-import NodeEditorTextModule from "@/app/lib/editor/text/module";
-import NodeEditorVoiceModule from "@/app/lib/editor/voice/module";
-import NodeEditorImageModule from "@/app/lib/editor/image/module";
-import NodeEditorQuoteModule from "@/app/lib/editor/quote/module";
-import NodeEditorDividerModule from "@/app/lib/editor/divider/module";
-import NodeEditorFileModule from "@/app/lib/editor/file/module";
-import NodeEditorVideoModule from "@/app/lib/editor/video/module";
+import { EditorContext } from '../../lib/editor/hook/context';
 
-import NodeEditor from "@/app/components/editor/NodeEditor";
-
-import { EditorContext } from "@/app/lib/editor/hook/context";
-
-import { JsonEditor, OnJsonEditorUpdateListener, OnUploadFileListener, TYPE_NODE_TEXT, TYPE_NODE_VOICE, TYPE_NODE_IMAGE, TYPE_NODE_QUOTE, TYPE_NODE_DIVIDER, NodeText, NodeVoice, NodeImage, NodeQuote, NodeDivider, OnNodeBehavior, Node, TYPE_NODE_FILE, NodeFile, TYPE_NODE_VIDEO, NodeVideo } from "@/app/lib/editor/type";
+import { JsonEditor, OnJsonEditorUpdateListener, OnUploadFileListener, TYPE_NODE_TEXT, TYPE_NODE_VOICE, TYPE_NODE_IMAGE, TYPE_NODE_QUOTE, TYPE_NODE_VIDEO, TYPE_NODE_DIVIDER, NodeText, NodeVoice, NodeImage, NodeQuote, NodeDivider, OnNodeBehavior, Node, TYPE_NODE_FILE, NodeFile, NodeVideo } from '../../lib/editor/type';
+import NodeEditor from './NodeEditor';
 
 interface AddNode {
   type: number;
@@ -35,7 +32,7 @@ const EditorApp = (props: Props) => {
   const [clipboard, setClipboard] = useState<Node>();
   const [jsonEditor, setJsonEditor] = useState<JsonEditor>(
     value || {
-      name: "TestA",
+      name: 'TestA',
       nodes: [],
     }
   );
@@ -58,107 +55,107 @@ const EditorApp = (props: Props) => {
   const onNodeBehavior: OnNodeBehavior = {
     toolsMenu: [
       {
-        title: "متن",
-        description: "محتوای متنی به عنوان یک درس",
-        icon: "textalign",
+        title: 'متن',
+        description: 'محتوای متنی به عنوان یک درس',
+        icon: 'textalign',
         action: (index: number) => {
           onBtnAddNodeClick({ type: TYPE_NODE_TEXT, index });
         },
       },
       {
-        title: "عنوان 1",
-        description: "سایز بزرگ برای نوشتن عنوان",
-        icon: "smallcaps",
+        title: 'عنوان 1',
+        description: 'سایز بزرگ برای نوشتن عنوان',
+        icon: 'smallcaps',
         action: (index: number) => {
           const node = new NodeText();
-          node.baseTag = "h1";
+          node.baseTag = 'h1';
           onBtnAddNodeClick({ type: TYPE_NODE_TEXT, node, index });
         },
       },
       {
-        title: "عنوان 2",
-        description: "سایز متوسط برای نوشتن عنوان",
-        icon: "smallcaps",
+        title: 'عنوان 2',
+        description: 'سایز متوسط برای نوشتن عنوان',
+        icon: 'smallcaps',
         action: (index: number) => {
           const node = new NodeText();
-          node.baseTag = "h2";
+          node.baseTag = 'h2';
           onBtnAddNodeClick({ type: TYPE_NODE_TEXT, node, index });
         },
       },
       {
-        title: "عنوان 3",
-        description: "سایز کوچک برای نوشتن عنوان",
-        icon: "smallcaps",
+        title: 'عنوان 3',
+        description: 'سایز کوچک برای نوشتن عنوان',
+        icon: 'smallcaps',
         action: (index: number) => {
           const node = new NodeText();
-          node.baseTag = "h3";
+          node.baseTag = 'h3';
           onBtnAddNodeClick({ type: TYPE_NODE_TEXT, node, index });
         },
       },
       {
-        title: "نقل‌قول",
-        description: "برای نوشتن نقل‌قول استفاده کنید.",
-        icon: "quote-up",
+        title: 'نقل‌قول',
+        description: 'برای نوشتن نقل‌قول استفاده کنید.',
+        icon: 'quote-up',
         action: (index: number) => {
           onBtnAddNodeClick({ type: TYPE_NODE_QUOTE, index });
         },
       },
       {
-        title: "لیست نقطه‌ای",
-        description: "لیست ساده نقطه‌ای بسازید.",
-        icon: "bulleted",
+        title: 'لیست نقطه‌ای',
+        description: 'لیست ساده نقطه‌ای بسازید.',
+        icon: 'bulleted',
         action: (index: number) => {
           const node = new NodeText();
-          node.baseTag = "ul-disc";
+          node.baseTag = 'ul-disc';
           onBtnAddNodeClick({ type: TYPE_NODE_TEXT, index, node });
         },
       },
       {
-        title: "لیست شماره‌دار",
-        description: "لیست شماره‌دار ایجاد کنید.",
-        icon: "numbered",
+        title: 'لیست شماره‌دار',
+        description: 'لیست شماره‌دار ایجاد کنید.',
+        icon: 'numbered',
         action: (index: number) => {
           const node = new NodeText();
-          node.baseTag = "ul-decimal";
+          node.baseTag = 'ul-decimal';
           onBtnAddNodeClick({ type: TYPE_NODE_TEXT, index, node });
         },
       },
       {
-        title: "تصویر",
-        description: "تصویر خود را بارگذاری کنید.",
-        icon: "gallery",
+        title: 'تصویر',
+        description: 'تصویر خود را بارگذاری کنید.',
+        icon: 'gallery',
         action: (index: number) => {
           onBtnAddNodeClick({ type: TYPE_NODE_IMAGE, index });
         },
       },
       {
-        title: "ویدیو",
-        description: "ویدیو خود را بارگذاری کنید.",
-        icon: "play-circle",
+        title: 'ویدیو',
+        description: 'ویدیو خود را بارگذاری کنید.',
+        icon: 'play-circle',
         action: (index: number) => {
           onBtnAddNodeClick({ type: TYPE_NODE_VIDEO, index });
         },
       },
       {
-        title: "فایل یا پوشه",
-        description: "فایل خود را بارگذاری کنید.",
-        icon: "document",
+        title: 'فایل یا پوشه',
+        description: 'فایل خود را بارگذاری کنید.',
+        icon: 'document',
         action: (index: number) => {
           onBtnAddNodeClick({ type: TYPE_NODE_FILE, index });
         },
       },
       {
-        title: "صوتی",
-        description: "صوت یا ویس خود را بارگذاری کنید.",
-        icon: "volume",
+        title: 'صوتی',
+        description: 'صوت یا ویس خود را بارگذاری کنید.',
+        icon: 'volume',
         action: (index: number) => {
           onBtnAddNodeClick({ type: TYPE_NODE_VOICE, index });
         },
       },
       {
-        title: "جداکننده",
-        description: "جداکننده بخش‌های مختلف",
-        icon: "divider",
+        title: 'جداکننده',
+        description: 'جداکننده بخش‌های مختلف',
+        icon: 'divider',
         action: (index: number) => {
           onBtnAddNodeClick({
             type: TYPE_NODE_DIVIDER,
@@ -169,15 +166,15 @@ const EditorApp = (props: Props) => {
     ],
     onStyle(style, type, index) {
       const node = jsonEditor.nodes[index];
-      if (type === "background") {
+      if (type === 'background') {
         if (node.backgroundColor === style.value) {
-          node.backgroundColor = "";
+          node.backgroundColor = '';
         } else {
           node.backgroundColor = style.value;
         }
-      } else if (type === "color") {
+      } else if (type === 'color') {
         if (node.fontColor === style.value) {
-          node.fontColor = "";
+          node.fontColor = '';
         } else {
           node.fontColor = style.value;
         }
@@ -236,16 +233,16 @@ const EditorApp = (props: Props) => {
     },
     onKeyUp(e, index) {
       switch (e.key) {
-        case "ArrowDown":
+        case 'ArrowDown':
           selectDown(index);
           break;
-        case "ArrowUp":
+        case 'ArrowUp':
           selectUp(index);
           break;
-        case "Enter":
+        case 'Enter':
           onBtnAddNodeClick({ type: TYPE_NODE_TEXT, index });
           break;
-        case "Backspace":
+        case 'Backspace':
           const node = jsonEditor.nodes[index] as NodeText;
 
           if (node.text && node.text.blocks && node.text.blocks[0].text.length <= 0 && index > 0) {
@@ -319,7 +316,7 @@ const EditorApp = (props: Props) => {
 
   const onBtnAddNodeClick = (params: AddNode) => {
     const { type, index, node } = params;
-    let _index = typeof index === "undefined" ? -1 : index + 1;
+    let _index = typeof index === 'undefined' ? -1 : index + 1;
 
     switch (type) {
       case TYPE_NODE_TEXT:
@@ -375,18 +372,15 @@ const EditorApp = (props: Props) => {
   };
 
   return (
-    <div className={(jsonEditor.nodes.length <= 1 ? "empty-editor " : "") + " flex flex-col min-h-screen et-container mx-auto"}>
-      <div className="flex flex-col min-h-96 mt-16 w-full">
+    <div className={(jsonEditor.nodes.length <= 1 ? 'empty-editor ' : '') + ' editor-app-root'}>
+      <div className="editor-app-container">
         <EditorContext.Provider value={onNodeBehavior}>
-          <div className="flex flex-col nodes">
+          <div className="node-list">
             {jsonEditor.nodes.map((item, i) => (
-              <NodeEditor key={item.id} index={i} node={item} />
+              <NodeEditor key={item.id + '' + i} index={i} node={item} />
             ))}
           </div>
         </EditorContext.Provider>
-      </div>
-      <div className="bg-slate-900 text-white dir-ltr max-h-96 overflow-auto">
-        <pre>{JSON.stringify(jsonEditor, null, 2)}</pre>
       </div>
     </div>
   );

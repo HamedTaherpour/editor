@@ -1,6 +1,4 @@
 import { createContext } from "react";
-import { OnNodeBehavior } from "@/app/lib/editor/type";
+import { OnNodeBehavior } from '../type';
 
-export const EditorContext = createContext<OnNodeBehavior | undefined>(
-  undefined
-);
+export const EditorContext = createContext<OnNodeBehavior | undefined>(undefined);

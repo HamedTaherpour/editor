@@ -1,9 +1,9 @@
-import { NodeDivider } from "@/app/lib/editor/type";
+import React from 'react';
 
 const NodeReadonlyDivider = () => {
   return (
-    <div className="w-full h-6 flex items-center">
-      <hr className="border-slate-200 w-full" />
+    <div className="node-divider-root">
+      <hr />
     </div>
   );
 };

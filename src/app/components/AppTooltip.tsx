@@ -1,8 +1,8 @@
-"use client";
+'use client';
 
-import { ReactNode, useEffect, useRef, useState } from "react";
-import { createPortal } from "react-dom";
-import { getElementPostion } from "../lib/utils";
+import React, { ReactNode, useEffect, useRef, useState } from 'react';
+import { createPortal } from 'react-dom';
+import { getElementPostion } from '../lib/helpers';
 
 interface Props {
   activatorToolTip: ReactNode;
@@ -53,7 +53,7 @@ const AppTooltip = (props: Props) => {
   };
 
   return (
-    <div ref={refRoot} className={className + " relative "} onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave}>
+    <div ref={refRoot} className={className + ' tooltip'} onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave}>
       {activatorToolTip}
       {open && menuEl
         ? createPortal(
@@ -63,7 +63,7 @@ const AppTooltip = (props: Props) => {
                 top: postion.y,
                 left: postion.x,
               }}
-              className="absolute text-sm font-semibold px-1.5 py-2 z-50 rounded-md bg-gray-13 text-white"
+              className="portal tooltip-card"
             >
               {text}
             </div>,

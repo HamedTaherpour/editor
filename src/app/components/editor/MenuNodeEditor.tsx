@@ -1,7 +1,7 @@
-import AppIcon from "@/app/components/AppIcon";
-import { EditorContext } from "@/app/lib/editor/hook/context";
-import { OnNodeBehavior } from "@/app/lib/editor/type";
-import { useContext } from "react";
+import AppIcon from '../AppIcon';
+import { EditorContext } from '../../lib/editor/hook/context';
+import { OnNodeBehavior } from '../../lib/editor/type';
+import React, { useContext } from 'react';
 
 interface Props {
   index: number;
@@ -15,25 +15,27 @@ const MenuNodeEditor = (props: Props) => {
   if (onNodeBehavior) menuList = onNodeBehavior.toolsMenu;
 
   return (
-    <div className="flex flex-col gap-y-2 w-64 h-96 overflow-auto">
-      {menuList.map((item) => (
-        <div
-          key={item.title}
-          onClick={() => {
-            if (onActionClick) onActionClick();
-            item.action(index);
-          }}
-          className="flex flex-row cursor-pointer p-1 w-full hover:bg-gray-2 app-base-transform"
-        >
-          <div className="grid place-items-center bg-slate-50 rounded-lg border p-2 flex-none ">
-            <AppIcon name={item.icon} className="size-6" />
+    <div className="menu-node-editor">
+      <div className="menu-node-editor-root">
+        {menuList.map((item) => (
+          <div
+            key={item.title}
+            onClick={() => {
+              if (onActionClick) onActionClick();
+              item.action(index);
+            }}
+            className="menu-node-editor-item"
+          >
+            <div className="menu-node-editor-icon-box">
+              <AppIcon name={item.icon} className="icon" />
+            </div>
+            <div className="menu-node-editor-content">
+              <span>{item.title}</span>
+              <p>{item.description}</p>
+            </div>
           </div>
-          <div className="flex flex-col mr-3">
-            <span className="text-xs font-bold">{item.title}</span>
-            <p className="text-xs text-gray-600">{item.description}</p>
-          </div>
-        </div>
-      ))}
+        ))}
+      </div>
     </div>
   );
 };

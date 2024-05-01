@@ -1,20 +1,20 @@
-import React, { useEffect, useRef, useState, useContext } from "react";
-import { createPortal } from "react-dom";
+import React, { useEffect, useRef, useState, useContext } from 'react';
+import { createPortal } from 'react-dom';
 
-import { Editor, convertToRaw, getDefaultKeyBinding } from "draft-js";
-import { getValue, getLineNumberSelected, getLineKeySelected, getLineSize, getPositionOfLine, getValueOfLine, customStyleMap, blockStyleFn, editLink, getBlockPositionDOM, setLink, getFirstInitEditorState, setBaseTag } from "@/app/lib/editor-text/hook/tools";
+import { Editor, convertToRaw, getDefaultKeyBinding } from 'draft-js';
+import { getValue, getLineNumberSelected, getLineKeySelected, getLineSize, getPositionOfLine, getValueOfLine, customStyleMap, blockStyleFn, editLink, getBlockPositionDOM, setLink, getFirstInitEditorState, setBaseTag } from '../../lib/editor-text/hook/tools';
 
-import Toolbar from "@/app/components/TextEditor/Toolbar";
-import MenuNodeEditor from "@/app/components/editor/MenuNodeEditor";
-import LinkEditConfirm from "@/app/components/TextEditor/component/LinkEditConfirm";
-import LinkConfirm from "@/app/components/TextEditor/component/LinkConfirm";
-import "draft-js/dist/Draft.css";
-import { TYPE_NODE_QUOTE, TYPE_NODE_TEXT } from "@/app/lib/editor/type";
-import { EditorContext } from "@/app/lib/editor/hook/context";
-import { TextEditorContext } from "@/app/lib/editor-text/hook/context";
+import Toolbar from './Toolbar';
+import MenuNodeEditor from '../editor/MenuNodeEditor';
+import LinkEditConfirm from './component/LinkEditConfirm';
+import LinkConfirm from './component/LinkConfirm';
+import 'draft-js/dist/Draft.css';
+import { TYPE_NODE_QUOTE, TYPE_NODE_TEXT } from '../../lib/editor/type';
+import { EditorContext } from '../../lib/editor/hook/context';
+import { TextEditorContext } from '../../lib/editor-text/hook/context';
 
-import useOutsideClick from "@/app/lib/OutsideClick";
-import { getElementPostion } from "@/app/lib/utils";
+import useOutsideClick from '../../lib/helpers/OutsideClick';
+import { getElementPostion } from '../../lib/helpers';
 
 var delta = 200;
 var lastKeypressTime = 0;
@@ -37,7 +37,7 @@ const DraftEditor = ({ onChangeText, onChange, placeholder, node, index }) => {
 
   const [postionLink, setPostionLink] = useState({ x: 0, y: 0 });
   const [showEditLinkConfirm, setShowEditLinkConfirm] = useState(false);
-  const [linkEdit, setLinkEdit] = useState("");
+  const [linkEdit, setLinkEdit] = useState('');
   const [showLinkConfirm, setShowLinkConfirm] = useState(false);
   const [entityKeyEdit, setEntityKeyEdit] = useState();
   const [offseKeyEdit, setOffseKeyEdit] = useState();
@@ -51,19 +51,19 @@ const DraftEditor = ({ onChangeText, onChange, placeholder, node, index }) => {
     setShowMenu(false);
   });
   const refConfirm = useOutsideClick((e) => {
-    if (!e.target.closest(".node-" + node.id)) {
+    if (!e.target.closest('.node-' + node.id)) {
       setShowLinkConfirm(false);
     }
   });
   const refEditConfirm = useOutsideClick((e) => {
-    if (!e.target.closest(".node-" + node.id)) {
+    if (!e.target.closest('.node-' + node.id)) {
       setShowEditLinkConfirm(false);
     }
   });
   const menuEl = document.body;
-  let rootClazz = "node-" + node.id;
-  if (node.baseTag === "ul-disc" || node.baseTag === "ul-decimal") {
-    rootClazz += " et-bullte";
+  let rootClazz = 'node-' + node.id;
+  if (node.baseTag === 'ul-disc' || node.baseTag === 'ul-decimal') {
+    rootClazz += ' et-bullte';
   }
 
   useEffect(() => {
@@ -85,20 +85,20 @@ const DraftEditor = ({ onChangeText, onChange, placeholder, node, index }) => {
 
   function myKeyBindingFn(event) {
     setShowMenu(false);
-    if (event.key === "ArrowUp" || event.key === "ArrowDown") {
+    if (event.key === 'ArrowUp' || event.key === 'ArrowDown') {
       const lineNumber = getLineNumberSelected(editorState);
       const linesize = getLineSize(editorState);
-      if (event.key === "ArrowUp" && lineNumber <= 1) {
+      if (event.key === 'ArrowUp' && lineNumber <= 1) {
         setShowToolbar(false);
         onNodeBehavior.onKeyUp(event, index);
         return;
-      } else if (event.key === "ArrowDown" && lineNumber >= linesize - 1) {
+      } else if (event.key === 'ArrowDown' && lineNumber >= linesize - 1) {
         setShowToolbar(false);
         onNodeBehavior.onKeyUp(event, index);
         return;
       }
-    } else if (event.key === "Enter") {
-      if (node.type === TYPE_NODE_QUOTE || node.baseTag === "ul-disc" || node.baseTag === "ul-decimal") {
+    } else if (event.key === 'Enter') {
+      if (node.type === TYPE_NODE_QUOTE || node.baseTag === 'ul-disc' || node.baseTag === 'ul-decimal') {
         var thisKeypressTime = new Date();
         if (thisKeypressTime - lastKeypressTime <= delta) {
           thisKeypressTime = 0;
@@ -119,12 +119,12 @@ const DraftEditor = ({ onChangeText, onChange, placeholder, node, index }) => {
           return;
         }
       }
-    } else if (event.key === "Backspace") {
+    } else if (event.key === 'Backspace') {
       if (node.plainText.length <= 0) {
         setShowToolbar(false);
         onNodeBehavior.onKeyUp(event, index);
       }
-    } else if (event.key === "/") {
+    } else if (event.key === '/') {
       setTimeout(() => {
         openKeySlash(event);
       }, 100);
@@ -159,7 +159,7 @@ const DraftEditor = ({ onChangeText, onChange, placeholder, node, index }) => {
   const onMouseUp = (e) => {
     if (!!window.getSelection().toString()) {
       setShowToolbar(true);
-    } else if (!e.target.closest(".node-" + node.id)) {
+    } else if (!e.target.closest('.node-' + node.id)) {
       setShowToolbar(false);
     }
   };
@@ -178,8 +178,14 @@ const DraftEditor = ({ onChangeText, onChange, placeholder, node, index }) => {
     setShowEditLinkConfirm(false);
   };
 
+  const onChangeEditor = () => {
+    const contentState = editorState.getCurrentContent();
+    onChange(convertToRaw(contentState));
+    onChangeText(getValue(editorState));
+  };
+
   return (
-    <div ref={ref} className={rootClazz + " w-full"} onMouseUp={onMouseUp}>
+    <div ref={ref} className={rootClazz + ' node-draft'} onMouseUp={onMouseUp}>
       <TextEditorContext.Provider value={onTextEditorBehavior}>
         {showMenu
           ? createPortal(
@@ -189,17 +195,17 @@ const DraftEditor = ({ onChangeText, onChange, placeholder, node, index }) => {
                   top: postionMenu.y,
                   left: postionMenu.x,
                 }}
-                className="absolute z-50 bg-white p-2 border border-slate-200 rounded-lg shadow-xl2"
+                className="portal"
               >
                 <MenuNodeEditor index={index} onActionClick={() => setShowMenu(false)} />
               </div>,
               menuEl
             )
           : null}
-        <div className="relative">
+        <div className="portal-parent">
           {showToolbar ? <Toolbar node={node} editorState={editorState} setEditorState={setEditorState} onBtnShowLinkConfirmClick={onBtnShowLinkConfirmClick} onTransitionNodeListener={myOnTransitionNodeListener} /> : null}
           {showLinkConfirm ? (
-            <div ref={refConfirm} className="absolute z-50">
+            <div ref={refConfirm} className="portal">
               <LinkConfirm onBtnSetLinkClick={onBtnSetLinkClick} />
             </div>
           ) : null}
@@ -207,7 +213,7 @@ const DraftEditor = ({ onChangeText, onChange, placeholder, node, index }) => {
             ? createPortal(
                 <div
                   ref={refEditConfirm}
-                  className="absolute z-50"
+                  className="portal"
                   style={{
                     top: postionLink.y,
                     left: postionLink.x,
@@ -228,10 +234,11 @@ const DraftEditor = ({ onChangeText, onChange, placeholder, node, index }) => {
           blockStyleFn={blockStyleFn}
           keyBindingFn={myKeyBindingFn}
           onChange={(editorState) => {
-            const contentState = editorState.getCurrentContent();
-            onChange(convertToRaw(contentState));
-            onChangeText(getValue(editorState));
+            onChangeEditor();
             setEditorState(editorState);
+          }}
+          onBlur={() => {
+            onChangeEditor();
           }}
         />
       </TextEditorContext.Provider>

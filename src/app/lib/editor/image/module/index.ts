@@ -1,5 +1,5 @@
-import NodeEditor from "@/app/lib/editor";
-import { NodeImage, TYPE_NODE_IMAGE } from "@/app/lib/editor/type";
+import NodeEditor from "../../index";
+import { NodeImage, TYPE_NODE_IMAGE } from "../../type";
 
 class NodeEditorImageModule {
   nodeEditor: NodeEditor;

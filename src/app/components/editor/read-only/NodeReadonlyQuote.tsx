@@ -1,5 +1,7 @@
-import { NodeQuote } from "@/app/lib/editor/type";
-import DraftReadonly from "@/app/components/TextEditor/read-only/DraftReadonly";
+import { toolsColorStyleItems } from '../../../lib/editor-text/hook/tools';
+import { NodeQuote } from '../../../lib/editor/type';
+import DraftReadonly from '../../TextEditor/read-only/DraftReadonly';
+import React from 'react';
 
 interface Props {
   node: NodeQuote;
@@ -8,9 +10,25 @@ interface Props {
 const NodeReadonlyQuote = (props: Props) => {
   const { node } = props;
 
+  const classNameBgColor = () => {
+    let clazz = '';
+    if (node.backgroundColor) {
+      clazz += toolsColorStyleItems[node.backgroundColor].option.class.background;
+    }
+    return clazz;
+  };
+
+  const classNameBorderColor = () => {
+    let clazz = '';
+    if (node.backgroundColor) {
+      clazz += toolsColorStyleItems[node.backgroundColor].option.class.bgColor;
+    }
+    return clazz;
+  };
+
   return (
-    <div className="rounded flex flex-row px-1 py-1 bg-slate-100 w-full">
-      <div className="w-[3px] bg-slate-500 min-h-full ml-2.5">&nbsp;</div>
+    <div className={classNameBgColor() + ' node-quote-root'}>
+      <div className={classNameBorderColor() + ' divider'}>&nbsp;</div>
       <DraftReadonly node={node} />
     </div>
   );

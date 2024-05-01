@@ -1,21 +1,21 @@
-import NodeEditorText from "@/app/components/editor/NodeEditorText";
-import NodeEditorVoice from "@/app/components/editor/NodeEditorVoice";
-import NodeEditorImage from "@/app/components/editor/NodeEditorImage";
-import NodeEditorQuote from "@/app/components/editor/NodeEditorQuote";
-import NodeEditorDivider from "@/app/components/editor/NodeEditorDivider";
-import NodeEditorFile from "@/app/components/editor/NodeEditorFile";
-import MenuNodeEditor from "@/app/components/editor/MenuNodeEditor";
-import ToolsMenuNodeEditor from "@/app/components/editor/ToolsMenuNodeEditor";
-import AppMenu from "@/app/components/AppMenu";
-import AppIcon from "@/app/components/AppIcon";
-import { EditorContext } from "@/app/lib/editor/hook/context";
+import NodeEditorText from './NodeEditorText';
+import NodeEditorVoice from './NodeEditorVoice';
+import NodeEditorImage from './NodeEditorImage';
+import NodeEditorQuote from './NodeEditorQuote';
+import NodeEditorDivider from './NodeEditorDivider';
+import NodeEditorFile from './NodeEditorFile';
+import MenuNodeEditor from './MenuNodeEditor';
+import NodeEditorVideo from './NodeEditorVideo';
+import ToolsMenuNodeEditor from './ToolsMenuNodeEditor';
+import AppMenu from '../AppMenu';
+import AppIcon from '../AppIcon';
+import { EditorContext } from '../../lib/editor/hook/context';
 
-import { NodeText, NodeVoice, NodeImage, NodeQuote, Node, TYPE_NODE_TEXT, TYPE_NODE_VOICE, TYPE_NODE_IMAGE, TYPE_NODE_QUOTE, TYPE_NODE_DIVIDER, TYPE_NODE_FILE, NodeDivider, OnNodeBehavior, NodeFile, TYPE_NODE_VIDEO, NodeVideo } from "@/app/lib/editor/type";
-import AppTooltip from "../AppTooltip";
-import { useContext } from "react";
-import { ToolsColorStyleItemTextEditor } from "@/app/lib/editor-text/type";
-import { toolsColorStyleItems } from "@/app/lib/editor-text/hook/tools";
-import NodeEditorVideo from "./NodeEditorVideo";
+import { NodeText, NodeVoice, NodeImage, NodeVideo, NodeQuote, Node, TYPE_NODE_TEXT, TYPE_NODE_VOICE, TYPE_NODE_IMAGE, TYPE_NODE_QUOTE, TYPE_NODE_VIDEO, TYPE_NODE_DIVIDER, TYPE_NODE_FILE, NodeDivider, OnNodeBehavior, NodeFile } from '../../lib/editor/type';
+import AppTooltip from '../AppTooltip';
+import React, { useContext } from 'react';
+import { ToolsColorStyleItemTextEditor } from '../../lib/editor-text/type';
+import { toolsColorStyleItems } from '../../lib/editor-text/hook/tools';
 
 interface Props {
   index: number;
@@ -26,12 +26,12 @@ const NodeEditor = (props: Props) => {
   const { index, node } = props;
   const onNodeBehavior = useContext<OnNodeBehavior | undefined>(EditorContext);
 
-  let clazz = "";
+  let clazz = '';
   if (node.backgroundColor) {
     clazz += toolsColorStyleItems[node.backgroundColor].option.class.background;
   }
   if (node.fontColor) {
-    clazz += " ";
+    clazz += ' ';
     clazz += toolsColorStyleItems[node.fontColor].option.class.color;
   }
 
@@ -54,34 +54,30 @@ const NodeEditor = (props: Props) => {
   };
 
   return (
-    <div className={node.clazz + " flex flex-row items-start justify-start group node-row"}>
-      <div className="flex flex-row app-base-transform opacity-0 group-hover:opacity-100 mr-0.5 h-full w-12">
+    <div className={node.clazz + ' node-editor-root'}>
+      <div className="node-editor-actions">
         <AppMenu
-          className="h-6"
+          className="node-editor-menu"
           activator={
             <AppTooltip
               text="برای افزودن کلیک کنید"
               activatorToolTip={
-                <button className="size-6 rounded-lg hover:bg-gray-2">
-                  <AppIcon name="add" className="size-6 fill-gray-6" />
+                <button>
+                  <AppIcon name="add" className="icon" />
                 </button>
               }
             />
           }
-          menu={
-            <div className="bg-white p-2 border border-slate-200 rounded-lg shadow-xl2 ">
-              <MenuNodeEditor index={index} />
-            </div>
-          }
+          menu={<MenuNodeEditor index={index} />}
         />
         <AppMenu
-          className="h-6"
+          className="node-editor-menu"
           activator={
             <AppTooltip
               text="برای منو کلیک کنید"
               activatorToolTip={
-                <button className="size-6 rounded-lg hover:bg-gray-2">
-                  <AppIcon name="grip" className="size-6 fill-gray-6" />
+                <button>
+                  <AppIcon name="grip" className="icon" />
                 </button>
               }
             />
@@ -89,7 +85,7 @@ const NodeEditor = (props: Props) => {
           menu={<ToolsMenuNodeEditor node={node} onBtnSetStyleClick={onBtnSetStyleClick} onBtnPastClick={onBtnPastClick} onBtnDuplicateClick={onBtnDuplicateClick} onBtnDeleteClick={onBtnDeleteClick} isClipboardExists={!!onNodeBehavior?.isClipboardExists()} />}
         />
       </div>
-      <div className={clazz + " et-wrapper  rounded"}>
+      <div className={clazz + ' node-editor-container'}>
         {node.type === TYPE_NODE_TEXT ? <NodeEditorText node={node as NodeText} index={index} /> : null}
         {node.type === TYPE_NODE_QUOTE ? <NodeEditorQuote node={node as NodeQuote} index={index} /> : null}
         {node.type === TYPE_NODE_VOICE ? <NodeEditorVoice node={node as NodeVoice} index={index} /> : null}

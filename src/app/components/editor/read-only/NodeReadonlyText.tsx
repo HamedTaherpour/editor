@@ -1,5 +1,6 @@
-import { NodeText } from "@/app/lib/editor/type";
-import DraftReadonly from "@/app/components/TextEditor/read-only/DraftReadonly";
+import { NodeText } from '../../../lib/editor/type';
+import DraftReadonly from '../../TextEditor/read-only/DraftReadonly';
+import React from 'react';
 
 interface Props {
   node: NodeText;

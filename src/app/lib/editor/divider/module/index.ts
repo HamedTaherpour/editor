@@ -1,5 +1,5 @@
-import NodeEditor from "@/app/lib/editor";
-import { NodeDivider, TYPE_NODE_DIVIDER } from "@/app/lib/editor/type";
+import NodeEditor from "../../index";
+import { NodeDivider, TYPE_NODE_DIVIDER } from "../../type";
 
 class NodeEditorDividerModule {
   nodeEditor: NodeEditor;

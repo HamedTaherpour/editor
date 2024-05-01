@@ -1,5 +1,5 @@
-import NodeEditor from "@/app/lib/editor";
-import { NodeVoice, TYPE_NODE_VOICE } from "@/app/lib/editor/type";
+import NodeEditor from "../../index";
+import { NodeVoice, TYPE_NODE_VOICE } from '../../type';
 
 class NodeEditorVoiceModule {
   nodeEditor: NodeEditor;

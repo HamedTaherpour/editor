@@ -1,12 +1,9 @@
-"use client";
+'use client';
 
-import { Children, MouseEvent, ReactNode, useState } from "react";
-import useOutsideClick from "@/app/lib/OutsideClick";
-import {
-  DropDownMenuItemType,
-  DropDownMenuListType,
-} from "@/app/lib/type/index";
-import AppIcon from "./AppIcon";
+import React, { Children, MouseEvent, ReactNode, useState } from 'react';
+import useOutsideClick from '../lib/helpers/OutsideClick';
+import { DropDownMenuItemType, DropDownMenuListType } from '../lib/type';
+import AppIcon from './AppIcon';
 
 interface Props {
   activator: ReactNode;
@@ -38,28 +35,21 @@ const AppDropDownMenu = (props: Props) => {
   const childActivator = Children.only(activator) as React.ReactElement;
 
   return (
-    <div ref={refRoot} className={className + " relative"}>
-      <button
-        className="flex flex-row items-center gap-x-1.5 h-full"
-        onClick={onActivatorClick}
-      >
+    <div ref={refRoot} className={className + ' drop-down-menu-root'}>
+      <button className="drop-down-menu-activator" onClick={onActivatorClick}>
         {childActivator}
-        <AppIcon name="arrow-down" className="size-[18px] opacity-50" />
+        <AppIcon name="arrow-down" className="icon" />
       </button>
       {open ? (
-        <div className="absolute bg-white p-1 rounded-lg shadow-lg border border-slate-200 z-50 right-0 min-w-full top-10">
+        <div className="drop-down-menu-card">
           {!!menu ? (
             <div>{menu}</div>
           ) : (
             <div>
               {!!items ? (
-                <div className="flex flex-col gap-y-1 min-w-full">
+                <div className="drop-down-menu-container">
                   {Object.keys(items).map((item, i) => (
-                    <div
-                      key={items[item].value}
-                      onClick={() => onBtnItemClick(items[item])}
-                      className="p-1 text-sm app-base-transform hover:bg-gray-2 rounded-md cursor-pointer"
-                    >
+                    <div key={items[item].value} onClick={() => onBtnItemClick(items[item])} className="drop-down-menu-item">
                       {items[item].title}
                     </div>
                   ))}

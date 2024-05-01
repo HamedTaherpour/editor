@@ -1,5 +1,5 @@
-import { KeyboardEvent } from "react";
-import { ToolsColorStyleItemTextEditor } from "@/app/lib/editor-text/type";
+import { KeyboardEvent } from 'react';
+import { ToolsColorStyleItemTextEditor } from '../../editor-text/type';
 
 export const TYPE_NODE_TEXT = 0;
 export const TYPE_NODE_VOICE = 1;
@@ -22,21 +22,21 @@ export class Node {
   fontColor: string;
   focus?: () => void;
 
-  constructor(type: number, clazz: string = "") {
+  constructor(type: number, clazz: string = '') {
     this.id = 1; // set from Editor Class
     this.type = type;
     this.clazz = clazz;
-    this.backgroundColor = "";
-    this.fontColor = "";
+    this.backgroundColor = '';
+    this.fontColor = '';
   }
 }
 
 export class NodeText extends Node {
   text: any;
   plainText: string;
-  baseTag: string = "p";
+  baseTag: string = 'p';
 
-  constructor(text: any = "", plainText: string = "") {
+  constructor(text: any = '', plainText: string = '') {
     super(TYPE_NODE_TEXT);
     this.text = text;
     this.plainText = plainText;
@@ -46,14 +46,14 @@ export class NodeText extends Node {
 export class NodeQuote extends Node {
   text: any;
   plainText: string;
-  baseTag: string = "p";
+  baseTag: string = 'p';
 
-  constructor(text: any = "", plainText: string = "") {
+  constructor(text: any = '', plainText: string = '') {
     super(TYPE_NODE_QUOTE);
     this.text = text;
     this.plainText = plainText;
-    this.clazz = "my-3";
-    this.backgroundColor = "COLOR_GRAY";
+    this.clazz = 'node-gap';
+    this.backgroundColor = 'COLOR_GRAY';
   }
 }
 
@@ -62,12 +62,12 @@ export class NodeVoice extends Node {
   fileName: string;
   description: string;
 
-  constructor(url: string = "") {
+  constructor(url: string = '') {
     super(TYPE_NODE_VOICE);
     this.url = url;
-    this.fileName = "";
-    this.description = "";
-    this.clazz = "my-3";
+    this.fileName = '';
+    this.description = '';
+    this.clazz = 'node-gap';
   }
 }
 
@@ -77,13 +77,13 @@ export class NodeFile extends Node {
   fileSize: number;
   description: string;
 
-  constructor(url: string = "") {
+  constructor(url: string = '') {
     super(TYPE_NODE_FILE);
     this.url = url;
-    this.fileName = "";
-    this.description = "";
+    this.fileName = '';
+    this.description = '';
     this.fileSize = 0;
-    this.clazz = "my-3";
+    this.clazz = 'node-gap';
   }
 }
 
@@ -93,13 +93,13 @@ export class NodeVideo extends Node {
   fileSize: number;
   description: string;
 
-  constructor(url: string = "") {
+  constructor(url: string = '') {
     super(TYPE_NODE_FILE);
     this.url = url;
-    this.fileName = "";
-    this.description = "";
+    this.fileName = '';
+    this.description = '';
     this.fileSize = 0;
-    this.clazz = "my-3";
+    this.clazz = 'node-gap';
   }
 }
 
@@ -109,12 +109,12 @@ export class NodeImage extends Node {
   width?: number;
   verticallyAlign: string;
 
-  constructor(url: string = "", caption: string = "") {
+  constructor(url: string = '', caption: string = '') {
     super(TYPE_NODE_IMAGE);
     this.url = url;
     this.caption = caption;
-    this.clazz = "my-3";
-    this.verticallyAlign = "center";
+    this.clazz = 'node-gap';
+    this.verticallyAlign = 'center';
   }
 }
 

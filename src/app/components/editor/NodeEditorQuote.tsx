@@ -1,8 +1,8 @@
-import { useContext } from "react";
-import { NodeQuote, OnNodeBehavior } from "@/app/lib/editor/type";
-import DraftEditor from "@/app/components/TextEditor/DraftEditor";
-import { EditorContext } from "@/app/lib/editor/hook/context";
-import { toolsColorStyleItems } from "@/app/lib/editor-text/hook/tools";
+import React, { useContext } from 'react';
+import { NodeQuote, OnNodeBehavior } from '../../lib/editor/type';
+import DraftEditor from '../TextEditor/DraftEditor';
+import { EditorContext } from '../../lib/editor/hook/context';
+import { toolsColorStyleItems } from '../../lib/editor-text/hook/tools';
 
 interface Props {
   node: NodeQuote;
@@ -25,7 +25,7 @@ const NodeEditorQuote = (props: Props) => {
   };
 
   const classNameBgColor = () => {
-    let clazz = "";
+    let clazz = '';
     if (node.backgroundColor) {
       clazz += toolsColorStyleItems[node.backgroundColor].option.class.background;
     }
@@ -33,7 +33,7 @@ const NodeEditorQuote = (props: Props) => {
   };
 
   const classNameBorderColor = () => {
-    let clazz = "";
+    let clazz = '';
     if (node.backgroundColor) {
       clazz += toolsColorStyleItems[node.backgroundColor].option.class.bgColor;
     }
@@ -41,8 +41,8 @@ const NodeEditorQuote = (props: Props) => {
   };
 
   return (
-    <div className={classNameBgColor() + " rounded flex flex-row px-1 py-1 w-full"}>
-      <div className={classNameBorderColor() + " w-[3px] min-h-full ml-2.5"}>&nbsp;</div>
+    <div className={classNameBgColor() + ' node-quote-root'}>
+      <div className={classNameBorderColor() + ' divider'}>&nbsp;</div>
       <DraftEditor onChangeText={onChangeText} onChange={onChange} node={node} index={index} placeholder="نقل قول را اینجا بنوسید..." />
     </div>
   );

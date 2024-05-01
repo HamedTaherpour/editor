@@ -1,5 +1,5 @@
-import NodeEditor from "@/app/lib/editor";
-import { NodeQuote, NodeText, TYPE_NODE_QUOTE } from "@/app/lib/editor/type";
+import NodeEditor from "../../index";
+import { NodeQuote, NodeText, TYPE_NODE_QUOTE } from "../../type";
 
 class NodeEditorQuoteModule {
   nodeEditor: NodeEditor;

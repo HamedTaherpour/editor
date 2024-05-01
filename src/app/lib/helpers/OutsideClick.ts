@@ -1,4 +1,4 @@
-import { LegacyRef, Ref, RefObject, createRef, useEffect, useRef } from "react";
+import { RefObject, createRef, useEffect } from "react";
 
 function useOutsideClick<T extends HTMLElement>(callback: Function): RefObject<T> {
   const ref = createRef<T>();

@@ -22,6 +22,7 @@ export const nodeDragAndDropHandler = (dragableEl: HTMLElement, onDragEndListene
     }
   };
 
+  // @ts-ignore
   const onDragEnd = (e: DragEvent) => {
     if (replaceItem && draggedItem) {
       let index = -1;

@@ -1,6 +1,6 @@
-import { useRef, useState, useEffect } from "react";
-import { NodeVoice } from "@/app/lib/editor/type";
-import AppIcon from "@/app/components/AppIcon";
+import React, { useRef, useState, useEffect } from 'react';
+import { NodeVoice } from '../../../lib/editor/type';
+import AppIcon from '../../AppIcon';
 
 interface Props {
   node: NodeVoice;
@@ -9,23 +9,25 @@ interface Props {
 const NodeReadonlyVoice = (props: Props) => {
   const { node } = props;
   const ref = useRef<HTMLAudioElement>(null);
-  const [duration, setDuration] = useState<string>("00:00");
-  const [CurrentDuration, setCurrentDuration] = useState<string>("00:00");
+  const [duration, setDuration] = useState<string>('00:00');
+  const [currentDuration, setCurrentDuration] = useState<string>('00:00');
+  const [isVoicePause, setIsVoicePause] = useState<boolean>(false);
 
   useEffect(() => {
     setVoice(node.url);
-  });
+  }, []);
 
   const getDurationFormat = (duration: number): string => {
-    let minutes = "0" + Math.floor(duration / 60);
-    let seconds = "0" + Math.floor(duration - parseInt(minutes) * 60);
-    return minutes.substring(-2) + ":" + seconds.substring(-2);
+    let minutes = '0' + Math.floor(duration / 60);
+    let seconds = '0' + Math.floor(duration - parseInt(minutes) * 60);
+    return minutes.substring(-2) + ':' + seconds.substring(-2);
   };
 
   const onBtnToggleAudioPlayClick = () => {
     if (ref.current) {
       if (ref.current.paused) ref.current.play();
       else ref.current.pause();
+      setIsVoicePause(!ref.current.paused);
     }
   };
 
@@ -33,41 +35,42 @@ const NodeReadonlyVoice = (props: Props) => {
     if (ref.current) {
       ref.current.src = src;
       ref.current.addEventListener(
-        "loadedmetadata",
+        'loadedmetadata',
         () => {
           if (ref.current) setDuration(getDurationFormat(ref.current.duration));
         },
         false
       );
       ref.current.addEventListener(
-        "timeupdate",
+        'timeupdate',
         () => {
           if (ref.current) setCurrentDuration(getDurationFormat(ref.current.currentTime));
         },
         false
       );
+      ref.current.addEventListener('ended', () => {
+        setIsVoicePause(false);
+      });
     }
   };
 
   return (
-    <div>
-      <audio ref={ref} className="hidden">
+    <div className="node-file-root">
+      <audio ref={ref}>
         <source type=".mp3,.wav" />
         Your browser does not support the audio element.
       </audio>
-      <div className="flex flex-col">
-        <div className="flex flex-row items-center rounded-lg bg-gray-2 px-4 h-12 cursor-pointer">
-          <button className="ml-3" onClick={onBtnToggleAudioPlayClick}>
-            <AppIcon name="play" className="size-6" />
-          </button>
-          <p className="text-xs font-semibold placeholder:text-gray-8 outline-none bg-transparent flex-1 truncate ml-4">{node.fileName}</p>
-          <div className="text-xs space-x-1">
-            <span>{CurrentDuration}</span>
+      <div className="node-file-ready">
+        <div className="node-file-ready-container">
+          <button onClick={onBtnToggleAudioPlayClick}>{isVoicePause ? <AppIcon name="union" className="icon" /> : <AppIcon name="play" className="icon" />}</button>
+          <p className="title">{node.fileName}</p>
+          <div className="subtitle">
+            <span>{currentDuration}</span>
             <span>/</span>
             <span>{duration}</span>
           </div>
         </div>
-        <span className="text-xs placeholder:text-gray-6 text-gray-6 mt-1 outline-none">{node.description}</span>
+        <span className="description">{node.description}</span>
       </div>
     </div>
   );

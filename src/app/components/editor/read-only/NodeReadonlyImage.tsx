@@ -1,6 +1,6 @@
-import { ChangeEvent, KeyboardEvent, MouseEvent, useContext, useEffect, useRef, useState } from "react";
-import { NodeImage, OnNodeBehavior } from "@/app/lib/editor/type";
-import { imageVerticallyAlignItems } from "@/app/lib/editor/image/utils";
+import React, { useEffect, useRef } from 'react';
+import { NodeImage } from '../../../lib/editor/type';
+import { imageVerticallyAlignItems } from '../../../lib/editor/image/utils';
 
 interface Props {
   node: NodeImage;
@@ -35,12 +35,10 @@ const NodeReadonlyImage = (props: Props) => {
   };
 
   return (
-    <div className="w-full rounded flex flex-col">
-      <div className={imageVerticallyAlignItems[node.verticallyAlign].clazz + " w-full flex"}>
-        <div className="flex flex-col">
-          <img ref={ref} className="min-w-9 rounded-2xl" />
-          <p className="text-sm text-gray-7 pt-1.5 pb-4 px-4 outline-none text-center resize-none">{node.caption}</p>
-        </div>
+    <div className={imageVerticallyAlignItems[node.verticallyAlign].clazz + ' node-image-read-only'}>
+      <div className="node-image-resize">
+        <img ref={ref} />
+        <p className="node-image-caption">{node.caption}</p>
       </div>
     </div>
   );

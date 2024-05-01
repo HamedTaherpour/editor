@@ -1,4 +1,4 @@
-import { JsonEditor, Node, OnJsonEditorUpdateListener } from "@/app/lib/editor/type";
+import { JsonEditor, Node, OnJsonEditorUpdateListener } from './type';
 
 class Editor {
   jsonEditor: JsonEditor;
@@ -26,7 +26,7 @@ class Editor {
       this.jsonEditor.nodes[index] = node;
       this.onJsonEditorUpdateListener?.onUpdate(this.jsonEditor);
     } else {
-      alert("id not found" + node.id);
+      alert('id not found' + node.id);
     }
   }
 
@@ -37,7 +37,7 @@ class Editor {
       this.jsonEditor.nodes.splice(index, 1);
       this.onJsonEditorUpdateListener?.onUpdate(this.jsonEditor);
     } else {
-      alert("id not found" + id);
+      alert('id not found' + id);
     }
   }
 
