@@ -1,4 +1,4 @@
-import { JsonEditor, Node, OnJsonEditorUpdateListener } from './type';
+import { JsonEditor, Node, OnJsonEditorUpdateListener } from "./type";
 
 class Editor {
   jsonEditor: JsonEditor;
@@ -14,44 +14,44 @@ class Editor {
 
   addNode(node: Node, index: number = -1) {
     node.id = this.generateUniqueID();
-    if (index > 0) this.jsonEditor.nodes.splice(index, 0, node);
-    else this.jsonEditor.nodes.push(node);
+    if (index > 0) this.jsonEditor.splice(index, 0, node);
+    else this.jsonEditor.push(node);
 
     this.onJsonEditorUpdateListener?.onUpdate(this.jsonEditor);
   }
 
   updateNode(node: Node) {
-    const index = this.jsonEditor.nodes.findIndex((item) => item.id === node.id);
+    const index = this.jsonEditor.findIndex((item) => item.id === node.id);
     if (index > -1) {
-      this.jsonEditor.nodes[index] = node;
+      this.jsonEditor[index] = node;
       this.onJsonEditorUpdateListener?.onUpdate(this.jsonEditor);
     } else {
-      alert('id not found' + node.id);
+      alert("id not found" + node.id);
     }
   }
 
   deleteNode(id: number) {
-    const index = this.jsonEditor.nodes.findIndex((item) => item.id === id);
+    const index = this.jsonEditor.findIndex((item) => item.id === id);
 
     if (index > -1) {
-      this.jsonEditor.nodes.splice(index, 1);
+      this.jsonEditor.splice(index, 1);
       this.onJsonEditorUpdateListener?.onUpdate(this.jsonEditor);
     } else {
-      alert('id not found' + id);
+      alert("id not found" + id);
     }
   }
 
   moveNode(fromIndex: number, toIndex: number) {
-    var element = this.jsonEditor.nodes[fromIndex];
-    this.jsonEditor.nodes.splice(fromIndex, 1);
-    this.jsonEditor.nodes.splice(toIndex, 0, element);
+    var element = this.jsonEditor[fromIndex];
+    this.jsonEditor.splice(fromIndex, 1);
+    this.jsonEditor.splice(toIndex, 0, element);
     this.onJsonEditorUpdateListener?.onUpdate(this.jsonEditor);
   }
 
   generateUniqueID() {
     const time = new Date().getTime().toString().slice(6, 10);
     const randomeNumber = Math.floor(Math.random() * (9 - 0) + 0);
-    return parseInt(`${time}${randomeNumber}${this.jsonEditor.nodes.length}`);
+    return parseInt(`${time}${randomeNumber}${this.jsonEditor.length}`);
   }
 }
 
