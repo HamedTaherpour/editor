@@ -1,7 +1,7 @@
-import AppIcon from '../AppIcon';
-import { EditorContext } from '../../lib/editor/hook/context';
-import { OnNodeBehavior } from '../../lib/editor/type';
-import React, { useContext } from 'react';
+import AppIcon from "../AppIcon";
+import { EditorContext } from "../../lib/editor/hook/context";
+import { OnNodeBehavior } from "../../lib/editor/type";
+import React, { useContext } from "react";
 
 interface Props {
   index: number;

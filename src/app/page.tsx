@@ -480,7 +480,7 @@ export default function Home() {
 
   return (
     <main>
-      <EditorApp onJsonEditorUpdateListener={listener} onUploadFileListener={onUploadFileListener} />
+      <EditorApp  onJsonEditorUpdateListener={listener} onUploadFileListener={onUploadFileListener} />
     </main>
   );
 }

@@ -55,7 +55,7 @@ const EditorApp = (props: Props) => {
         icon: "textalign",
         action: (index: number) => {
           onBtnAddNodeClick({ type: TYPE_NODE_TEXT, index });
-        },
+        }
       },
       {
         title: "عنوان 1",
@@ -65,7 +65,7 @@ const EditorApp = (props: Props) => {
           const node = new NodeText();
           node.baseTag = "h1";
           onBtnAddNodeClick({ type: TYPE_NODE_TEXT, node, index });
-        },
+        }
       },
       {
         title: "عنوان 2",
@@ -75,7 +75,7 @@ const EditorApp = (props: Props) => {
           const node = new NodeText();
           node.baseTag = "h2";
           onBtnAddNodeClick({ type: TYPE_NODE_TEXT, node, index });
-        },
+        }
       },
       {
         title: "عنوان 3",
@@ -85,7 +85,7 @@ const EditorApp = (props: Props) => {
           const node = new NodeText();
           node.baseTag = "h3";
           onBtnAddNodeClick({ type: TYPE_NODE_TEXT, node, index });
-        },
+        }
       },
       {
         title: "نقل‌قول",
@@ -93,7 +93,7 @@ const EditorApp = (props: Props) => {
         icon: "quote-up",
         action: (index: number) => {
           onBtnAddNodeClick({ type: TYPE_NODE_QUOTE, index });
-        },
+        }
       },
       {
         title: "لیست نقطه‌ای",
@@ -103,7 +103,7 @@ const EditorApp = (props: Props) => {
           const node = new NodeText();
           node.baseTag = "ul-disc";
           onBtnAddNodeClick({ type: TYPE_NODE_TEXT, index, node });
-        },
+        }
       },
       {
         title: "لیست شماره‌دار",
@@ -113,7 +113,7 @@ const EditorApp = (props: Props) => {
           const node = new NodeText();
           node.baseTag = "ul-decimal";
           onBtnAddNodeClick({ type: TYPE_NODE_TEXT, index, node });
-        },
+        }
       },
       {
         title: "تصویر",
@@ -121,7 +121,7 @@ const EditorApp = (props: Props) => {
         icon: "gallery",
         action: (index: number) => {
           onBtnAddNodeClick({ type: TYPE_NODE_IMAGE, index });
-        },
+        }
       },
       {
         title: "ویدیو",
@@ -129,7 +129,7 @@ const EditorApp = (props: Props) => {
         icon: "play-circle",
         action: (index: number) => {
           onBtnAddNodeClick({ type: TYPE_NODE_VIDEO, index });
-        },
+        }
       },
       {
         title: "فایل یا پوشه",
@@ -137,7 +137,7 @@ const EditorApp = (props: Props) => {
         icon: "document",
         action: (index: number) => {
           onBtnAddNodeClick({ type: TYPE_NODE_FILE, index });
-        },
+        }
       },
       {
         title: "صوتی",
@@ -145,7 +145,7 @@ const EditorApp = (props: Props) => {
         icon: "volume",
         action: (index: number) => {
           onBtnAddNodeClick({ type: TYPE_NODE_VOICE, index });
-        },
+        }
       },
       {
         title: "جداکننده",
@@ -154,10 +154,10 @@ const EditorApp = (props: Props) => {
         action: (index: number) => {
           onBtnAddNodeClick({
             type: TYPE_NODE_DIVIDER,
-            index,
+            index
           });
-        },
-      },
+        }
+      }
     ],
     onStyle(style, type, index) {
       const node = jsonEditor[index];
@@ -189,7 +189,7 @@ const EditorApp = (props: Props) => {
         onBtnAddNodeClick({
           type: clipboard.type,
           node: clipboard,
-          index,
+          index
         });
       }
     },
@@ -223,7 +223,7 @@ const EditorApp = (props: Props) => {
       onBtnAddNodeClick({
         type: node.type,
         node: node,
-        index: index + 1,
+        index: index + 1
       });
     },
     onKeyUp(e, index) {
@@ -303,14 +303,14 @@ const EditorApp = (props: Props) => {
     onUploadVideo(file) {
       if (onUploadFileListener.onUploadVideo) return onUploadFileListener.onUploadVideo(file);
       else return Promise.reject("");
-    },
+    }
   };
 
   editor.setOnJsonEditorUpdateListener({
     onUpdate: (_jsonEditor) => {
       setJsonEditor([..._jsonEditor]);
       if (onJsonEditorUpdateListener) onJsonEditorUpdateListener.onUpdate(_jsonEditor);
-    },
+    }
   });
 
   const onBtnAddNodeClick = (params: AddNode) => {
@@ -340,20 +340,21 @@ const EditorApp = (props: Props) => {
         nodeEditorVideoModule.add((node as NodeVideo) || new NodeVideo(), _index);
         break;
     }
-    if (jsonEditor.length > 0 && _index + 1 === jsonEditor.length) {
-      for (let x = 0; x <= 4; x++) {
-        nodeEditorTextModule.add((node as NodeText) || new NodeText());
-      }
-      setTimeout(() => {
-        if (jsonEditor[_index].focus) {
-          // @ts-ignore
-          jsonEditor[_index].focus();
-        } else if (jsonEditor[_index + 1].focus) {
-          // @ts-ignore
-          jsonEditor[_index + 1].focus();
-        }
-      }, 10);
-    }
+
+    // if (jsonEditor.length > 0 && _index + 1 === jsonEditor.length) {
+    //   for (let x = 0; x <= 4; x++) {
+    //     nodeEditorTextModule.add((node as NodeText) || new NodeText());
+    //   }
+    //   setTimeout(() => {
+    //     if (jsonEditor[_index].focus) {
+    //       // @ts-ignore
+    //       jsonEditor[_index].focus();
+    //     } else if (jsonEditor[_index + 1].focus) {
+    //       // @ts-ignore
+    //       jsonEditor[_index + 1].focus();
+    //     }
+    //   }, 10);
+    // }
   };
 
   const selectUp = (index: number) => {

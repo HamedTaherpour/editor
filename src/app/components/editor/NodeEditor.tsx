@@ -1,21 +1,21 @@
-import NodeEditorText from './NodeEditorText';
-import NodeEditorVoice from './NodeEditorVoice';
-import NodeEditorImage from './NodeEditorImage';
-import NodeEditorQuote from './NodeEditorQuote';
-import NodeEditorDivider from './NodeEditorDivider';
-import NodeEditorFile from './NodeEditorFile';
-import MenuNodeEditor from './MenuNodeEditor';
-import NodeEditorVideo from './NodeEditorVideo';
-import ToolsMenuNodeEditor from './ToolsMenuNodeEditor';
-import AppMenu from '../AppMenu';
-import AppIcon from '../AppIcon';
-import { EditorContext } from '../../lib/editor/hook/context';
+import NodeEditorText from "./NodeEditorText";
+import NodeEditorVoice from "./NodeEditorVoice";
+import NodeEditorImage from "./NodeEditorImage";
+import NodeEditorQuote from "./NodeEditorQuote";
+import NodeEditorDivider from "./NodeEditorDivider";
+import NodeEditorFile from "./NodeEditorFile";
+import MenuNodeEditor from "./MenuNodeEditor";
+import NodeEditorVideo from "./NodeEditorVideo";
+import ToolsMenuNodeEditor from "./ToolsMenuNodeEditor";
+import AppMenu from "../AppMenu";
+import AppIcon from "../AppIcon";
+import { EditorContext } from "../../lib/editor/hook/context";
 
-import { NodeText, NodeVoice, NodeImage, NodeVideo, NodeQuote, Node, TYPE_NODE_TEXT, TYPE_NODE_VOICE, TYPE_NODE_IMAGE, TYPE_NODE_QUOTE, TYPE_NODE_VIDEO, TYPE_NODE_DIVIDER, TYPE_NODE_FILE, NodeDivider, OnNodeBehavior, NodeFile } from '../../lib/editor/type';
-import AppTooltip from '../AppTooltip';
-import React, { useContext } from 'react';
-import { ToolsColorStyleItemTextEditor } from '../../lib/editor-text/type';
-import { toolsColorStyleItems } from '../../lib/editor-text/hook/tools';
+import { NodeText, NodeVoice, NodeImage, NodeVideo, NodeQuote, Node, TYPE_NODE_TEXT, TYPE_NODE_VOICE, TYPE_NODE_IMAGE, TYPE_NODE_QUOTE, TYPE_NODE_VIDEO, TYPE_NODE_DIVIDER, TYPE_NODE_FILE, NodeDivider, OnNodeBehavior, NodeFile } from "../../lib/editor/type";
+import AppTooltip from "../AppTooltip";
+import React, { useContext } from "react";
+import { ToolsColorStyleItemTextEditor } from "../../lib/editor-text/type";
+import { toolsColorStyleItems } from "../../lib/editor-text/hook/tools";
 
 interface Props {
   index: number;
@@ -26,12 +26,12 @@ const NodeEditor = (props: Props) => {
   const { index, node } = props;
   const onNodeBehavior = useContext<OnNodeBehavior | undefined>(EditorContext);
 
-  let clazz = '';
+  let clazz = "";
   if (node.backgroundColor) {
     clazz += toolsColorStyleItems[node.backgroundColor].option.class.background;
   }
   if (node.fontColor) {
-    clazz += ' ';
+    clazz += " ";
     clazz += toolsColorStyleItems[node.fontColor].option.class.color;
   }
 
@@ -54,7 +54,7 @@ const NodeEditor = (props: Props) => {
   };
 
   return (
-    <div className={node.clazz + ' node-editor-root'}>
+    <div className={node.clazz + " node-editor-root"}>
       <div className="node-editor-actions">
         <AppMenu
           className="node-editor-menu"
@@ -85,7 +85,7 @@ const NodeEditor = (props: Props) => {
           menu={<ToolsMenuNodeEditor node={node} onBtnSetStyleClick={onBtnSetStyleClick} onBtnPastClick={onBtnPastClick} onBtnDuplicateClick={onBtnDuplicateClick} onBtnDeleteClick={onBtnDeleteClick} isClipboardExists={!!onNodeBehavior?.isClipboardExists()} />}
         />
       </div>
-      <div className={clazz + ' node-editor-container'}>
+      <div className={clazz + " node-editor-container"}>
         {node.type === TYPE_NODE_TEXT ? <NodeEditorText node={node as NodeText} index={index} /> : null}
         {node.type === TYPE_NODE_QUOTE ? <NodeEditorQuote node={node as NodeQuote} index={index} /> : null}
         {node.type === TYPE_NODE_VOICE ? <NodeEditorVoice node={node as NodeVoice} index={index} /> : null}
