@@ -49,13 +49,15 @@ const AppMenu = (props: Props) => {
       x -= ref.current.clientWidth;
       x += el.clientWidth;
 
+      const screenHeight = window.innerHeight
+        || document.documentElement.clientHeight
+        || document.body.clientHeight;
 
-      if (window.screen.height < (y + ref.current.clientHeight)) {
+      if (screenHeight < (y + ref.current.clientHeight)) {
         y -= ref.current.clientHeight;
       } else {
         y += el.offsetHeight;
       }
-      console.log(window.screen.height, y);
 
       setPosition({ x, y });
     }
