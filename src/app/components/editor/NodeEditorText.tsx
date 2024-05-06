@@ -18,8 +18,8 @@ const NodeEditorText = (props: Props) => {
     if (onNodeBehavior) onNodeBehavior.onUpdate(node);
   };
 
-  const onChange = (josn: string) => {
-    node.text = josn;
+  const onChange = (json: string) => {
+    node.text = json;
     if (onNodeBehavior) onNodeBehavior.onUpdate(node);
   };
 
