@@ -9,14 +9,15 @@ export const TYPE_NODE_DIVIDER = 4;
 export const TYPE_NODE_FILE = 5;
 export const TYPE_NODE_VIDEO = 6;
 
-export interface JsonEditor extends Array<Node> {}
+export interface JsonEditor extends Array<Node> {
+}
 
 export class Node {
   type: number;
   id: number;
-  clazz?: string;
-  backgroundColor: string;
-  fontColor: string;
+  clazz?: string | null;
+  backgroundColor: string | null;
+  fontColor: string | null;
   focus?: () => void;
 
   constructor(type: number, clazz: string = "") {
@@ -127,26 +128,43 @@ export interface OnJsonEditorUpdateListener {
 
 export interface OnNodeBehavior {
   toolsMenu: Array<any>;
+
   isClipboardExists(): boolean;
+
   onStyle(style: ToolsColorStyleItemTextEditor, type: string, index: number): void;
+
   onCopy(node: Node): void;
+
   onDuplicate(index: number): void;
+
   onPast(index: number): void;
+
   onDelete(node: Node): void;
+
   onUpdate(node: Node): void;
+
   onKeyUp(e: KeyboardEvent<HTMLElement>, index: number): void;
+
   onTransition(typeTransition: number, index: number): void;
+
   onMove(fromIndex: number, toIndex: number): void;
+
   onUploadFile(file: File): Promise<any>;
+
   onUploadImage(file: File): Promise<any>;
+
   onUploadVoice(file: File): Promise<any>;
+
   onUploadVideo(file: File): Promise<any>;
 }
 
 export interface OnUploadFileListener {
   onUploadFile?(file: File): Promise<any>;
+
   onUploadImage?(file: File): Promise<any>;
+
   onUploadVoice?(file: File): Promise<any>;
+
   onUploadVideo?(file: File): Promise<any>;
 }
 
