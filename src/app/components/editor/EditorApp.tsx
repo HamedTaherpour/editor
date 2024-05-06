@@ -377,7 +377,7 @@ const EditorApp = (props: Props) => {
         <EditorContext.Provider value={onNodeBehavior}>
           <div className="node-list">
             {jsonEditor.map((item, i) => (
-              <NodeEditor key={item.id + "" + i} index={i} node={item} />
+              <NodeEditor key={item.id} index={i} node={item} />
             ))}
           </div>
         </EditorContext.Provider>
