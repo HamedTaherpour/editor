@@ -341,20 +341,24 @@ const EditorApp = (props: Props) => {
         break;
     }
 
-    // if (jsonEditor.length > 0 && _index + 1 === jsonEditor.length) {
-    //   for (let x = 0; x <= 4; x++) {
-    //     nodeEditorTextModule.add((node as NodeText) || new NodeText());
-    //   }
-    //   setTimeout(() => {
-    //     if (jsonEditor[_index].focus) {
-    //       // @ts-ignore
-    //       jsonEditor[_index].focus();
-    //     } else if (jsonEditor[_index + 1].focus) {
-    //       // @ts-ignore
-    //       jsonEditor[_index + 1].focus();
-    //     }
-    //   }, 10);
-    // }
+
+    handlingAddBlankLines(index);
+  };
+
+  const handlingAddBlankLines = (index?: number) => {
+    let _index = typeof index === "undefined" ? 0 : index + 1;
+
+    if (_index + 1 === jsonEditor.length) {
+      for (let x = 0; x <= 4; x++) {
+        nodeEditorTextModule.add(new NodeText());
+      }
+      setTimeout(() => {
+        if (jsonEditor[_index].focus) {
+          // @ts-ignore
+          jsonEditor[_index].focus();
+        }
+      }, 100);
+    }
   };
 
   const selectUp = (index: number) => {
