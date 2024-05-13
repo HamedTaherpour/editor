@@ -140,7 +140,7 @@ const DraftEditor = ({ onChangeText, onChange, placeholder, node, index }) => {
     let y = 0;
 
     let el = window.getSelection().focusNode.parentNode;
-    const pos = getElementPostion(el);
+    const pos = getElementPosition(el);
     x = pos.x;
     y = pos.y;
 
