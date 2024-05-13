@@ -4,7 +4,7 @@ import React, { Children, ReactNode, useEffect, useRef, useState } from "react";
 import { cloneElement } from "react";
 import useOutsideClick from "../lib/helpers/OutsideClick";
 import { createPortal } from "react-dom";
-import { getElementPostion } from "../lib/helpers";
+import { getElementPosition } from "../lib/helpers";
 
 interface Props {
   activator: ReactNode;
@@ -41,7 +41,7 @@ const AppMenu = (props: Props) => {
       let y = 0;
 
       let el = refRoot.current;
-      const pos = getElementPostion(el);
+      const pos = getElementPosition(el);
       x = pos.x;
       y = pos.y;
 

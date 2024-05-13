@@ -1,4 +1,4 @@
-export const getElementPostion = (_element: Element) => {
+export const getElementPosition = (_element: Element) => {
   let x = 0;
   let y = 0;
   let element = _element;
@@ -14,7 +14,7 @@ export const getElementPostion = (_element: Element) => {
 
   return {
     x,
-    y,
+    y
   };
 };
 
@@ -36,4 +36,8 @@ export const getFileSizeFormat = (size: number): string => {
   } while (Math.round(Math.abs(size) * r) / r >= thresh && u < units.length - 1);
 
   return size.toFixed(dp) + " " + units[u];
+};
+
+export const isMobile = (): boolean => {
+  return (/Mobi|Android|iPhone/i.test(navigator.userAgent))
 };

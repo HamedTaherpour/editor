@@ -141,8 +141,147 @@
     margin-bottom: 0.75rem;
 }
 
-html, body {
-    height: 100vh;
+.editor-toolbar-bottom {
+    position: fixed;
+    bottom: 0;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    z-index: 50;
+}
+
+.editor-toolbar-bottom-container {
+    display: flex;
+    width: 100%;
+    height: 52px;
+    padding: 0 16px;
+    align-items: center;
+    gap: 12px;
+    flex-shrink: 0;
+    border-top: 1px solid #E3E3E3;
+    background-color: white;
+}
+
+.editor-toolbar-bottom-menu-node {
+    display: flex;
+    flex-direction: column;
+    padding: 24px;
+    gap: 8px;
+    border-top: 1px solid #E3E3E3;
+    background: #F9F8FB;
+    overflow-y: auto;
+}
+
+.editor-toolbar-bottom-menu-node-container {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+    flex-shrink: 0;
+    align-self: stretch;
+    margin-top: 16px;
+}
+
+.editor-toolbar-bottom-menu-node-box-color {
+    display: flex;
+    width: 24px;
+    height: 24px;
+    padding: 4px;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 0;
+    border-radius: 4px;
+    border: 0.5px solid #D6D6D6;
+    background: #F5F5F5;
+}
+
+.editor-toolbar-bottom-menu-node-box-color span {
+    color: #787774;
+    text-align: right;
+    font-size: 14px;
+    font-weight: 400;
+}
+ dew
+.editor-toolbar-bottom-menu-node-section {
+    display: flex;
+    flex-direction: column;
+}
+
+.editor-toolbar-bottom-menu-node-heading {
+    display: flex;
+    flex-direction: row;
+}
+
+.editor-toolbar-bottom-menu-node-heading span {
+    color: #919191;
+    text-align: right;
+    font-feature-settings: 'ss01' on;
+    font-size: 13px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+}
+
+.editor-toolbar-bottom-menu-node button {
+    display: flex;
+    justify-content: start !important;
+    align-items: center;
+    flex-direction: row;
+    gap: 8px;
+    padding: 12px;
+    border-radius: 8px;
+    border: 0.5px solid #F1F1F1;
+    background: #FFF;
+    box-shadow: 0px 1px 2px 0px rgba(0, 0, 0, 0.05);
+}
+
+.editor-toolbar-bottom-menu-node button svg {
+    width: 24px;
+    height: 24px;
+}
+
+.editor-toolbar-bottom-menu-node button span {
+    text-align: right;
+    font-feature-settings: 'ss01' on;
+    font-size: 13px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+}
+
+.editor-toolbar-bottom button {
+    display: flex;
+    padding: 8px;
+    justify-content: center;
+    align-items: center;
+}
+
+.editor-toolbar-bottom-action {
+    height: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex: 1 0 0;
+    overflow-x: auto;
+    direction: ltr;
+}
+
+.editor-toolbar-bottom-action button svg {
+    width: 24px;
+    height: 24px;
+    fill: #171717;
+}
+
+.editor-toolbar-bottom-side {
+    height: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.editor-toolbar-bottom button svg {
+    width: 24px;
+    height: 24px;
 }
 
 .editor-app-root {
@@ -151,6 +290,7 @@ html, body {
     min-height: 100vh;
     margin-left: auto;
     margin-right: auto;
+    position: relative;
 }
 
 .editor-app-root .node-list {
@@ -195,10 +335,10 @@ html, body {
 
 .node-editor-root .node-editor-container {
     border-radius: 0.25rem /* 4px */;
-    width: 432px;
+    /*width: 432px;*/
+    width: 100%;
     padding-right: 16px;
     padding-left: 16px;
-    padding-top: 24px;
 }
 
 .node-divider-root {
@@ -833,6 +973,7 @@ html, body {
     z-index: 50;
     padding-bottom: 0.75rem;
     color: rgb(94 94 94);
+    display: none;
 }
 
 .draft-toolbar-card {
@@ -1051,7 +1192,7 @@ html, body {
     text-align: justify !important;
 }
 
-.et-bullte .public-DraftEditorPlaceholder-inner {
+.et-bullets .public-DraftEditorPlaceholder-inner {
     padding-right: 1.25rem /* 20px */;
 }
 
@@ -1090,7 +1231,7 @@ html, body {
         transition-duration: 300ms;
     }
 
-    .node-editor-root .node-editor-container {
-        padding: 0;
+    .draft-toolbar {
+        display: block;
     }
 }

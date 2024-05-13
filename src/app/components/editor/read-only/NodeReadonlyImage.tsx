@@ -9,7 +9,7 @@ interface Props {
 const NodeReadonlyImage = (props: Props) => {
   const { node } = props;
   const ref = useRef<HTMLImageElement>(null);
-  const maxWidth = 432;
+  const maxWidth = 380;
 
   useEffect(() => {
     setImage(node.url);

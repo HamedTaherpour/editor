@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 
 import Editor from "../../lib/editor";
 import NodeEditorTextModule from "../..//lib/editor/text/module";
@@ -11,8 +11,9 @@ import NodeEditorVideoModule from "../../lib/editor/video/module";
 
 import { EditorContext } from "../../lib/editor/hook/context";
 
-import { JsonEditor, OnJsonEditorUpdateListener, OnUploadFileListener, TYPE_NODE_TEXT, TYPE_NODE_VOICE, TYPE_NODE_IMAGE, TYPE_NODE_QUOTE, TYPE_NODE_VIDEO, TYPE_NODE_DIVIDER, NodeText, NodeVoice, NodeImage, NodeQuote, NodeDivider, OnNodeBehavior, Node, TYPE_NODE_FILE, NodeFile, NodeVideo } from "../../lib/editor/type";
+import { JsonEditor, OnJsonEditorUpdateListener, OnUploadFileListener, TYPE_NODE_TEXT, TYPE_NODE_VOICE, TYPE_NODE_IMAGE, TYPE_NODE_QUOTE, TYPE_NODE_VIDEO, TYPE_NODE_DIVIDER, NodeText, NodeVoice, NodeImage, NodeQuote, NodeDivider, OnNodeBehavior, Node, TYPE_NODE_FILE, NodeFile, NodeVideo} from "../../lib/editor/type";
 import NodeEditor from "./NodeEditor";
+import ToolbarBottom from "@/app/components/editor/mobile/ToolbarBottom";
 
 interface AddNode {
   type: number;
@@ -45,7 +46,7 @@ const EditorApp = (props: Props) => {
     if (jsonEditor.length <= 0) {
       onBtnAddNodeClick({ type: TYPE_NODE_TEXT });
     }
-  }, []);
+  }, [jsonEditor.length]);
 
   const onNodeBehavior: OnNodeBehavior = {
     toolsMenu: [
@@ -303,7 +304,13 @@ const EditorApp = (props: Props) => {
     onUploadVideo(file) {
       if (onUploadFileListener.onUploadVideo) return onUploadFileListener.onUploadVideo(file);
       else return Promise.reject("");
-    }
+    },
+    onAddNode(type, index) {
+      onBtnAddNodeClick({
+        type,
+        index
+      });
+    },
   };
 
   editor.setOnJsonEditorUpdateListener({
@@ -341,7 +348,6 @@ const EditorApp = (props: Props) => {
         break;
     }
 
-
     handlingAddBlankLines(index);
   };
 
@@ -349,7 +355,7 @@ const EditorApp = (props: Props) => {
     let _index = typeof index === "undefined" ? 0 : index + 1;
 
     if (_index + 1 === jsonEditor.length) {
-      for (let x = 0; x <= 4; x++) {
+      for (let x = 0; x <= 2; x++) {
         nodeEditorTextModule.add(new NodeText());
       }
       setTimeout(() => {
@@ -377,15 +383,14 @@ const EditorApp = (props: Props) => {
 
   return (
     <div className={(jsonEditor.length <= 1 ? "empty-editor " : "") + " editor-app-root"}>
-      <div className="editor-app-container">
-        <EditorContext.Provider value={onNodeBehavior}>
-          <div className="node-list">
-            {jsonEditor.map((item, i) => (
-              <NodeEditor key={item.id} index={i} node={item} />
-            ))}
-          </div>
-        </EditorContext.Provider>
-      </div>
+      <EditorContext.Provider value={onNodeBehavior}>
+        <div className="node-list">
+          {jsonEditor.map((item, i) => (
+            <NodeEditor key={item.id} index={i} node={item}  />
+          ))}
+        </div>
+        <ToolbarBottom />,
+      </EditorContext.Provider>
     </div>
   );
 };

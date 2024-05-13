@@ -156,6 +156,8 @@ export interface OnNodeBehavior {
   onUploadVoice(file: File): Promise<any>;
 
   onUploadVideo(file: File): Promise<any>;
+
+  onAddNode(type: number, index?: number): void;
 }
 
 export interface OnUploadFileListener {

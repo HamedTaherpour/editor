@@ -10,7 +10,7 @@ const DraftReadonly = ({ node }) => {
 
   let rootClazz = 'node-' + node.id;
   if (node.baseTag === 'ul-disc' || node.baseTag === 'ul-decimal') {
-    rootClazz += ' et-bullte';
+    rootClazz += ' et-bullets';
   }
 
   return (

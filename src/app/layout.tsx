@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "./index.css";
 
 import { Vazirmatn } from "next/font/google";
+import React from "react";
 const vazirmatnFont = Vazirmatn({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
@@ -16,10 +17,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={vazirmatnFont.className + " dir-rtl"}>
+      <body className={vazirmatnFont.className + " dir-rtl h-screen"}>
         <div id="modal"></div>
         <div id="menu"></div>
-
         {children}
       </body>
     </html>

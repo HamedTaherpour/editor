@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState, useContext } from "react";
 import { createPortal } from "react-dom";
 
 import { Editor, convertToRaw, getDefaultKeyBinding } from "draft-js";
-import { getValue, getLineNumberSelected, getLineKeySelected, getLineSize, getPositionOfLine, getValueOfLine, customStyleMap, blockStyleFn, editLink, getBlockPositionDOM, setLink, getFirstInitEditorState, setBaseTag } from "../../lib/editor-text/hook/tools";
+import { getValue, getLineNumberSelected, getLineKeySelected, getLineSize, getPositionOfLine, getValueOfLine, customStyleMap, blockStyleFn, editLink, getBlockPositionDOM, setLink, getFirstInitEditorState, setStyle, getLastStyleFontColor, getLastStyleBackgroundColor } from "../../lib/editor-text/hook/tools";
 
 import Toolbar from "./Toolbar";
 import MenuNodeEditor from "../editor/MenuNodeEditor";
@@ -14,7 +14,7 @@ import { EditorContext } from "../../lib/editor/hook/context";
 import { TextEditorContext } from "../../lib/editor-text/hook/context";
 
 import useOutsideClick from "../../lib/helpers/OutsideClick";
-import { getElementPostion } from "../../lib/helpers";
+import { getElementPosition } from "../../lib/helpers";
 
 var delta = 200;
 var lastKeypressTime = 0;
@@ -63,12 +63,15 @@ const DraftEditor = ({ onChangeText, onChange, placeholder, node, index }) => {
   const menuEl = document.body;
   let rootClazz = "node-" + node.id;
   if (node.baseTag === "ul-disc" || node.baseTag === "ul-decimal") {
-    rootClazz += " et-bullte";
+    rootClazz += " et-bullets";
   }
 
   useEffect(() => {
-    focusEditor();
+    node.focus = focus;
+    node.focus();
+  }, []);
 
+  useEffect(() => {
     if (showEditLinkConfirm && refEditConfirm.current) {
       const positionBlock = getBlockPositionDOM(offseKeyEdit);
       setPositionLink({
@@ -78,10 +81,9 @@ const DraftEditor = ({ onChangeText, onChange, placeholder, node, index }) => {
     }
   }, [showEditLinkConfirm]);
 
-  const focusEditor = () => {
+  const focus = () => {
     editor.current.focus();
   };
-  node.focus = focusEditor;
 
   function myKeyBindingFn(event) {
     setShowMenu(false);

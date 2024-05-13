@@ -1,73 +1,73 @@
-import { EditorState, RichUtils, ContentBlock, convertFromRaw, CompositeDecorator } from 'draft-js';
-import { NodeQuote, NodeText } from '../../editor/type';
-import { ToolsColorStyleTextEditor } from '../type';
+import { EditorState, RichUtils, ContentBlock, convertFromRaw, CompositeDecorator } from "draft-js";
+import { NodeQuote, NodeText } from "../../editor/type";
+import { ToolsColorStyleTextEditor } from "../type";
 
-import LinkComponent from '../../../components/TextEditor/component/Link';
-import LinkReadonlyComponent from '../../../components/TextEditor/component/read-only/LinkReadonly';
+import LinkComponent from "../../../components/TextEditor/component/Link";
+import LinkReadonlyComponent from "../../../components/TextEditor/component/read-only/LinkReadonly";
 
 // FOR INLINE STYLES
 export const customStyleMap = {
   COLOR_YELLOW: {
-    color: '#CB912F',
+    color: "#CB912F"
   },
   COLOR_ORAMGE: {
-    color: '#D9730D',
+    color: "#D9730D"
   },
   COLOR_BROWN: {
-    color: '#9F6B53',
+    color: "#9F6B53"
   },
   COLOR_GRAY: {
-    color: '#787774',
+    color: "#787774"
   },
   COLOR_DARK: {
-    color: '#242424',
+    color: "#242424"
   },
   COLOR_RED: {
-    color: '#d44c47',
+    color: "#d44c47"
   },
   COLOR_PINK: {
-    color: '#c14c8a',
+    color: "#c14c8a"
   },
   COLOR_PURPLE: {
-    color: '#9065B0',
+    color: "#9065B0"
   },
   COLOR_BLUE: {
-    color: '#3680AA',
+    color: "#3680AA"
   },
   COLOR_GREEN: {
-    color: '#448361',
+    color: "#448361"
   },
 
   BACKGROUND_YELLOW: {
-    backgroundColor: '#FBF6EE',
+    backgroundColor: "#FBF6EE"
   },
   BACKGROUND_ORAMGE: {
-    backgroundColor: '#FEF5EC',
+    backgroundColor: "#FEF5EC"
   },
   BACKGROUND_BROWN: {
-    backgroundColor: '#F8F4F2',
+    backgroundColor: "#F8F4F2"
   },
   BACKGROUND_GRAY: {
-    backgroundColor: '#F5F5F5',
+    backgroundColor: "#F5F5F5"
   },
   BACKGROUND_DARK: {
-    backgroundColor: '#FFFFFF',
+    backgroundColor: "#FFFFFF"
   },
   BACKGROUND_RED: {
-    backgroundColor: '#FBEFEE',
+    backgroundColor: "#FBEFEE"
   },
   BACKGROUND_PINK: {
-    backgroundColor: '#FAF0F5',
+    backgroundColor: "#FAF0F5"
   },
   BACKGROUND_PURPLE: {
-    backgroundColor: '#F5F2F8',
+    backgroundColor: "#F5F2F8"
   },
   BACKGROUND_BLUE: {
-    backgroundColor: '#EFF6FA',
+    backgroundColor: "#EFF6FA"
   },
   BACKGROUND_GREEN: {
-    backgroundColor: '#F2F8F5',
-  },
+    backgroundColor: "#F2F8F5"
+  }
 };
 
 // FOR BLOCK LEVEL STYLES(Returns CSS Class From DraftEditor.css)
@@ -75,18 +75,18 @@ export const customStyleMap = {
 export const blockStyleFn = (contentBlock: ContentBlock) => {
   const type = contentBlock.getType();
   switch (type) {
-    case 'header-one':
-      return 'te-header-one';
-    case 'header-two':
-      return 'te-header-two';
-    case 'header-three':
-      return 'te-header-three';
-    case 'unstyled':
-      return 'te-unstyled';
-    case 'unordered-list-item':
-      return 'te-unordered-list-item';
-    case 'ordered-list-item':
-      return 'te-ordered-list-item';
+    case "header-one":
+      return "te-header-one";
+    case "header-two":
+      return "te-header-two";
+    case "header-three":
+      return "te-header-three";
+    case "unstyled":
+      return "te-unstyled";
+    case "unordered-list-item":
+      return "te-unordered-list-item";
+    case "ordered-list-item":
+      return "te-ordered-list-item";
     default:
       break;
   }
@@ -94,240 +94,240 @@ export const blockStyleFn = (contentBlock: ContentBlock) => {
 
 export const toolsFontStylsItems = [
   {
-    label: 'bold',
-    style: 'BOLD',
-    icon: 'text-bold',
-    method: 'inline',
+    label: "bold",
+    style: "BOLD",
+    icon: "text-bold",
+    method: "inline"
   },
   {
-    label: 'underline',
-    style: 'UNDERLINE',
-    icon: 'underline',
-    method: 'inline',
+    label: "underline",
+    style: "UNDERLINE",
+    icon: "underline",
+    method: "inline"
   },
   {
-    label: 'italic',
-    style: 'ITALIC',
-    icon: 'italic',
-    method: 'inline',
+    label: "italic",
+    style: "ITALIC",
+    icon: "italic",
+    method: "inline"
   },
   {
-    label: 'strike-through',
-    style: 'STRIKETHROUGH',
-    icon: 'text-cross',
-    method: 'inline',
-  },
+    label: "strike-through",
+    style: "STRIKETHROUGH",
+    icon: "text-cross",
+    method: "inline"
+  }
 ];
 
 export const toolsColorStyleItems: ToolsColorStyleTextEditor = {
   COLOR_YELLOW: {
-    title: 'yellow',
-    value: 'COLOR_YELLOW',
-    method: 'inline',
+    title: "yellow",
+    value: "COLOR_YELLOW",
+    method: "inline",
     option: {
       style: {
-        color: 'COLOR_YELLOW',
-        background: 'BACKGROUND_YELLOW',
+        color: "COLOR_YELLOW",
+        background: "BACKGROUND_YELLOW"
       },
       class: {
-        color: 'et-text-yellow',
-        bgColor: 'et-bg-yellow',
-        background: 'et-bg-yellow-bg',
-      },
-    },
+        color: "et-text-yellow",
+        bgColor: "et-bg-yellow",
+        background: "et-bg-yellow-bg"
+      }
+    }
   },
   COLOR_ORAMGE: {
-    title: 'orange',
-    value: 'COLOR_ORAMGE',
-    method: 'inline',
+    title: "orange",
+    value: "COLOR_ORAMGE",
+    method: "inline",
     option: {
       style: {
-        color: 'COLOR_ORAMGE',
-        background: 'BACKGROUND_ORAMGE',
+        color: "COLOR_ORAMGE",
+        background: "BACKGROUND_ORAMGE"
       },
       class: {
-        color: 'et-text-orange',
-        bgColor: 'et-bg-orange',
-        background: 'et-bg-orange-bg',
-      },
-    },
+        color: "et-text-orange",
+        bgColor: "et-bg-orange",
+        background: "et-bg-orange-bg"
+      }
+    }
   },
   COLOR_BROWN: {
-    title: 'brown',
-    value: 'COLOR_BROWN',
-    method: 'inline',
+    title: "brown",
+    value: "COLOR_BROWN",
+    method: "inline",
     option: {
       style: {
-        color: 'COLOR_BROWN',
-        background: 'BACKGROUND_BROWN',
+        color: "COLOR_BROWN",
+        background: "BACKGROUND_BROWN"
       },
       class: {
-        color: 'et-text-brown',
-        bgColor: 'et-bg-brown',
-        background: 'et-bg-brown-bg',
-      },
-    },
+        color: "et-text-brown",
+        bgColor: "et-bg-brown",
+        background: "et-bg-brown-bg"
+      }
+    }
   },
   COLOR_GRAY: {
-    title: 'gray',
-    value: 'COLOR_GRAY',
-    method: 'inline',
+    title: "gray",
+    value: "COLOR_GRAY",
+    method: "inline",
     option: {
       style: {
-        color: 'COLOR_GRAY',
-        background: 'BACKGROUND_GRAY',
+        color: "COLOR_GRAY",
+        background: "BACKGROUND_GRAY"
       },
       class: {
-        color: 'et-text-gray',
-        bgColor: 'et-bg-gray',
-        background: 'et-bg-gray-bg',
-      },
-    },
+        color: "et-text-gray",
+        bgColor: "et-bg-gray",
+        background: "et-bg-gray-bg"
+      }
+    }
   },
   COLOR_DARK: {
-    title: 'dark',
-    value: 'COLOR_DARK',
-    method: 'inline',
+    title: "dark",
+    value: "COLOR_DARK",
+    method: "inline",
     option: {
       style: {
-        color: 'COLOR_DARK',
-        background: 'BACKGROUND_DARK',
+        color: "COLOR_DARK",
+        background: "BACKGROUND_DARK"
       },
       class: {
-        color: 'et-text-dark',
-        bgColor: 'et-bg-dark',
-        background: 'et-bg-dark-bg',
-      },
-    },
+        color: "et-text-dark",
+        bgColor: "et-bg-dark",
+        background: "et-bg-dark-bg"
+      }
+    }
   },
   COLOR_RED: {
-    title: 'red',
-    value: 'COLOR_RED',
-    method: 'inline',
+    title: "red",
+    value: "COLOR_RED",
+    method: "inline",
     option: {
       style: {
-        color: 'COLOR_RED',
-        background: 'BACKGROUND_RED',
+        color: "COLOR_RED",
+        background: "BACKGROUND_RED"
       },
       class: {
-        color: 'et-text-red',
-        bgColor: 'et-bg-red',
-        background: 'et-bg-red-bg',
-      },
-    },
+        color: "et-text-red",
+        bgColor: "et-bg-red",
+        background: "et-bg-red-bg"
+      }
+    }
   },
   COLOR_PINK: {
-    title: 'pink',
-    value: 'COLOR_PINK',
-    method: 'inline',
+    title: "pink",
+    value: "COLOR_PINK",
+    method: "inline",
     option: {
       style: {
-        color: 'COLOR_PINK',
-        background: 'BACKGROUND_PINK',
+        color: "COLOR_PINK",
+        background: "BACKGROUND_PINK"
       },
       class: {
-        color: 'et-text-pink',
-        bgColor: 'et-bg-pink',
-        background: 'et-bg-pink-bg',
-      },
-    },
+        color: "et-text-pink",
+        bgColor: "et-bg-pink",
+        background: "et-bg-pink-bg"
+      }
+    }
   },
   COLOR_PURPLE: {
-    title: 'purple',
-    value: 'COLOR_PURPLE',
-    method: 'inline',
+    title: "purple",
+    value: "COLOR_PURPLE",
+    method: "inline",
     option: {
       style: {
-        color: 'COLOR_PURPLE',
-        background: 'BACKGROUND_PURPLE',
+        color: "COLOR_PURPLE",
+        background: "BACKGROUND_PURPLE"
       },
       class: {
-        color: 'et-text-purple',
-        bgColor: 'et-bg-purple',
-        background: 'et-bg-purple-bg',
-      },
-    },
+        color: "et-text-purple",
+        bgColor: "et-bg-purple",
+        background: "et-bg-purple-bg"
+      }
+    }
   },
   COLOR_BLUE: {
-    title: 'blue',
-    value: 'COLOR_BLUE',
-    method: 'inline',
+    title: "blue",
+    value: "COLOR_BLUE",
+    method: "inline",
     option: {
       style: {
-        color: 'COLOR_BLUE',
-        background: 'BACKGROUND_BLUE',
+        color: "COLOR_BLUE",
+        background: "BACKGROUND_BLUE"
       },
       class: {
-        color: 'et-text-blue',
-        bgColor: 'et-bg-blue',
-        background: 'et-bg-blue-bg',
-      },
-    },
+        color: "et-text-blue",
+        bgColor: "et-bg-blue",
+        background: "et-bg-blue-bg"
+      }
+    }
   },
   COLOR_GREEN: {
-    title: 'green',
-    value: 'COLOR_GREEN',
-    method: 'inline',
+    title: "green",
+    value: "COLOR_GREEN",
+    method: "inline",
     option: {
       style: {
-        color: 'COLOR_GREEN',
-        background: 'BACKGROUND_GREEN',
+        color: "COLOR_GREEN",
+        background: "BACKGROUND_GREEN"
       },
       class: {
-        color: 'et-text-green',
-        bgColor: 'et-bg-green',
-        background: 'et-bg-green-bg',
-      },
-    },
-  },
+        color: "et-text-green",
+        bgColor: "et-bg-green",
+        background: "et-bg-green-bg"
+      }
+    }
+  }
 };
 
 export const toolsHeadingStyleItems = {
-  h1: {
-    title: 'عنوان بزرگ',
-    value: 'h1',
-    style: 'header-one',
-    method: 'block',
+  "h1": {
+    title: "عنوان بزرگ",
+    value: "h1",
+    style: "header-one",
+    method: "block"
   },
-  h2: {
-    title: 'عنوان متوسط',
-    value: 'h2',
-    style: 'header-two',
-    method: 'block',
+  "h2": {
+    title: "عنوان متوسط",
+    value: "h2",
+    style: "header-two",
+    method: "block"
   },
-  h3: {
-    title: 'عنوان کوچک',
-    value: 'h3',
-    style: 'header-three',
-    method: 'block',
+  "h3": {
+    title: "عنوان کوچک",
+    value: "h3",
+    style: "header-three",
+    method: "block"
   },
-  p: {
-    title: 'متن',
-    value: 'p',
-    style: 'unstyled',
-    method: 'block',
-  },
+  "p": {
+    title: "متن",
+    value: "p",
+    style: "unstyled",
+    method: "block"
+  }
 };
 
 const findLinkEntities = (contentBlock: any, callback: any, contentState: any) => {
   contentBlock.findEntityRanges((character: any) => {
     const entityKey = character.getEntity();
-    return entityKey !== null && contentState.getEntity(entityKey).getType() === 'LINK';
+    return entityKey !== null && contentState.getEntity(entityKey).getType() === "LINK";
   }, callback);
 };
 
 export const editorDecorator = new CompositeDecorator([
   {
     strategy: findLinkEntities,
-    component: LinkComponent,
-  },
+    component: LinkComponent
+  }
 ]);
 
 export const readonlyDecorator = new CompositeDecorator([
   {
     strategy: findLinkEntities,
-    component: LinkReadonlyComponent,
-  },
+    component: LinkReadonlyComponent
+  }
 ]);
 
 export const getFirstInitEditorState = (node: NodeText | NodeQuote, readonly: boolean): EditorState => {
@@ -345,19 +345,19 @@ export const getFirstInitEditorState = (node: NodeText | NodeQuote, readonly: bo
 
 export const setBaseTag = (editorState: EditorState, node: NodeText | NodeQuote): EditorState => {
   let newEditorState = editorState;
-  if (node.baseTag !== 'p' && !!!node.text && !!!node.text.blocks) {
+  if (node.baseTag !== "p" && !!!node.text && !!!node.text.blocks) {
     const keys: { [key: string]: string } = {
-      h1: 'header-one',
-      h2: 'header-two',
-      h3: 'header-three',
-      'ul-disc': 'unordered-list-item',
-      'ul-decimal': 'ordered-list-item',
+      h1: "header-one",
+      h2: "header-two",
+      h3: "header-three",
+      "ul-disc": "unordered-list-item",
+      "ul-decimal": "ordered-list-item"
     };
 
     const style = keys[node.baseTag];
     const blockType = editorState.getCurrentContent().getBlockForKey(editorState.getSelection().getStartKey()).getType();
     if (blockType !== style) {
-      newEditorState = setStyle(editorState, style, 'block');
+      newEditorState = setStyle(editorState, style, "block");
     }
   }
   return newEditorState;
@@ -403,11 +403,11 @@ export const getValueOfLine = (editorState: EditorState, lineKey: any) => {
 };
 
 export const getValue = (editorState: EditorState) => {
-  return editorState.getCurrentContent().getPlainText('\u0001');
+  return editorState.getCurrentContent().getPlainText("\u0001");
 };
 
 export const setStyle = (editorState: EditorState, style: any, method: string): EditorState => {
-  if (method === 'block') {
+  if (method === "block") {
     return RichUtils.toggleBlockType(editorState, style);
   } else {
     return RichUtils.toggleInlineStyle(editorState, style);
@@ -416,18 +416,18 @@ export const setStyle = (editorState: EditorState, style: any, method: string): 
 
 export const getLastStyleBackgroundColor = (editorState: EditorState): any => {
   return editorState.getCurrentInlineStyle().find((style: any) => {
-    if (!!style) return style.includes('BACKGROUND_');
+    if (!!style) return style.includes("BACKGROUND_");
   });
 };
 
 export const getLastStyleFontColor = (editorState: EditorState): any => {
   return editorState.getCurrentInlineStyle().find((style: any) => {
-    if (!!style) return style.includes('COLOR_');
+    if (!!style) return style.includes("COLOR_");
   });
 };
 
 export const isStyleActive = (editorState: EditorState, style: any, method: string): boolean => {
-  if (method === 'block') {
+  if (method === "block") {
     const selection = editorState.getSelection();
     const blockType = editorState.getCurrentContent().getBlockForKey(selection.getStartKey()).getType();
     return blockType === style;
@@ -440,11 +440,11 @@ export const isStyleActive = (editorState: EditorState, style: any, method: stri
 export const editLink = (editorState: EditorState, entityKey: string, link: string): EditorState => {
   const contentState = editorState.getCurrentContent();
   const contentStateWithEntity = contentState.replaceEntityData(entityKey, {
-    url: link,
+    url: link
   });
 
   const newEditorState = EditorState.set(editorState, {
-    currentContent: contentStateWithEntity,
+    currentContent: contentStateWithEntity
   });
 
   return RichUtils.toggleLink(newEditorState, newEditorState.getSelection(), entityKey);
@@ -452,13 +452,13 @@ export const editLink = (editorState: EditorState, entityKey: string, link: stri
 
 export const setLink = (editorState: EditorState, link: string): EditorState => {
   const contentState = editorState.getCurrentContent();
-  const contentStateWithEntity = contentState.createEntity('LINK', 'MUTABLE', {
-    url: link,
+  const contentStateWithEntity = contentState.createEntity("LINK", "MUTABLE", {
+    url: link
   });
   const entityKey = contentStateWithEntity.getLastCreatedEntityKey();
 
   const newEditorState = EditorState.set(editorState, {
-    currentContent: contentStateWithEntity,
+    currentContent: contentStateWithEntity
   });
 
   return RichUtils.toggleLink(newEditorState, newEditorState.getSelection(), entityKey);
@@ -468,7 +468,7 @@ export const getBlockPositionDOM = (offsetKey: string) => {
   let postion = { x: 0, y: 0 };
   let x = 0;
   let y = 0;
-  let blockEl = document.querySelector('span[data-offset-key="' + offsetKey + '"]');
+  let blockEl = document.querySelector("span[data-offset-key=\"" + offsetKey + "\"]");
   if (blockEl) {
     // @ts-ignore
     const blockHeight = blockEl.offsetHeight;
@@ -487,7 +487,7 @@ export const getBlockPositionDOM = (offsetKey: string) => {
     x = x + blockWidth;
     postion = {
       x: x,
-      y: y + blockHeight,
+      y: y + blockHeight
     };
   }
   return postion;

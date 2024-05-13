@@ -2,7 +2,7 @@
 
 import React, { ReactNode, useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
-import { getElementPostion } from '../lib/helpers';
+import { getElementPosition } from '../lib/helpers';
 
 interface Props {
   activatorToolTip: ReactNode;
@@ -32,7 +32,7 @@ const AppTooltip = (props: Props) => {
       let y = 0;
 
       let el = refRoot.current;
-      const pos = getElementPostion(el);
+      const pos = getElementPosition(el);
       x = pos.x;
       y = pos.y;
 
