@@ -23,7 +23,10 @@ const DraftEditor = forwardRef(function DraftEditor({ onChangeText, onChange, pl
   useImperativeHandle(_ref, () => {
     return {
       focus,
-      onBtnHeadingItemClick
+      onBtnHeadingItemClick,
+      onBtnColorClick,
+      onBtnBackgroundClick,
+      onBtnStyleClick
     };
   }, []);
 
@@ -36,9 +39,18 @@ const DraftEditor = forwardRef(function DraftEditor({ onChangeText, onChange, pl
       setLinkEdit(url);
       setShowEditLinkConfirm(true);
     },
-    onBtnHeadingItemClick(item){
-      onBtnHeadingItemClick(item)
-    }
+    onBtnHeadingItemClick(item) {
+      onBtnHeadingItemClick(item);
+    },
+    onBtnColorClick(item) {
+      onBtnColorClick(item);
+    },
+    onBtnBackgroundClick(item) {
+      onBtnBackgroundClick(item);
+    },
+    onBtnStyleClick(item) {
+      onBtnStyleClick(item);
+    },
   };
 
   const [editorState, setEditorState] = useState(getFirstInitEditorState(node, false));
@@ -91,6 +103,27 @@ const DraftEditor = forwardRef(function DraftEditor({ onChangeText, onChange, pl
   };
 
   const onBtnHeadingItemClick = (item) => {
+    applyStyle(item.style, item.method);
+  };
+
+  const onBtnColorClick = (item) => {
+    console.log(item);
+    const lastStyle = getLastStyleFontColor(editorState);
+    let newEditorState = editorState;
+    if (lastStyle && lastStyle !== item.option.style.color) applyStyle(lastStyle, item.method);
+    applyStyle(item.option.style.color, item.method, newEditorState);
+  };
+
+  const onBtnBackgroundClick = (item) => {
+    const lastStyle = getLastStyleBackgroundColor(editorState);
+
+    let newEditorState = editorState;
+    if (lastStyle && lastStyle !== item.option.style.background) applyStyle(lastStyle, item.method);
+
+    applyStyle(item.option.style.background, item.method, newEditorState);
+  };
+
+  const onBtnStyleClick = (item) => {
     applyStyle(item.style, item.method);
   };
 

@@ -13,20 +13,19 @@ const Toolbar = ({ editorState, setEditorState, onTransitionNodeListener, onBtnS
       onTextEditorBehavior.onBtnHeadingItemClick(item);
   };
 
-  const onBtnColorClick = (e, item) => {
-    const lastStyle = getLastStyleFontColor(editorState);
-    let newEditorState = editorState;
-    if (lastStyle && lastStyle !== item.option.style.color) applyStyle(e, lastStyle, item.method);
-    applyStyle(e, item.option.style.color, item.method, newEditorState);
+  const onBtnColorClick = (item) => {
+    if (onTextEditorBehavior)
+      onTextEditorBehavior.onBtnColorClick(item);
   };
 
-  const onBtnBackgroundClick = (e, item) => {
-    const lastStyle = getLastStyleBackgroundColor(editorState);
+  const onBtnBackgroundClick = (item) => {
+    if (onTextEditorBehavior)
+      onTextEditorBehavior.onBtnBackgroundClick(item);
+  };
 
-    let newEditorState = editorState;
-    if (lastStyle && lastStyle !== item.option.style.background) applyStyle(e, lastStyle, item.method);
-
-    applyStyle(e, item.option.style.background, item.method, newEditorState);
+  const onBtnStyleClick = (item) => {
+    if (onTextEditorBehavior)
+      onTextEditorBehavior.onBtnStyleClick(item);
   };
 
   const onBtnLinkClick = () => {
@@ -35,12 +34,6 @@ const Toolbar = ({ editorState, setEditorState, onTransitionNodeListener, onBtnS
 
   const onBtnToggleQuoteClick = () => {
     onTransitionNodeListener();
-  };
-
-  const applyStyle = (e, style, method, _editorState = editorState) => {
-    if (!!e) e.preventDefault();
-    const newEditorState = setStyle(_editorState, style, method);
-    setEditorState(newEditorState);
   };
 
   const classNameDDMColor = () => {
@@ -78,7 +71,7 @@ const Toolbar = ({ editorState, setEditorState, onTransitionNodeListener, onBtnS
               <div className="color-palette">
                 <div className="color-palette-section">
                   {Object.keys(toolsColorStyleItems).map((item, i) => (
-                    <button title={toolsColorStyleItems[item].title} key={toolsColorStyleItems[item].value} onClick={(e) => onBtnColorClick(e, toolsColorStyleItems[item])} className={(!!isStyleActive(editorState, toolsColorStyleItems[item].option.style.color, item.method) ? "active" : "") + " " + toolsColorStyleItems[item].option.class.color}>
+                    <button title={toolsColorStyleItems[item].title} key={toolsColorStyleItems[item].value} onClick={(e) => onBtnColorClick(toolsColorStyleItems[item])} className={(!!isStyleActive(editorState, toolsColorStyleItems[item].option.style.color, item.method) ? "active" : "") + " " + toolsColorStyleItems[item].option.class.color}>
                       A
                     </button>
                   ))}
@@ -86,7 +79,7 @@ const Toolbar = ({ editorState, setEditorState, onTransitionNodeListener, onBtnS
                 <hr />
                 <div className="color-palette-section">
                   {Object.keys(toolsColorStyleItems).map((item, i) => (
-                    <button title={toolsColorStyleItems[item].title} key={toolsColorStyleItems[item].value} onClick={(e) => onBtnBackgroundClick(e, toolsColorStyleItems[item])} className={(!!isStyleActive(editorState, toolsColorStyleItems[item].option.style.background, item.method) ? "active" : "") + " " + toolsColorStyleItems[item].option.class.color + " " + toolsColorStyleItems[item].option.class.background}>
+                    <button title={toolsColorStyleItems[item].title} key={toolsColorStyleItems[item].value} onClick={(e) => onBtnBackgroundClick(toolsColorStyleItems[item])} className={(!!isStyleActive(editorState, toolsColorStyleItems[item].option.style.background, item.method) ? "active" : "") + " " + toolsColorStyleItems[item].option.class.color + " " + toolsColorStyleItems[item].option.class.background}>
                       A
                     </button>
                   ))}
@@ -97,7 +90,7 @@ const Toolbar = ({ editorState, setEditorState, onTransitionNodeListener, onBtnS
         </div>
         <div className="draft-toolbar-section">
           {toolsFontStylsItems.map((item) => (
-            <button key={item.style} onClick={(e) => applyStyle(e, item.style, item.method)} className={"draft-toolbar-action " + (!!isStyleActive(editorState, item.style, item.method) ? "active" : "")}>
+            <button key={item.style} onClick={(e) => onBtnStyleClick(item)} className={"draft-toolbar-action " + (!!isStyleActive(editorState, item.style, item.method) ? "active" : "")}>
               <AppIcon name={item.icon} className="icon" />
             </button>
           ))}

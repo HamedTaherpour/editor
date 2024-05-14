@@ -161,6 +161,8 @@ export interface OnNodeBehavior {
   onAddNode(type: number, index?: number): void;
 
   onBtnHeadingItemClick(item: any): void;
+
+  onBtnColorClick(item: any): void;
 }
 
 export interface OnUploadFileListener {
