@@ -1,5 +1,6 @@
-import { KeyboardEvent } from "react";
+import { Dispatch, KeyboardEvent, RefObject, SetStateAction, useState } from "react";
 import { ToolsColorStyleItemTextEditor } from "../../editor-text/type";
+import { EditorState } from "draft-js";
 
 export const TYPE_NODE_TEXT = 0;
 export const TYPE_NODE_VOICE = 1;
@@ -18,7 +19,7 @@ export class Node {
   clazz?: string | null;
   backgroundColor: string | null;
   fontColor: string | null;
-  focus?: () => void;
+  heroRef?: RefObject<any>;
 
   constructor(type: number, clazz: string = "") {
     this.id = 1; // set from Editor Class
@@ -158,6 +159,8 @@ export interface OnNodeBehavior {
   onUploadVideo(file: File): Promise<any>;
 
   onAddNode(type: number, index?: number): void;
+
+  onBtnHeadingItemClick(item: any): void;
 }
 
 export interface OnUploadFileListener {

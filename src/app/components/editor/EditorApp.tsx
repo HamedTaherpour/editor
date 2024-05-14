@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import Editor from "../../lib/editor";
 import NodeEditorTextModule from "../..//lib/editor/text/module";
@@ -11,9 +11,14 @@ import NodeEditorVideoModule from "../../lib/editor/video/module";
 
 import { EditorContext } from "../../lib/editor/hook/context";
 
-import { JsonEditor, OnJsonEditorUpdateListener, OnUploadFileListener, TYPE_NODE_TEXT, TYPE_NODE_VOICE, TYPE_NODE_IMAGE, TYPE_NODE_QUOTE, TYPE_NODE_VIDEO, TYPE_NODE_DIVIDER, NodeText, NodeVoice, NodeImage, NodeQuote, NodeDivider, OnNodeBehavior, Node, TYPE_NODE_FILE, NodeFile, NodeVideo} from "../../lib/editor/type";
+import {
+  JsonEditor, OnJsonEditorUpdateListener, OnUploadFileListener,
+  TYPE_NODE_TEXT, TYPE_NODE_VOICE, TYPE_NODE_IMAGE, TYPE_NODE_QUOTE, TYPE_NODE_VIDEO, TYPE_NODE_DIVIDER, TYPE_NODE_FILE,
+  NodeText, NodeVoice, NodeImage, NodeQuote, NodeDivider, OnNodeBehavior, Node, NodeFile, NodeVideo
+} from "../../lib/editor/type";
 import NodeEditor from "./NodeEditor";
 import ToolbarBottom from "@/app/components/editor/mobile/ToolbarBottom";
+import { ToolsColorStyleItemTextEditor } from "@/app/lib/editor-text/type";
 
 interface AddNode {
   type: number;
@@ -28,6 +33,7 @@ interface Props {
 }
 
 const EditorApp = (props: Props) => {
+
   const { value, onJsonEditorUpdateListener, onUploadFileListener } = props;
   const [isClipboardExists, setIsClipboardExists] = useState(false);
   const [clipboard, setClipboard] = useState<Node>();
@@ -311,6 +317,11 @@ const EditorApp = (props: Props) => {
         index
       });
     },
+    onBtnHeadingItemClick(item: ToolsColorStyleItemTextEditor) {
+      console.log("asd");
+      if(jsonEditor[0].heroRef)
+        jsonEditor[0].heroRef.current.onBtnHeadingItemClick(item)
+    }
   };
 
   editor.setOnJsonEditorUpdateListener({
@@ -359,9 +370,9 @@ const EditorApp = (props: Props) => {
         nodeEditorTextModule.add(new NodeText());
       }
       setTimeout(() => {
-        if (jsonEditor[_index].focus) {
+        if (jsonEditor[_index].heroRef) {
           // @ts-ignore
-          jsonEditor[_index].focus();
+          jsonEditor[_index].heroRef.current.focus()
         }
       }, 100);
     }
@@ -369,15 +380,15 @@ const EditorApp = (props: Props) => {
 
   const selectUp = (index: number) => {
     const node = jsonEditor[index - 1];
-    if (!!node && !!node.focus) {
-      node.focus();
+    if (!!node && !!node.heroRef) {
+      node.heroRef.current.focus()
     }
   };
 
   const selectDown = (index: number) => {
     const node = jsonEditor[index + 1];
-    if (!!node && !!node.focus) {
-      node.focus();
+    if (!!node && !!node.heroRef) {
+      node.heroRef.current.focus()
     }
   };
 
@@ -386,7 +397,7 @@ const EditorApp = (props: Props) => {
       <EditorContext.Provider value={onNodeBehavior}>
         <div className="node-list">
           {jsonEditor.map((item, i) => (
-            <NodeEditor key={item.id} index={i} node={item}  />
+            <NodeEditor key={item.id} index={i} node={item} />
           ))}
         </div>
         <ToolbarBottom />,

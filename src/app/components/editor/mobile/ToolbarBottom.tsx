@@ -3,6 +3,7 @@ import AppIcon from "@/app/components/AppIcon";
 import { OnNodeBehavior, TYPE_NODE_FILE, TYPE_NODE_IMAGE, TYPE_NODE_TEXT, TYPE_NODE_VOICE } from "@/app/lib/editor/type";
 import { EditorContext } from "@/app/lib/editor/hook/context";
 import { ToolsColorStyleItemTextEditor } from "@/app/lib/editor-text/type";
+import { toolsHeadingStyleItems } from "@/app/lib/editor-text/hook/tools";
 
 const ToolbarBottom = () => {
   const ref = useRef<HTMLDivElement>(null);
@@ -53,8 +54,11 @@ const ToolbarBottom = () => {
   };
 
   const onBtnOpenMenuNodeEditor = () => {
-    setTabMenuBottomName("tools");
-    setShowMenuBottom(!showMenuBottom);
+    // setTabMenuBottomName("tools");
+    // setShowMenuBottom(!showMenuBottom);
+    if(onNodeBehavior)
+      onNodeBehavior.onBtnHeadingItemClick(toolsHeadingStyleItems["h1"])
+
   };
 
   const onBtnAddNodeImage = () => {
@@ -215,7 +219,6 @@ const ToolbarBottom = () => {
                     </button>
                   </div>
                 </div>
-
               </div>
             </>
           }

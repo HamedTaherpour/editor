@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState, useContext } from "react";
+import React, { useEffect, useRef, useState, useContext, forwardRef, useImperativeHandle } from "react";
 import { createPortal } from "react-dom";
 
 import { Editor, convertToRaw, getDefaultKeyBinding } from "draft-js";
@@ -19,7 +19,14 @@ import { getElementPosition } from "../../lib/helpers";
 var delta = 200;
 var lastKeypressTime = 0;
 
-const DraftEditor = ({ onChangeText, onChange, placeholder, node, index }) => {
+const DraftEditor = forwardRef(function DraftEditor({ onChangeText, onChange, placeholder, node, index }, _ref) {
+  useImperativeHandle(_ref, () => {
+    return {
+      focus,
+      onBtnHeadingItemClick
+    };
+  }, []);
+
   const onNodeBehavior = useContext(EditorContext);
 
   const onTextEditorBehavior = {
@@ -28,6 +35,9 @@ const DraftEditor = ({ onChangeText, onChange, placeholder, node, index }) => {
       setOffseKeyEdit(offsetKey);
       setLinkEdit(url);
       setShowEditLinkConfirm(true);
+    },
+    onBtnHeadingItemClick(item){
+      onBtnHeadingItemClick(item)
     }
   };
 
@@ -67,11 +77,6 @@ const DraftEditor = ({ onChangeText, onChange, placeholder, node, index }) => {
   }
 
   useEffect(() => {
-    node.focus = focus;
-    node.focus();
-  }, []);
-
-  useEffect(() => {
     if (showEditLinkConfirm && refEditConfirm.current) {
       const positionBlock = getBlockPositionDOM(offseKeyEdit);
       setPositionLink({
@@ -83,6 +88,15 @@ const DraftEditor = ({ onChangeText, onChange, placeholder, node, index }) => {
 
   const focus = () => {
     editor.current.focus();
+  };
+
+  const onBtnHeadingItemClick = (item) => {
+    applyStyle(item.style, item.method);
+  };
+
+  const applyStyle = (style, method, _editorState = editorState) => {
+    const newEditorState = setStyle(_editorState, style, method);
+    setEditorState(newEditorState);
   };
 
   function myKeyBindingFn(event) {
@@ -239,6 +253,6 @@ const DraftEditor = ({ onChangeText, onChange, placeholder, node, index }) => {
       </TextEditorContext.Provider>
     </div>
   );
-};
+});
 
 export default DraftEditor;

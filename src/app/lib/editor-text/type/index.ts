@@ -1,6 +1,7 @@
 export interface ToolsColorStyleTextEditor {
   [key: string]: ToolsColorStyleItemTextEditor;
 }
+
 export interface ToolsColorStyleItemTextEditor {
   title: string;
   value: string;
@@ -20,4 +21,6 @@ export interface ToolsColorStyleItemTextEditor {
 
 export interface OnTextEditorBehavior {
   onBtnLinkEditClick(url: string, entityKey: string, offsetKey: string): void;
+
+  onBtnHeadingItemClick(item: ToolsColorStyleItemTextEditor): void;
 }

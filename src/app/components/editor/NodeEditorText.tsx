@@ -1,7 +1,7 @@
-import React, { useContext } from 'react';
-import { NodeText, OnNodeBehavior } from '../../lib/editor/type';
-import DraftEditor from '../TextEditor/DraftEditor';
-import { EditorContext } from '../../lib/editor/hook/context';
+import React, { createRef, useContext } from "react";
+import { NodeText, OnNodeBehavior } from "../../lib/editor/type";
+import DraftEditor from "../TextEditor/DraftEditor";
+import { EditorContext } from "../../lib/editor/hook/context";
 
 interface Props {
   node: NodeText;
@@ -10,8 +10,10 @@ interface Props {
 
 const NodeEditorText = (props: Props) => {
   const { node, index } = props;
+  node.heroRef = createRef();
 
   const onNodeBehavior = useContext<OnNodeBehavior | undefined>(EditorContext);
+
 
   const onChangeText = (text: string) => {
     node.plainText = text;
@@ -23,7 +25,7 @@ const NodeEditorText = (props: Props) => {
     if (onNodeBehavior) onNodeBehavior.onUpdate(node);
   };
 
-  return <DraftEditor onChangeText={onChangeText} onChange={onChange} node={node} index={index} placeholder="متن را اینجا بنوسید..." />;
+  return <DraftEditor onChangeText={onChangeText} onChange={onChange} node={node} index={index} ref={node.heroRef} placeholder="متن را اینجا بنوسید..." />;
 };
 
 export default NodeEditorText;

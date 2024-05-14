@@ -1,12 +1,16 @@
-import React from "react";
+import React, { useContext } from "react";
 import AppDropDownMenu from "../AppDropDownMenu";
 import { toolsFontStylsItems, toolsColorStyleItems, toolsHeadingStyleItems, getLastStyleFontColor, getLastStyleBackgroundColor, setStyle, isStyleActive } from "../../lib/editor-text/hook/tools";
 import AppIcon from "../AppIcon";
 import { TYPE_NODE_QUOTE } from "../../lib/editor/type";
+import { TextEditorContext } from "@/app/lib/editor-text/hook/context";
 
 const Toolbar = ({ editorState, setEditorState, onTransitionNodeListener, onBtnShowLinkConfirmClick, node }) => {
+  const onTextEditorBehavior = useContext(TextEditorContext);
+
   const onBtnHeadingItemClick = (item) => {
-    applyStyle(null, item.style, item.method);
+    if (onTextEditorBehavior)
+      onTextEditorBehavior.onBtnHeadingItemClick(item);
   };
 
   const onBtnColorClick = (e, item) => {
