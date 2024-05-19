@@ -1,6 +1,5 @@
-import { Dispatch, KeyboardEvent, RefObject, SetStateAction, useState } from "react";
+import React, { KeyboardEvent, RefObject } from "react";
 import { ToolsColorStyleItemTextEditor } from "../../editor-text/type";
-import { EditorState } from "draft-js";
 
 export const TYPE_NODE_TEXT = 0;
 export const TYPE_NODE_VOICE = 1;
@@ -162,7 +161,25 @@ export interface OnNodeBehavior {
 
   onBtnHeadingItemClick(item: any): void;
 
-  onBtnColorClick(item: any): void;
+  onBtnStyleClick(item: any): void;
+
+  onBtnColorClick(item: ToolsColorStyleItemTextEditor): void;
+
+  onBtnBackgroundClick(item: ToolsColorStyleItemTextEditor): void;
+
+  isTextStyleActive(style: any, method: string): boolean;
+
+  onFocus(index: number): void;
+
+  setOnTextHighlightListener(onTextHighlightListener: OnTextHighlightListener): void;
+
+  onShowTextToolbar(on: boolean): void;
+
+  getCurrentNodeSelectedIndex(): number;
+}
+
+export interface OnTextHighlightListener {
+  onTextHighlight(on: boolean): void;
 }
 
 export interface OnUploadFileListener {

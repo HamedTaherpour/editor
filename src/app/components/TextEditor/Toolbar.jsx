@@ -1,31 +1,41 @@
 import React, { useContext } from "react";
 import AppDropDownMenu from "../AppDropDownMenu";
-import { toolsFontStylsItems, toolsColorStyleItems, toolsHeadingStyleItems, getLastStyleFontColor, getLastStyleBackgroundColor, setStyle, isStyleActive } from "../../lib/editor-text/hook/tools";
+import { toolsFontStylsItems, toolsColorStyleItems, toolsHeadingStyleItems, isStyleActive } from "../../lib/editor-text/hook/tools";
 import AppIcon from "../AppIcon";
 import { TYPE_NODE_QUOTE } from "../../lib/editor/type";
-import { TextEditorContext } from "@/app/lib/editor-text/hook/context";
+import { EditorContext } from "@/app/lib/editor/hook/context";
 
-const Toolbar = ({ editorState, setEditorState, onTransitionNodeListener, onBtnShowLinkConfirmClick, node }) => {
-  const onTextEditorBehavior = useContext(TextEditorContext);
+
+const Toolbar = ({ onTransitionNodeListener, onBtnShowLinkConfirmClick, node }) => {
+  const onNodeBehavior = useContext(EditorContext);
 
   const onBtnHeadingItemClick = (item) => {
-    if (onTextEditorBehavior)
-      onTextEditorBehavior.onBtnHeadingItemClick(item);
+    if (onNodeBehavior)
+      onNodeBehavior.onBtnHeadingItemClick(item);
   };
 
-  const onBtnColorClick = (item) => {
-    if (onTextEditorBehavior)
-      onTextEditorBehavior.onBtnColorClick(item);
+  const onBtnColorClick = (e, item) => {
+    e.preventDefault();
+    if (onNodeBehavior)
+      onNodeBehavior.onBtnColorClick(item);
   };
 
-  const onBtnBackgroundClick = (item) => {
-    if (onTextEditorBehavior)
-      onTextEditorBehavior.onBtnBackgroundClick(item);
+  const onBtnBackgroundClick = (e, item) => {
+    if (onNodeBehavior)
+      onNodeBehavior.onBtnBackgroundClick(item);
   };
 
-  const onBtnStyleClick = (item) => {
-    if (onTextEditorBehavior)
-      onTextEditorBehavior.onBtnStyleClick(item);
+  const onBtnStyleClick = (e, item) => {
+    e.preventDefault();
+    if (onNodeBehavior)
+      onNodeBehavior.onBtnStyleClick(item);
+  };
+
+  const isTextStyleActive = (style, method) => {
+    if (onNodeBehavior)
+      return onNodeBehavior.isTextStyleActive(style, method);
+    else
+      return false;
   };
 
   const onBtnLinkClick = () => {
@@ -37,7 +47,7 @@ const Toolbar = ({ editorState, setEditorState, onTransitionNodeListener, onBtnS
   };
 
   const classNameDDMColor = () => {
-    const colorName = Object.keys(toolsColorStyleItems).find((item) => isStyleActive(editorState, toolsColorStyleItems[item].option.style.color, item.method));
+    const colorName = Object.keys(toolsColorStyleItems).find((item) => isTextStyleActive(toolsColorStyleItems[item].option.style.color, toolsColorStyleItems[item].method));
     if (colorName) {
       return toolsColorStyleItems[colorName].option.class.bgColor;
     } else {
@@ -54,7 +64,7 @@ const Toolbar = ({ editorState, setEditorState, onTransitionNodeListener, onBtnS
           activator={
             <div className="draft-toolbar-heading">
               {Object.keys(toolsHeadingStyleItems).map((item) => (
-                <span key={toolsHeadingStyleItems[item].value} className={!!isStyleActive(editorState, toolsHeadingStyleItems[item].style, toolsHeadingStyleItems[item].method) ? "" : "draft-toolbar-heading-deactive"}>
+                <span key={toolsHeadingStyleItems[item].value} className={!!isTextStyleActive(toolsHeadingStyleItems[item].style, toolsHeadingStyleItems[item].method) ? "" : "draft-toolbar-heading-deactive"}>
                   {toolsHeadingStyleItems[item].title}
                 </span>
               ))}
@@ -71,7 +81,7 @@ const Toolbar = ({ editorState, setEditorState, onTransitionNodeListener, onBtnS
               <div className="color-palette">
                 <div className="color-palette-section">
                   {Object.keys(toolsColorStyleItems).map((item, i) => (
-                    <button title={toolsColorStyleItems[item].title} key={toolsColorStyleItems[item].value} onClick={(e) => onBtnColorClick(toolsColorStyleItems[item])} className={(!!isStyleActive(editorState, toolsColorStyleItems[item].option.style.color, item.method) ? "active" : "") + " " + toolsColorStyleItems[item].option.class.color}>
+                    <button title={toolsColorStyleItems[item].title} key={toolsColorStyleItems[item].value} onMouseDown={(e) => onBtnColorClick(e, toolsColorStyleItems[item])} className={(!!isTextStyleActive(toolsColorStyleItems[item].option.style.color, toolsColorStyleItems[item].method) ? "active" : "") + " " + toolsColorStyleItems[item].option.class.color}>
                       A
                     </button>
                   ))}
@@ -79,7 +89,7 @@ const Toolbar = ({ editorState, setEditorState, onTransitionNodeListener, onBtnS
                 <hr />
                 <div className="color-palette-section">
                   {Object.keys(toolsColorStyleItems).map((item, i) => (
-                    <button title={toolsColorStyleItems[item].title} key={toolsColorStyleItems[item].value} onClick={(e) => onBtnBackgroundClick(toolsColorStyleItems[item])} className={(!!isStyleActive(editorState, toolsColorStyleItems[item].option.style.background, item.method) ? "active" : "") + " " + toolsColorStyleItems[item].option.class.color + " " + toolsColorStyleItems[item].option.class.background}>
+                    <button title={toolsColorStyleItems[item].title} key={toolsColorStyleItems[item].value} onMouseDown={(e) => onBtnBackgroundClick(e, toolsColorStyleItems[item])} className={(!!isTextStyleActive(toolsColorStyleItems[item].option.style.background, toolsColorStyleItems[item].method) ? "active" : "") + " " + toolsColorStyleItems[item].option.class.color + " " + toolsColorStyleItems[item].option.class.background}>
                       A
                     </button>
                   ))}
@@ -90,15 +100,17 @@ const Toolbar = ({ editorState, setEditorState, onTransitionNodeListener, onBtnS
         </div>
         <div className="draft-toolbar-section">
           {toolsFontStylsItems.map((item) => (
-            <button key={item.style} onClick={(e) => onBtnStyleClick(item)} className={"draft-toolbar-action " + (!!isStyleActive(editorState, item.style, item.method) ? "active" : "")}>
+            <button key={item.style} onMouseDown={(e) => {
+              onBtnStyleClick(e, item);
+            }} className={"draft-toolbar-action " + (!!isTextStyleActive(item.style, item.method) ? "active" : "")}>
               <AppIcon name={item.icon} className="icon" />
             </button>
           ))}
-          <button className={(node.type === TYPE_NODE_QUOTE ? "active" : "") + " draft-toolbar-action"} onClick={() => onBtnToggleQuoteClick()}>
+          <button className={(node.type === TYPE_NODE_QUOTE ? "active" : "") + " draft-toolbar-action"} onMouseDown={() => onBtnToggleQuoteClick()}>
             <AppIcon name="quote-up" className="icon" />
           </button>
         </div>
-        <button onClick={onBtnLinkClick} className="draft-toolbar-action draft-toolbar-section">
+        <button onMouseDown={onBtnLinkClick} className="draft-toolbar-action draft-toolbar-section">
           <span className="title">لینک</span>
           <AppIcon name="arrow-right-up" className="icon" />
         </button>

@@ -3,7 +3,8 @@ import AppIcon from "@/app/components/AppIcon";
 import { OnNodeBehavior, TYPE_NODE_FILE, TYPE_NODE_IMAGE, TYPE_NODE_TEXT, TYPE_NODE_VOICE } from "@/app/lib/editor/type";
 import { EditorContext } from "@/app/lib/editor/hook/context";
 import { ToolsColorStyleItemTextEditor } from "@/app/lib/editor-text/type";
-import { toolsHeadingStyleItems } from "@/app/lib/editor-text/hook/tools";
+import ToolbarBottomColor from "@/app/components/editor/mobile/toolbar-bottom/ToolbarBottomColor";
+import { toolsFontStylsItems } from "@/app/lib/editor-text/hook/tools";
 
 const ToolbarBottom = () => {
   const ref = useRef<HTMLDivElement>(null);
@@ -14,6 +15,14 @@ const ToolbarBottom = () => {
   let menuList = [];
   if (onNodeBehavior) {
     menuList = onNodeBehavior.toolsMenu;
+    onNodeBehavior.setOnTextHighlightListener({
+      onTextHighlight(on: boolean) {
+        if (on)
+          setTabName("text");
+        else
+          setTabName("main");
+      }
+    });
   }
 
   useEffect(() => {
@@ -50,39 +59,47 @@ const ToolbarBottom = () => {
     // }
   }, [showMenuBottom]); // no dependencies
 
+
+  useEffect(() => {
+    setShowMenuBottom(false);
+  }, [tabName]);
+
   const onBtnCloseKeyboard = () => {
   };
 
   const onBtnOpenMenuNodeEditor = () => {
-    // setTabMenuBottomName("tools");
-    // setShowMenuBottom(!showMenuBottom);
-    if(onNodeBehavior)
-      onNodeBehavior.onBtnHeadingItemClick(toolsHeadingStyleItems["h1"])
-
+    setTabMenuBottomName("tools");
+    setShowMenuBottom(!showMenuBottom);
   };
 
   const onBtnAddNodeImage = () => {
-    // if (onNodeBehavior) {
-    //   onNodeBehavior.onAddNode(TYPE_NODE_IMAGE, onNodeBehavior.getCurrentNodeSelectedIndex());
-    // }
+    if (onNodeBehavior) {
+      onNodeBehavior.onAddNode(TYPE_NODE_IMAGE, onNodeBehavior.getCurrentNodeSelectedIndex());
+    }
   };
 
   const onBtnAddNodeVoice = () => {
-    // if (onNodeBehavior) {
-    //   onNodeBehavior.onAddNode(TYPE_NODE_VOICE, onNodeBehavior.getCurrentNodeSelectedIndex());
-    // }
+    if (onNodeBehavior) {
+      onNodeBehavior.onAddNode(TYPE_NODE_VOICE, onNodeBehavior.getCurrentNodeSelectedIndex());
+    }
   };
 
   const onBtnAddNodeFile = () => {
-    // if (onNodeBehavior) {
-    //   onNodeBehavior.onAddNode(TYPE_NODE_FILE, onNodeBehavior.getCurrentNodeSelectedIndex());
-    // }
+    if (onNodeBehavior) {
+      onNodeBehavior.onAddNode(TYPE_NODE_FILE, onNodeBehavior.getCurrentNodeSelectedIndex());
+    }
+  };
+
+  const onBtnStyleClick = (item: any) => {
+    if (onNodeBehavior) {
+      onNodeBehavior.onBtnStyleClick(item);
+    }
   };
 
   const onBtnAddNodeText = () => {
-    // if (onNodeBehavior) {
-    //   onNodeBehavior.onAddNode(TYPE_NODE_TEXT, onNodeBehavior.getCurrentNodeSelectedIndex());
-    // }
+    if (onNodeBehavior) {
+      onNodeBehavior.onAddNode(TYPE_NODE_TEXT, onNodeBehavior.getCurrentNodeSelectedIndex());
+    }
   };
 
   const onBtnColorClick = (e: MouseEvent, item: ToolsColorStyleItemTextEditor) => {
@@ -95,16 +112,20 @@ const ToolbarBottom = () => {
 
   const onBtnBackToMainClick = () => {
     setTabName("main");
+    setShowMenuBottom(false);
+    setTabMenuBottomName("tools");
   };
 
-  const isStyleActive = () => {
-    setTabName("main");
+  const isTextStyleActive = (style: string, method: string): boolean => {
+    if (onNodeBehavior)
+      return onNodeBehavior.isTextStyleActive(style, method);
+    return false;
   };
 
   const onActionClick = (item: any) => {
-    // if (onNodeBehavior) {
-    //   item.action(onNodeBehavior.getCurrentNodeSelectedIndex());
-    // }
+    if (onNodeBehavior) {
+      item.action(onNodeBehavior.getCurrentNodeSelectedIndex());
+    }
   };
 
   // @ts-ignore
@@ -161,9 +182,11 @@ const ToolbarBottom = () => {
               <button onClick={onBtnTextColorOrBgColor}>
                 <AppIcon name="paint-roller" />
               </button>
-              <button onClick={onBtnAddNodeFile}>
-                <AppIcon name="document" />
-              </button>
+              {toolsFontStylsItems.map((item) => (
+                <button key={item.style} onClick={(e) => onBtnStyleClick(item)} className={(!!isTextStyleActive(item.style, item.method) ? "bg-red-500" : "")}>
+                  <AppIcon name={item.icon} className="icon" />
+                </button>
+              ))}
               <button onClick={onBtnAddNodeText}>
                 <AppIcon name="smallcaps" />
               </button>
@@ -186,40 +209,21 @@ const ToolbarBottom = () => {
           {
             tabMenuBottomName === "tools" && <>
               <div className="editor-toolbar-bottom-menu-node">
-                {menuList.map((item) => (
-                  <button key={item.title}
-                          onClick={() => onActionClick(item)}>
-                    <AppIcon name={item.icon} />
-                    <span>{item.title}</span>
-                  </button>
-                ))}
+                <div className="editor-toolbar-bottom-menu-node-container">
+                  {menuList.map((item) => (
+                    <button key={item.title}
+                            onClick={() => onActionClick(item)}>
+                      <AppIcon name={item.icon} />
+                      <span>{item.title}</span>
+                    </button>
+                  ))}
+                </div>
               </div>
             </>
           }
           {
             tabMenuBottomName === "color" && <>
-              <div className="editor-toolbar-bottom-menu-node">
-                <div className="editor-toolbar-bottom-menu-node-section">
-                  <div className="editor-toolbar-bottom-menu-node-heading">
-                    <span>آخرین رنگ‌ها</span>
-                  </div>
-                  <div className="editor-toolbar-bottom-menu-node-container">
-
-                    {/*{Object.keys(toolsColorStyleItems).map((item, i) => (*/}
-                    {/*  <button title={toolsColorStyleItems[item].title} key={toolsColorStyleItems[item].value} onClick={(e) => onBtnColorClick(e, toolsColorStyleItems[item])} className={(!!isStyleActive(editorState, toolsColorStyleItems[item].option.style.color, item.method) ? "active" : "") + " " + toolsColorStyleItems[item].option.class.color}>*/}
-                    {/*    A*/}
-                    {/*  </button>*/}
-                    {/*))}*/}
-
-                    <button>
-                      <div className="editor-toolbar-bottom-menu-node-box-color">
-                        <span>A</span>
-                      </div>
-                      <span>پس‌زمینه طوسی</span>
-                    </button>
-                  </div>
-                </div>
-              </div>
+              <ToolbarBottomColor />
             </>
           }
         </>

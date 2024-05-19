@@ -121,7 +121,7 @@ export const toolsFontStylsItems = [
 
 export const toolsColorStyleItems: ToolsColorStyleTextEditor = {
   COLOR_YELLOW: {
-    title: "yellow",
+    title: "زرد",
     value: "COLOR_YELLOW",
     method: "inline",
     option: {
@@ -137,7 +137,7 @@ export const toolsColorStyleItems: ToolsColorStyleTextEditor = {
     }
   },
   COLOR_ORAMGE: {
-    title: "orange",
+    title: "نارنجی",
     value: "COLOR_ORAMGE",
     method: "inline",
     option: {
@@ -153,7 +153,7 @@ export const toolsColorStyleItems: ToolsColorStyleTextEditor = {
     }
   },
   COLOR_BROWN: {
-    title: "brown",
+    title: "قهوه‌ای",
     value: "COLOR_BROWN",
     method: "inline",
     option: {
@@ -169,7 +169,7 @@ export const toolsColorStyleItems: ToolsColorStyleTextEditor = {
     }
   },
   COLOR_GRAY: {
-    title: "gray",
+    title: "طوسی",
     value: "COLOR_GRAY",
     method: "inline",
     option: {
@@ -185,7 +185,7 @@ export const toolsColorStyleItems: ToolsColorStyleTextEditor = {
     }
   },
   COLOR_DARK: {
-    title: "dark",
+    title: "رنگ اصلی",
     value: "COLOR_DARK",
     method: "inline",
     option: {
@@ -201,7 +201,7 @@ export const toolsColorStyleItems: ToolsColorStyleTextEditor = {
     }
   },
   COLOR_RED: {
-    title: "red",
+    title: "قرمز",
     value: "COLOR_RED",
     method: "inline",
     option: {
@@ -217,7 +217,7 @@ export const toolsColorStyleItems: ToolsColorStyleTextEditor = {
     }
   },
   COLOR_PINK: {
-    title: "pink",
+    title: "صورتی",
     value: "COLOR_PINK",
     method: "inline",
     option: {
@@ -233,7 +233,7 @@ export const toolsColorStyleItems: ToolsColorStyleTextEditor = {
     }
   },
   COLOR_PURPLE: {
-    title: "purple",
+    title: "بنفش",
     value: "COLOR_PURPLE",
     method: "inline",
     option: {
@@ -249,7 +249,7 @@ export const toolsColorStyleItems: ToolsColorStyleTextEditor = {
     }
   },
   COLOR_BLUE: {
-    title: "blue",
+    title: "آبی",
     value: "COLOR_BLUE",
     method: "inline",
     option: {
@@ -265,7 +265,7 @@ export const toolsColorStyleItems: ToolsColorStyleTextEditor = {
     }
   },
   COLOR_GREEN: {
-    title: "green",
+    title: "سبز",
     value: "COLOR_GREEN",
     method: "inline",
     option: {
@@ -330,16 +330,17 @@ export const readonlyDecorator = new CompositeDecorator([
   }
 ]);
 
-export const getFirstInitEditorState = (node: NodeText | NodeQuote, readonly: boolean): EditorState => {
+export const getFirstInitEditorState = (node: NodeText | NodeQuote | undefined, readonly: boolean): EditorState => {
   const decorator = readonly ? readonlyDecorator : editorDecorator;
   let editorState = EditorState.createEmpty(decorator);
-
-  if (!!node.text && !!node.text.blocks) {
-    const content = convertFromRaw(node.text);
-    editorState = EditorState.createWithContent(content, decorator);
-    editorState = EditorState.moveSelectionToEnd(editorState);
+  if (node) {
+    if (!!node.text && !!node.text.blocks) {
+      const content = convertFromRaw(node.text);
+      editorState = EditorState.createWithContent(content, decorator);
+      editorState = EditorState.moveSelectionToEnd(editorState);
+    }
+    editorState = setBaseTag(editorState, node);
   }
-  editorState = setBaseTag(editorState, node);
   return editorState;
 };
 
@@ -422,7 +423,10 @@ export const getLastStyleBackgroundColor = (editorState: EditorState): any => {
 
 export const getLastStyleFontColor = (editorState: EditorState): any => {
   return editorState.getCurrentInlineStyle().find((style: any) => {
-    if (!!style) return style.includes("COLOR_");
+    if (!!style) {
+      console.log(style);
+      return style.includes("COLOR_");
+    }
   });
 };
 

@@ -19,14 +19,11 @@ export interface ToolsColorStyleItemTextEditor {
   };
 }
 
+export interface ToolsStyleItemTextEditor {
+  style: string;
+  method: string;
+}
+
 export interface OnTextEditorBehavior {
   onBtnLinkEditClick(url: string, entityKey: string, offsetKey: string): void;
-
-  onBtnHeadingItemClick(item: any): void;
-
-  onBtnStyleClick(item: any): void;
-
-  onBtnColorClick(item: ToolsColorStyleItemTextEditor): void;
-
-  onBtnBackgroundClick(item: ToolsColorStyleItemTextEditor): void;
 }

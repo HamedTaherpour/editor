@@ -1,139 +1,135 @@
 @tailwind base;
 
 .et-justify-start {
-    justify-content: flex-start;
+    justify-content: flex-start !important;
 }
 
 .et-justify-end {
-    justify-content: flex-end;
+    justify-content: flex-end !important;
 }
 
 .et-justify-center {
-    justify-content: center;
+    justify-content: center !important;
 }
 
 .et-bg-blue-bg {
-    background-color: #eff6fa;
+    background-color: #eff6fa !important;
 }
 
 .et-bg-brown-bg {
-    background-color: #f8f4f2;
-}
-
-.et-bg-dark {
-    background-color: #ffffff;
+    background-color: #f8f4f2 !important;
 }
 
 .et-bg-dark-bg {
-    background-color: #ffffff;
+    background-color: #ffffff !important;
 }
 
 .et-bg-gray-bg {
-    background-color: #f5f5f5;
+    background-color: #f5f5f5 !important;
 }
 
 .et-bg-green-bg {
-    background-color: #f2f8f5;
+    background-color: #f2f8f5 !important;
 }
 
 .et-bg-orange-bg {
-    background-color: #fef5ec;
+    background-color: #fef5ec !important;
 }
 
 .et-bg-pink-bg {
-    background-color: #faf0f5;
+    background-color: #faf0f5 !important;
 }
 
 .et-bg-purple-bg {
-    background-color: #f5f2f8;
+    background-color: #f5f2f8 !important;
 }
 
 .et-bg-red-bg {
-    background-color: #fbefee;
+    background-color: #fbefee !important;
 }
 
 .et-bg-yellow-bg {
-    background-color: #fbf6ee;
+    background-color: #fbf6ee !important;
 }
 
 .et-text-blue {
-    color: #3680aa;
+    color: #3680aa !important;
 }
 
 .et-text-brown {
-    color: #9f6b53;
+    color: #9f6b53 !important;
 }
 
 .et-text-dark {
-    color: #242424;
+    color: #242424 !important;
 }
 
 .et-text-gray {
-    color: #787774;
+    color: #787774 !important;
 }
 
 .et-text-green {
-    color: #448361;
+    color: #448361 !important;
 }
 
 .et-text-orange {
-    color: #d9730d;
+    color: #d9730d !important;
 }
 
 .et-text-pink {
-    color: #c14c8a;
+    color: #c14c8a !important;
 }
 
 .et-text-purple {
-    color: #9065b0;
+    color: #9065b0 !important;
 }
 
 .et-text-red {
-    color: #d44c47;
+    color: #d44c47 !important;
 }
 
 .et-text-yellow {
-    color: #cb912f;
+    color: #cb912f !important;
 }
 
 .et-bg-blue {
-    background-color: #3680aa;
+    background-color: #3680aa !important;
 }
 
 .et-bg-brown {
-    background-color: #9f6b53;
+    background-color: #9f6b53 !important;
 }
 
 .et-bg-dark {
-    background-color: #242424;
+    background-color: #242424 !important;
 }
 
 .et-bg-gray {
-    background-color: #787774;
+    background-color: #787774 !important;
 }
 
 .et-bg-green {
-    background-color: #448361;
+    background-color: #448361 !important;
 }
 
 .et-bg-orange {
-    background-color: #d9730d;
+    background-color: #d9730d !important;
 }
 
 .et-bg-pink {
-    background-color: #c14c8a;
+    background-color: #c14c8a !important;
 }
 
 .et-bg-purple {
-    background-color: #9065b0;
+    background-color: #9065b0 !important;
 }
 
 .et-bg-red {
-    background-color: #d44c47;
+    background-color: #d44c47 !important;
 }
 
 .et-bg-yellow {
-    background-color: #cb912f;
+    background-color: #cb912f !important;
 }
 
 .node-gap {
@@ -196,12 +192,11 @@
 }
 
 .editor-toolbar-bottom-menu-node-box-color span {
-    color: #787774;
     text-align: right;
     font-size: 14px;
     font-weight: 400;
 }
- dew
+
 .editor-toolbar-bottom-menu-node-section {
     display: flex;
     flex-direction: column;
@@ -222,7 +217,7 @@
     line-height: normal;
 }
 
-.editor-toolbar-bottom-menu-node button {
+.editor-toolbar-bottom-menu-node-container button {
     display: flex;
     justify-content: start !important;
     align-items: center;
@@ -235,18 +230,21 @@
     box-shadow: 0px 1px 2px 0px rgba(0, 0, 0, 0.05);
 }
 
-.editor-toolbar-bottom-menu-node button svg {
+.editor-toolbar-bottom-menu-node-container button svg {
     width: 24px;
     height: 24px;
 }
 
-.editor-toolbar-bottom-menu-node button span {
+.editor-toolbar-bottom-menu-node-container button span {
     text-align: right;
     font-feature-settings: 'ss01' on;
     font-size: 13px;
     font-style: normal;
     font-weight: 400;
     line-height: normal;
+}
+.editor-toolbar-bottom-menu-node-container button.deactive {
+    display: none;
 }
 
 .editor-toolbar-bottom button {
@@ -973,7 +971,6 @@
     z-index: 50;
     padding-bottom: 0.75rem;
     color: rgb(94 94 94);
-    display: none;
 }
 
 .draft-toolbar-card {

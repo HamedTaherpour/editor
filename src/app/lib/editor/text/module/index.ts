@@ -1,10 +1,11 @@
 import NodeEditor from "../../index";
 import { NodeText, TYPE_NODE_TEXT, TYPE_NODE_QUOTE, NodeQuote } from "../../type";
-import { getFirstInitEditorState } from "@/app/lib/editor-text/hook/tools";
 import { useState } from "react";
+import { EditorState } from "draft-js";
 
 class NodeEditorTextModule {
   nodeEditor: NodeEditor;
+
   constructor(nodeEditor: NodeEditor) {
     this.nodeEditor = nodeEditor;
   }

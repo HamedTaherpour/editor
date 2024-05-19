@@ -11,14 +11,9 @@ import NodeEditorVideoModule from "../../lib/editor/video/module";
 
 import { EditorContext } from "../../lib/editor/hook/context";
 
-import {
-  JsonEditor, OnJsonEditorUpdateListener, OnUploadFileListener,
-  TYPE_NODE_TEXT, TYPE_NODE_VOICE, TYPE_NODE_IMAGE, TYPE_NODE_QUOTE, TYPE_NODE_VIDEO, TYPE_NODE_DIVIDER, TYPE_NODE_FILE,
-  NodeText, NodeVoice, NodeImage, NodeQuote, NodeDivider, OnNodeBehavior, Node, NodeFile, NodeVideo
-} from "../../lib/editor/type";
+import { JsonEditor, Node, NodeDivider, NodeFile, NodeImage, NodeQuote, NodeText, NodeVideo, NodeVoice, OnJsonEditorUpdateListener, OnNodeBehavior, OnTextHighlightListener, OnUploadFileListener, TYPE_NODE_DIVIDER, TYPE_NODE_FILE, TYPE_NODE_IMAGE, TYPE_NODE_QUOTE, TYPE_NODE_TEXT, TYPE_NODE_VIDEO, TYPE_NODE_VOICE } from "../../lib/editor/type";
 import NodeEditor from "./NodeEditor";
-import ToolbarBottom from "@/app/components/editor/mobile/ToolbarBottom";
-import { ToolsColorStyleItemTextEditor } from "@/app/lib/editor-text/type";
+import { ToolsColorStyleItemTextEditor, ToolsStyleItemTextEditor } from "@/app/lib/editor-text/type";
 
 interface AddNode {
   type: number;
@@ -38,6 +33,7 @@ const EditorApp = (props: Props) => {
   const [isClipboardExists, setIsClipboardExists] = useState(false);
   const [clipboard, setClipboard] = useState<Node>();
   const [jsonEditor, setJsonEditor] = useState<JsonEditor>(value || []);
+  let highlightListener: OnTextHighlightListener;
 
   const editor = new Editor(jsonEditor);
   const nodeEditorTextModule = new NodeEditorTextModule(editor);
@@ -47,6 +43,7 @@ const EditorApp = (props: Props) => {
   const nodeEditorDividerModule = new NodeEditorDividerModule(editor);
   const nodeEditorFileModule = new NodeEditorFileModule(editor);
   const nodeEditorVideoModule = new NodeEditorVideoModule(editor);
+  const [currentNodeIndex, setCurrentNodeIndex] = useState(-1);
 
   useEffect(() => {
     if (jsonEditor.length <= 0) {
@@ -317,16 +314,57 @@ const EditorApp = (props: Props) => {
         index
       });
     },
-    onBtnHeadingItemClick(item: ToolsColorStyleItemTextEditor) {
-      console.log("asd");
-      if(jsonEditor[0].heroRef)
-        jsonEditor[0].heroRef.current.onBtnHeadingItemClick(item)
+    onBtnHeadingItemClick(item: ToolsStyleItemTextEditor) {
+      const node = jsonEditor[currentNodeIndex];
+      if (node && node.heroRef && node.heroRef.current) {
+        node.heroRef.current.onBtnHeadingItemClick(item);
+      }
+    },
+    onBtnBackgroundClick(item: ToolsColorStyleItemTextEditor) {
+      const node = jsonEditor[currentNodeIndex];
+      if (node && node.heroRef && node.heroRef.current) {
+        node.heroRef.current.onBtnBackgroundClick(item);
+      }
+    },
+    onBtnColorClick(item: ToolsColorStyleItemTextEditor) {
+      const node = jsonEditor[currentNodeIndex];
+      if (node && node.heroRef && node.heroRef.current) {
+        node.heroRef.current.onBtnColorClick(item);
+      }
+    },
+    onBtnStyleClick(item: ToolsStyleItemTextEditor) {
+      const node = jsonEditor[currentNodeIndex];
+      if (node && node.heroRef && node.heroRef.current) {
+        node.heroRef.current.onBtnStyleClick(item);
+      }
+    },
+    isTextStyleActive(style: any, method: string): boolean {
+      const node = jsonEditor[currentNodeIndex];
+      if (node && node.heroRef && node.heroRef.current) {
+        return node.heroRef.current.isTextStyleActive(style, method);
+      } else
+        return false;
+    },
+    onFocus(index: number) {
+      setCurrentNodeIndex(index);
+      if (highlightListener)
+        highlightListener.onTextHighlight(true);
+    },
+    getCurrentNodeSelectedIndex(): number {
+      return currentNodeIndex;
+    },
+    onShowTextToolbar(on: boolean) {
+      if (highlightListener)
+        highlightListener.onTextHighlight(on);
+    },
+    setOnTextHighlightListener(onTextHighlightListener: OnTextHighlightListener) {
+      highlightListener = onTextHighlightListener;
     }
   };
 
   editor.setOnJsonEditorUpdateListener({
     onUpdate: (_jsonEditor) => {
-      setJsonEditor([..._jsonEditor]);
+      setJsonEditor(_jsonEditor.concat());
       if (onJsonEditorUpdateListener) onJsonEditorUpdateListener.onUpdate(_jsonEditor);
     }
   });
@@ -370,9 +408,9 @@ const EditorApp = (props: Props) => {
         nodeEditorTextModule.add(new NodeText());
       }
       setTimeout(() => {
-        if (jsonEditor[_index].heroRef) {
-          // @ts-ignore
-          jsonEditor[_index].heroRef.current.focus()
+        const node = jsonEditor[_index];
+        if (node && node.heroRef && node.heroRef.current) {
+          node.heroRef.current.focus();
         }
       }, 100);
     }
@@ -380,15 +418,15 @@ const EditorApp = (props: Props) => {
 
   const selectUp = (index: number) => {
     const node = jsonEditor[index - 1];
-    if (!!node && !!node.heroRef) {
-      node.heroRef.current.focus()
+    if (node && node.heroRef && node.heroRef.current) {
+      node.heroRef.current.focus();
     }
   };
 
   const selectDown = (index: number) => {
     const node = jsonEditor[index + 1];
-    if (!!node && !!node.heroRef) {
-      node.heroRef.current.focus()
+    if (node && node.heroRef && node.heroRef.current) {
+      node.heroRef.current.focus();
     }
   };
 
@@ -400,7 +438,6 @@ const EditorApp = (props: Props) => {
             <NodeEditor key={item.id} index={i} node={item} />
           ))}
         </div>
-        <ToolbarBottom />,
       </EditorContext.Provider>
     </div>
   );

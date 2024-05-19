@@ -7,99 +7,85 @@ const EditorApp = dynamic(() => import("@/app/components/editor/EditorApp"), { s
 
 export default function Home() {
 
-  const dataStr = JSON.stringify([
-    {
-      "id": 583720,
-      "text": {
-        "blocks": [
-          {
-            "key": "b9vmg",
-            "data": [],
-            "text": "\u0645\u062a\u0646 \u0645\u0642\u0627\u0644\u0647",
-            "type": "unstyled",
-            "depth": 0,
-            "entityRanges": [],
-            "inlineStyleRanges": []
-          }
-        ],
-        "entityMap": []
+  const dataStr = JSON.stringify(
+    [
+      {
+        "id": 275380,
+        "type": 0,
+        "clazz": null,
+        "backgroundColor": null,
+        "fontColor": null,
+        "baseTag": "p",
+        "text": {
+          "blocks": [
+            {
+              "key": "9k69r",
+              "text": "یشسیشسی",
+              "type": "unstyled",
+              "depth": 0,
+              "inlineStyleRanges": [],
+              "entityRanges": [],
+              "data": []
+            }
+          ],
+          "entityMap": []
+        },
+        "plainText": "یشسیشسی"
       },
-      "type": 0,
-      "clazz": null,
-      "baseTag": "p",
-      "fontColor": null,
-      "plainText": "\u0645\u062a\u0646 \u0645\u0642\u0627\u0644\u0647",
-      "backgroundColor": null
-    },
-    {
-      "id": 591461,
-      "url": "http:\/\/mydev.test\/media\/3\/167870.jpg",
-      "type": 2,
-      "clazz": "node-gap",
-      "width": 374,
-      "caption": "this is a caption",
-      "fontColor": null,
-      "backgroundColor": null,
-      "verticallyAlign": "center"
-    },
-    {
-      "id": 597934,
-      "text": {
-        "blocks": [
-          {
-            "key": "cpub7",
-            "data": [],
-            "text": null,
-            "type": "unstyled",
-            "depth": 0,
-            "entityRanges": [],
-            "inlineStyleRanges": []
-          }
-        ],
-        "entityMap": []
+      {
+        "id": 275381,
+        "type": 0,
+        "clazz": null,
+        "backgroundColor": null,
+        "fontColor": null,
+        "baseTag": "p",
+        "text": {
+          "blocks": [
+            {
+              "key": "kjke",
+              "text": "شسیشسیشس",
+              "type": "unstyled",
+              "depth": 0,
+              "inlineStyleRanges": [],
+              "entityRanges": [],
+              "data": []
+            }
+          ],
+          "entityMap": []
+        },
+        "plainText": "شسیشسیشس"
       },
-      "type": 0,
-      "clazz": null,
-      "baseTag": "p",
-      "fontColor": null,
-      "plainText": null,
-      "backgroundColor": null
-    },
-    {
-      "id": 597955,
-      "text": {
-        "blocks": [
-          {
-            "key": "1lk8a",
-            "data": [],
-            "text": "this is a block",
-            "type": "unstyled",
-            "depth": 0,
-            "entityRanges": [],
-            "inlineStyleRanges": [
-              {
-                "style": "COLOR_ORAMGE",
-                "length": 15,
-                "offset": 0
-              }
-            ]
-          }
-        ],
-        "entityMap": []
-      },
-      "type": 3,
-      "clazz": "node-gap",
-      "baseTag": "p",
-      "fontColor": null,
-      "plainText": "this is a block",
-      "backgroundColor": "COLOR_GRAY"
+      {
+        "id": 275302,
+        "type": 0,
+        "clazz": null,
+        "backgroundColor": null,
+        "fontColor": null,
+        "baseTag": "p",
+        "text": {
+          "blocks": [
+            {
+              "key": "3u357",
+              "text": "شسیشسیشسیشسی",
+              "type": "unstyled",
+              "depth": 0,
+              "inlineStyleRanges": [],
+              "entityRanges": [],
+              "data": []
+            }
+          ],
+          "entityMap": []
+        },
+        "plainText": "شسیشسیشسیشسی"
+      }
+    ],
+    function(key, value) {
+      if (value === null) {
+        return "";
+      }
+      return value;
     }
-  ], function(key, value) {
-    if (value === null) {
-      return "";
-    }
-    return value;
-  });
+  );
   const dataJson = JSON.parse(dataStr);
 
   const listener: OnJsonEditorUpdateListener = {
@@ -139,8 +125,8 @@ export default function Home() {
   };
 
   return (
-    <main>
-      <EditorApp value={[]} onJsonEditorUpdateListener={listener} onUploadFileListener={onUploadFileListener} />
+    <main style={{ marginTop: "154px" }}>
+      <EditorApp onJsonEditorUpdateListener={listener} onUploadFileListener={onUploadFileListener} />
     </main>
   );
 }

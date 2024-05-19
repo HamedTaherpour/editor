@@ -13,8 +13,8 @@ import { EditorContext } from "../../lib/editor/hook/context";
 
 import { NodeText, NodeVoice, NodeImage, NodeVideo, NodeQuote, Node, TYPE_NODE_TEXT, TYPE_NODE_VOICE, TYPE_NODE_IMAGE, TYPE_NODE_QUOTE, TYPE_NODE_VIDEO, TYPE_NODE_DIVIDER, TYPE_NODE_FILE, NodeDivider, OnNodeBehavior, NodeFile } from "../../lib/editor/type";
 import AppTooltip from "../AppTooltip";
-import React, { useContext } from "react";
-import { ToolsColorStyleItemTextEditor } from "../../lib/editor-text/type";
+import React, { createRef,useContext } from "react";
+import { ToolsColorStyleItemTextEditor, } from "../../lib/editor-text/type";
 import { toolsColorStyleItems } from "../../lib/editor-text/hook/tools";
 
 interface Props {

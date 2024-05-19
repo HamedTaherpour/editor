@@ -10,10 +10,9 @@ interface Props {
 
 const NodeEditorText = (props: Props) => {
   const { node, index } = props;
-  node.heroRef = createRef();
+  node.heroRef = node.heroRef || createRef();
 
   const onNodeBehavior = useContext<OnNodeBehavior | undefined>(EditorContext);
-
 
   const onChangeText = (text: string) => {
     node.plainText = text;
@@ -25,7 +24,7 @@ const NodeEditorText = (props: Props) => {
     if (onNodeBehavior) onNodeBehavior.onUpdate(node);
   };
 
-  return <DraftEditor onChangeText={onChangeText} onChange={onChange} node={node} index={index} ref={node.heroRef} placeholder="متن را اینجا بنوسید..." />;
+  return <DraftEditor ref={node.heroRef}  onChangeText={onChangeText} onChange={onChange} node={node} index={index} placeholder="متن را اینجا بنوسید..." />;
 };
 
 export default NodeEditorText;
