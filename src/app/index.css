@@ -166,6 +166,7 @@
     border-top: 1px solid #E3E3E3;
     background: #F9F8FB;
     overflow-y: auto;
+    max-height: 400px;
 }
 
 .editor-toolbar-bottom-menu-node-container {
@@ -243,6 +244,7 @@
     font-weight: 400;
     line-height: normal;
 }
+
 .editor-toolbar-bottom-menu-node-container button.deactive {
     display: none;
 }
@@ -262,6 +264,11 @@
     flex: 1 0 0;
     overflow-x: auto;
     direction: ltr;
+}
+
+.editor-toolbar-bottom-action button.active {
+    border-radius: 8px;
+    background: #F1F1F1;
 }
 
 .editor-toolbar-bottom-action button svg {

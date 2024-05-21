@@ -2,9 +2,10 @@ import React, { MouseEvent, useContext, useEffect, useRef, useState } from "reac
 import AppIcon from "@/app/components/AppIcon";
 import { OnNodeBehavior, TYPE_NODE_FILE, TYPE_NODE_IMAGE, TYPE_NODE_TEXT, TYPE_NODE_VOICE } from "@/app/lib/editor/type";
 import { EditorContext } from "@/app/lib/editor/hook/context";
-import { ToolsColorStyleItemTextEditor } from "@/app/lib/editor-text/type";
+import { ToolsColorStyleItemTextEditor, ToolsStyleItemTextEditor } from "@/app/lib/editor-text/type";
 import ToolbarBottomColor from "@/app/components/editor/mobile/toolbar-bottom/ToolbarBottomColor";
 import { toolsFontStylsItems } from "@/app/lib/editor-text/hook/tools";
+import ToolbarBottomNodeOption from "@/app/components/editor/mobile/toolbar-bottom/ToolbarBottomNodeOption";
 
 const ToolbarBottom = () => {
   const ref = useRef<HTMLDivElement>(null);
@@ -90,7 +91,8 @@ const ToolbarBottom = () => {
     }
   };
 
-  const onBtnStyleClick = (item: any) => {
+  const onBtnStyleClick = (e: MouseEvent, item: ToolsStyleItemTextEditor) => {
+    e.preventDefault();
     if (onNodeBehavior) {
       onNodeBehavior.onBtnStyleClick(item);
     }
@@ -102,10 +104,8 @@ const ToolbarBottom = () => {
     }
   };
 
-  const onBtnColorClick = (e: MouseEvent, item: ToolsColorStyleItemTextEditor) => {
-  };
-
-  const onBtnTextColorOrBgColor = () => {
+  const onBtnTextColorOrBgColor = (e: MouseEvent) => {
+    e.preventDefault();
     setTabMenuBottomName("color");
     setShowMenuBottom(!showMenuBottom);
   };
@@ -116,10 +116,16 @@ const ToolbarBottom = () => {
     setTabMenuBottomName("tools");
   };
 
+  const onBtnMoreClick = () => {
+    setShowMenuBottom(true);
+    setTabMenuBottomName("node-option");
+  };
+
   const isTextStyleActive = (style: string, method: string): boolean => {
     if (onNodeBehavior)
       return onNodeBehavior.isTextStyleActive(style, method);
-    return false;
+    else
+      return false;
   };
 
   const onActionClick = (item: any) => {
@@ -160,13 +166,13 @@ const ToolbarBottom = () => {
                 <AppIcon name="smallcaps" />
               </button>
               <button>
-                <AppIcon name="keyboard" />
+                <AppIcon name="undo" />
               </button>
               <button>
-                <AppIcon name="keyboard" />
+                <AppIcon name="trash" />
               </button>
-              <button>
-                <AppIcon name="keyboard" />
+              <button onClick={onBtnMoreClick}>
+                <AppIcon name="more" />
               </button>
             </>
           }
@@ -179,11 +185,11 @@ const ToolbarBottom = () => {
               <button onClick={onBtnAddNodeImage}>
                 <AppIcon name="gallery" />
               </button>
-              <button onClick={onBtnTextColorOrBgColor}>
+              <button onMouseDown={onBtnTextColorOrBgColor} className={tabMenuBottomName === "color" ? "active" : ""}>
                 <AppIcon name="paint-roller" />
               </button>
               {toolsFontStylsItems.map((item) => (
-                <button key={item.style} onClick={(e) => onBtnStyleClick(item)} className={(!!isTextStyleActive(item.style, item.method) ? "bg-red-500" : "")}>
+                <button key={item.style} onMouseDown={(e) => onBtnStyleClick(e, item)} className={(!!isTextStyleActive(item.style, item.method) ? "active" : "")}>
                   <AppIcon name={item.icon} className="icon" />
                 </button>
               ))}
@@ -224,6 +230,11 @@ const ToolbarBottom = () => {
           {
             tabMenuBottomName === "color" && <>
               <ToolbarBottomColor />
+            </>
+          }
+          {
+            tabMenuBottomName === "node-option" && <>
+              <ToolbarBottomNodeOption />
             </>
           }
         </>

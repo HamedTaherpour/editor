@@ -14,6 +14,7 @@ import { EditorContext } from "../../lib/editor/hook/context";
 import { JsonEditor, Node, NodeDivider, NodeFile, NodeImage, NodeQuote, NodeText, NodeVideo, NodeVoice, OnJsonEditorUpdateListener, OnNodeBehavior, OnTextHighlightListener, OnUploadFileListener, TYPE_NODE_DIVIDER, TYPE_NODE_FILE, TYPE_NODE_IMAGE, TYPE_NODE_QUOTE, TYPE_NODE_TEXT, TYPE_NODE_VIDEO, TYPE_NODE_VOICE } from "../../lib/editor/type";
 import NodeEditor from "./NodeEditor";
 import { ToolsColorStyleItemTextEditor, ToolsStyleItemTextEditor } from "@/app/lib/editor-text/type";
+import ToolbarBottom from "@/app/components/editor/mobile/toolbar-bottom/ToolbarBottom";
 
 interface AddNode {
   type: number;
@@ -438,6 +439,7 @@ const EditorApp = (props: Props) => {
             <NodeEditor key={item.id} index={i} node={item} />
           ))}
         </div>
+        <ToolbarBottom />
       </EditorContext.Provider>
     </div>
   );
