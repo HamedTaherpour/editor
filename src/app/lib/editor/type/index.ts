@@ -176,6 +176,16 @@ export interface OnNodeBehavior {
   onShowTextToolbar(on: boolean): void;
 
   getCurrentNodeSelectedIndex(): number;
+
+  getCurrentNodeSelected(): Node;
+
+  focusCurrentNodeSelected(): void;
+
+  onBtnShowLinkConfirmClick(): void;
+
+  blurCurrentNodeSelected(): void;
+
+  undo(): void;
 }
 
 export interface OnTextHighlightListener {

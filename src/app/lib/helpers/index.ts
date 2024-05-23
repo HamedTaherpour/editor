@@ -41,3 +41,4 @@ export const getFileSizeFormat = (size: number): string => {
 export const isMobile = (): boolean => {
   return (/Mobi|Android|iPhone/i.test(navigator.userAgent))
 };
+

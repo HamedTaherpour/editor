@@ -144,6 +144,7 @@
     flex-direction: column;
     width: 100%;
     z-index: 50;
+    background-color: white;
 }
 
 .editor-toolbar-bottom-container {
@@ -158,15 +159,17 @@
     background-color: white;
 }
 
+.editor-toolbar-bottom-menu-node-root {
+    overflow-y: auto;
+    border-top: 1px solid #E3E3E3;
+    background: #F9F8FB;
+}
+
 .editor-toolbar-bottom-menu-node {
     display: flex;
     flex-direction: column;
     padding: 24px;
     gap: 8px;
-    border-top: 1px solid #E3E3E3;
-    background: #F9F8FB;
-    overflow-y: auto;
-    max-height: 400px;
 }
 
 .editor-toolbar-bottom-menu-node-container {
@@ -178,7 +181,7 @@
     margin-top: 16px;
 }
 
-.editor-toolbar-bottom-menu-node-box-color {
+.editor-toolbar-bottom-menu-node-box-color, .modal-color-box-color {
     display: flex;
     width: 24px;
     height: 24px;
@@ -192,7 +195,7 @@
     background: #F5F5F5;
 }
 
-.editor-toolbar-bottom-menu-node-box-color span {
+.editor-toolbar-bottom-menu-node-box-color span, .modal-color-box-color span {
     text-align: right;
     font-size: 14px;
     font-weight: 400;
@@ -532,6 +535,98 @@
 .portal-parent {
     position: relative;
     pointer-events: auto;
+}
+
+.modal-root {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.50);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9000;
+}
+
+.modal-root-card {
+    display: flex;
+    width: 342px;
+    padding-top: 20px;
+    padding-bottom: 12px;
+    flex-direction: column;
+    border-radius: 16px;
+    background: #FFF;
+    box-shadow: 0px 10px 20px 0px rgba(0, 0, 0, 0.08);
+}
+
+.modal-root-list {
+    max-height: 350px;
+    overflow-y: auto;
+    flex-direction: column;
+    display: flex;
+    row-gap: 24px;
+}
+
+.modal-root-header {
+    width: 100%;
+    display: flex;
+    padding: 0 24px;
+    flex-direction: row;
+    justify-content: flex-end;
+    align-items: center;
+}
+
+.modal-root-header svg {
+    width: 25px;
+    height: 25px;
+    fill: black;
+}
+
+.modal-color-container > :not([hidden]) ~ :not([hidden]) {
+    --tw-divide-y-reverse: 0;
+    border-top-width: calc(1px * calc(1 - var(--tw-divide-y-reverse)));
+    border-bottom-width: calc(1px * var(--tw-divide-y-reverse));
+    border-color: rgba(227, 227, 227, 1);
+}
+
+.modal-color-section {
+}
+
+.modal-color-heading {
+    padding: 0 24px;
+}
+
+.modal-color-heading span {
+    color: #919191;
+    text-align: right;
+    font-feature-settings: 'ss01' on;
+    font-size: 13px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: normal;
+}
+
+.modal-color-container button {
+    width: 100%;
+    display: flex;
+    padding: 0.75rem 24px;
+    flex-direction: row;
+    column-gap: 0.75rem;
+    align-items: center;
+}
+
+.modal-color-container button span {
+    flex: 1 1 0%;
+    text-align: right;
+}
+
+.modal-color-container.color button span {
+    font-size: 14px;
+}
+
+.modal-color-container button svg {
+    width: 20px;
+    height: 20px;
+    fill: black;
 }
 
 .menu-node-editor {
@@ -1151,11 +1246,13 @@
 }
 
 /* For Webkit-based browsers (Chrome, Safari and Opera) */
+
 .scrollbar-hide::-webkit-scrollbar {
     display: none;
 }
 
 /* For IE, Edge and Firefox */
+
 .scrollbar-hide {
     -ms-overflow-style: none; /* IE and Edge */
     scrollbar-width: none; /* Firefox */

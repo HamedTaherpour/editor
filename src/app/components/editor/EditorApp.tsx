@@ -34,6 +34,7 @@ const EditorApp = (props: Props) => {
   const [isClipboardExists, setIsClipboardExists] = useState(false);
   const [clipboard, setClipboard] = useState<Node>();
   const [jsonEditor, setJsonEditor] = useState<JsonEditor>(value || []);
+
   let highlightListener: OnTextHighlightListener;
 
   const editor = new Editor(jsonEditor);
@@ -198,7 +199,7 @@ const EditorApp = (props: Props) => {
         });
       }
     },
-    onDelete(node) {
+    onDelete(node: Node) {
       switch (node.type) {
         case TYPE_NODE_TEXT:
           nodeEditorTextModule.delete(node.id);
@@ -354,12 +355,34 @@ const EditorApp = (props: Props) => {
     getCurrentNodeSelectedIndex(): number {
       return currentNodeIndex;
     },
+    getCurrentNodeSelected(): Node {
+      const node = jsonEditor[currentNodeIndex];
+      return node;
+    },
     onShowTextToolbar(on: boolean) {
       if (highlightListener)
         highlightListener.onTextHighlight(on);
     },
     setOnTextHighlightListener(onTextHighlightListener: OnTextHighlightListener) {
       highlightListener = onTextHighlightListener;
+    },
+    focusCurrentNodeSelected() {
+      const node = jsonEditor[currentNodeIndex];
+      if (node && node.heroRef && node.heroRef.current)
+        node.heroRef.current.focus();
+    },
+    blurCurrentNodeSelected() {
+      const node = jsonEditor[currentNodeIndex];
+      if (node && node.heroRef && node.heroRef.current)
+        node.heroRef.current.blur();
+    },
+    undo() {
+      console.log("aaaa");
+    },
+    onBtnShowLinkConfirmClick() {
+      const node = jsonEditor[currentNodeIndex];
+      if (node && node.heroRef && node.heroRef.current)
+        node.heroRef.current.onBtnShowLinkConfirmClick();
     }
   };
 
@@ -435,7 +458,7 @@ const EditorApp = (props: Props) => {
     <div className={(jsonEditor.length <= 1 ? "empty-editor " : "") + " editor-app-root"}>
       <EditorContext.Provider value={onNodeBehavior}>
         <div className="node-list">
-          {jsonEditor.map((item, i) => (
+          {jsonEditor.map((item: any, i: number) => (
             <NodeEditor key={item.id} index={i} node={item} />
           ))}
         </div>

@@ -32,9 +32,12 @@ interface Props {
 const DraftEditor = forwardRef(function DraftEditor(props: Props, _ref) {
   const { node, index, onChangeText, onChange, placeholder } = props;
   const [editorState, setEditorState] = useState<EditorState>(getFirstInitEditorState(node, false));
+  const [showLinkConfirm, setShowLinkConfirm] = useState(false);
 
   useImperativeHandle(_ref, () => {
     return {
+      onBtnShowLinkConfirmClick,
+      blur,
       focus,
       onBtnHeadingItemClick: baseOnBtnHeadingItemClick,
       onBtnColorClick: baseOnBtnColorClick,
@@ -42,7 +45,7 @@ const DraftEditor = forwardRef(function DraftEditor(props: Props, _ref) {
       onBtnStyleClick: baseOnBtnStyleClick,
       isTextStyleActive: baseIsTextStyleActive
     };
-  }, [editorState]);
+  }, [editorState,showLinkConfirm]);
 
   const onNodeBehavior = useContext<OnNodeBehavior | undefined>(EditorContext);
 
@@ -52,7 +55,6 @@ const DraftEditor = forwardRef(function DraftEditor(props: Props, _ref) {
   const [positionLink, setPositionLink] = useState({ x: 0, y: 0 });
   const [showEditLinkConfirm, setShowEditLinkConfirm] = useState(false);
   const [linkEdit, setLinkEdit] = useState("");
-  const [showLinkConfirm, setShowLinkConfirm] = useState(false);
   const [reRender, setReRender] = useState(false);
   const [entityKeyEdit, setEntityKeyEdit] = useState("");
   const [offsetKeyEdit, setOffsetKeyEdit] = useState("");
@@ -113,6 +115,11 @@ const DraftEditor = forwardRef(function DraftEditor(props: Props, _ref) {
   const focus = () => {
     if (editorRef.current)
       editorRef.current.focus();
+  };
+
+  const blur = () => {
+    if (editorRef.current)
+      editorRef.current?.blur();
   };
 
   const onFocus = () => {
