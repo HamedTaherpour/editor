@@ -17,20 +17,31 @@ const ToolbarBottom = () => {
   const [menuBottomHeight, setMenuBottomHeight] = useState<string>("0px");
   const [tabName, setTabName] = useState<string>("main");
   const [tabMenuBottomName, setTabMenuBottomName] = useState<string>("tools");
-  const { keyboardHeight, keyboardIsOpen } = useKeyboard();
+  const { keyboardHeight, keyboardIsOpen } = useKeyboard({
+    keyboardClose() {
+      if (onNodeBehavior)
+        onNodeBehavior.blurCurrentNodeSelected();
+    }
+  });
   const onNodeBehavior = useContext<OnNodeBehavior | undefined>(EditorContext);
   let menuList = [];
   if (onNodeBehavior) {
     menuList = onNodeBehavior.toolsMenu;
-    onNodeBehavior.setOnTextHighlightListener({
-      onTextHighlight(on: boolean) {
-        if (on)
-          setTabName("text");
-        else
-          setTabName("main");
-      }
-    });
   }
+
+  useEffect(() => {
+    document.addEventListener("selectionchange", function(event) {
+      const selection = window.getSelection();
+      if (!selection)
+        return;
+
+      if (selection.toString().length > 0)
+        setTabName("text");
+      else
+        setTabName("main");
+    });
+
+  }, []);
 
   useEffect(() => {
     if (ref.current) {
@@ -44,23 +55,6 @@ const ToolbarBottom = () => {
       } else {
         ref.current.style.bottom = "0px";
       }
-      console.log(keyboardHeight, keyboardIsOpen);
-
-      const onTouchend = (e: TouchEvent) => {
-        let changedTouch = e.changedTouches[0];
-        let elem = document.elementFromPoint(changedTouch.clientX, changedTouch.clientY);
-        if (elem) {
-          const toolbarBottomEl = elem.closest(".editor-toolbar-bottom");
-          if (toolbarBottomEl) {
-            // On iOS tapping anywhere doesn’t
-            // automatically discard keyboard
-            e.stopPropagation();
-          }
-        }
-      };
-      // if(ref.current){
-      //   ref.current.addEventListener("touchend", onTouchend);
-      // }
     }
   }, [keyboardIsOpen]);
 

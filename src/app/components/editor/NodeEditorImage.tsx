@@ -153,8 +153,13 @@ const NodeEditorImage = (props: Props) => {
     if (onNodeBehavior) onNodeBehavior.onUpdate(node);
   };
 
+  const onFocus = () => {
+    if (onNodeBehavior)
+      onNodeBehavior.onFocus(index);
+  };
+
   return (
-    <div className="node-file-root">
+    <div className="node-file-root" onMouseDown={onFocus}>
       {showFileSelected ? (
         <label className="node-file-none">
           <AppIcon name="document-upload" className="icon" />

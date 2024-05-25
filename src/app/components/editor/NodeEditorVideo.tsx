@@ -1,10 +1,10 @@
-import React, { ChangeEvent, useRef, useContext, useState, useEffect } from 'react';
-import { NodeVideo, OnNodeBehavior } from '../../lib/editor/type';
-import { EditorContext } from '../../lib/editor/hook/context';
-import useOutsideClick from '../../lib/helpers/OutsideClick';
-import { getFileSizeFormat } from '../../lib/helpers';
-import AppIcon from '../AppIcon';
-import AppLoadingSpinner from '../AppLoadingSpinner';
+import React, { ChangeEvent, useRef, useContext, useState, useEffect } from "react";
+import { NodeVideo, OnNodeBehavior } from "../../lib/editor/type";
+import { EditorContext } from "../../lib/editor/hook/context";
+import useOutsideClick from "../../lib/helpers/OutsideClick";
+import { getFileSizeFormat } from "../../lib/helpers";
+import AppIcon from "../AppIcon";
+import AppLoadingSpinner from "../AppLoadingSpinner";
 
 interface Props {
   index: number;
@@ -21,11 +21,11 @@ const NodeEditorVideo = (props: Props) => {
   const { node, index } = props;
   const onNodeBehavior = useContext<OnNodeBehavior | undefined>(EditorContext);
   const [status, setStatus] = useState<Status>(Status.None);
-  const [fileSize, setFileSize] = useState<string>('0');
-  const [fileName, setFileName] = useState<string>('');
-  const [description, setDescription] = useState<string>('');
+  const [fileSize, setFileSize] = useState<string>("0");
+  const [fileName, setFileName] = useState<string>("");
+  const [description, setDescription] = useState<string>("");
   const refFile = useRef<HTMLInputElement>(null);
-  const [tempFileName, setTempFileName] = useState('');
+  const [tempFileName, setTempFileName] = useState("");
   const rootRef = useOutsideClick<HTMLDivElement>(() => {
     if (status !== Status.None && fileName.length <= 0) {
       onChangeFileName(tempFileName);
@@ -80,8 +80,13 @@ const NodeEditorVideo = (props: Props) => {
     setStatus(Status.FileReady);
   };
 
+  const onFocus = () => {
+    if (onNodeBehavior)
+      onNodeBehavior.onFocus(index);
+  };
+
   return (
-    <div ref={rootRef} className="node-file-root">
+    <div ref={rootRef} className="node-file-root" onMouseDown={onFocus}>
       {status === Status.None ? (
         <label className="node-file-none">
           <AppIcon name="document-upload" className="icon" />

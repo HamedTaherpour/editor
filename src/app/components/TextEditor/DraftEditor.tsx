@@ -15,7 +15,7 @@ import { TextEditorContext } from "../../lib/editor-text/hook/context";
 import "draft-js/dist/Draft.css";
 
 import useOutsideClick from "../../lib/helpers/OutsideClick";
-import { getElementPosition } from "../../lib/helpers";
+import { getElementPosition, isMobile } from "../../lib/helpers";
 import { OnTextEditorBehavior, ToolsColorStyleItemTextEditor, ToolsStyleItemTextEditor } from "@/app/lib/editor-text/type";
 
 var delta = 200;
@@ -45,7 +45,7 @@ const DraftEditor = forwardRef(function DraftEditor(props: Props, _ref) {
       onBtnStyleClick: baseOnBtnStyleClick,
       isTextStyleActive: baseIsTextStyleActive
     };
-  }, [editorState,showLinkConfirm]);
+  }, [editorState, showLinkConfirm]);
 
   const onNodeBehavior = useContext<OnNodeBehavior | undefined>(EditorContext);
 
@@ -266,13 +266,15 @@ const DraftEditor = forwardRef(function DraftEditor(props: Props, _ref) {
   };
 
   const onMouseUp = (e: React.MouseEvent<HTMLElement>) => {
-    const section = window.getSelection();
-    if (!!section && section.toString()) {
-      setShowToolbar(true);
-    } else {
-      const target = e.target as HTMLElement;
-      if (target && !target.closest(".node-" + node.id)) {
-        setShowToolbar(false);
+    if(!isMobile()) {
+      const section = window.getSelection();
+      if (!!section && section.toString()) {
+        setShowToolbar(true);
+      } else {
+        const target = e.target as HTMLElement;
+        if (target && !target.closest(".node-" + node.id)) {
+          setShowToolbar(false);
+        }
       }
     }
   };

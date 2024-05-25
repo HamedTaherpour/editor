@@ -1,9 +1,9 @@
-import React, { ChangeEvent, useRef, useContext, useState, useEffect } from 'react';
-import { NodeVoice, OnNodeBehavior } from '../../lib/editor/type';
-import { EditorContext } from '../../lib/editor/hook/context';
-import AppIcon from '../AppIcon';
-import AppLoadingSpinner from '../AppLoadingSpinner';
-import useOutsideClick from '../../lib/helpers/OutsideClick';
+import React, { ChangeEvent, useRef, useContext, useState, useEffect } from "react";
+import { NodeVoice, OnNodeBehavior } from "../../lib/editor/type";
+import { EditorContext } from "../../lib/editor/hook/context";
+import AppIcon from "../AppIcon";
+import AppLoadingSpinner from "../AppLoadingSpinner";
+import useOutsideClick from "../../lib/helpers/OutsideClick";
 
 interface Props {
   index: number;
@@ -21,13 +21,13 @@ const NodeEditorVoice = (props: Props) => {
   const ref = useRef<HTMLAudioElement>(null);
   const onNodeBehavior = useContext<OnNodeBehavior | undefined>(EditorContext);
   const [status, setStatus] = useState<Status>(Status.None);
-  const [duration, setDuration] = useState<string>('00:00');
-  const [currentDuration, setCurrentDuration] = useState<string>('00:00');
-  const [fileName, setFileName] = useState<string>('');
-  const [description, setDescription] = useState<string>('');
+  const [duration, setDuration] = useState<string>("00:00");
+  const [currentDuration, setCurrentDuration] = useState<string>("00:00");
+  const [fileName, setFileName] = useState<string>("");
+  const [description, setDescription] = useState<string>("");
   const [isVoicePause, setIsVoicePause] = useState<boolean>(false);
   const refFile = useRef<HTMLInputElement>(null);
-  const [tempFileName, setTempFileName] = useState('');
+  const [tempFileName, setTempFileName] = useState("");
   const rootRef = useOutsideClick<HTMLDivElement>(() => {
     if (status !== Status.None && fileName.length <= 0) {
       onChangeFileName(tempFileName);
@@ -74,9 +74,9 @@ const NodeEditorVoice = (props: Props) => {
   };
 
   const getDurationFormat = (duration: number): string => {
-    let minutes = '0' + Math.floor(duration / 60);
-    let seconds = '0' + Math.floor(duration - parseInt(minutes) * 60);
-    return minutes.substring(-2) + ':' + seconds.substring(-2);
+    let minutes = "0" + Math.floor(duration / 60);
+    let seconds = "0" + Math.floor(duration - parseInt(minutes) * 60);
+    return minutes.substring(-2) + ":" + seconds.substring(-2);
   };
 
   const onBtnToggleAudioPlayClick = () => {
@@ -94,27 +94,32 @@ const NodeEditorVoice = (props: Props) => {
     if (ref.current) {
       ref.current.src = url;
       ref.current.addEventListener(
-        'loadedmetadata',
+        "loadedmetadata",
         () => {
           if (ref.current) setDuration(getDurationFormat(ref.current.duration));
         },
         false
       );
       ref.current.addEventListener(
-        'timeupdate',
+        "timeupdate",
         () => {
           if (ref.current) setCurrentDuration(getDurationFormat(ref.current.currentTime));
         },
         false
       );
-      ref.current.addEventListener('ended', () => {
+      ref.current.addEventListener("ended", () => {
         setIsVoicePause(false);
       });
     }
   };
 
+  const onFocus = () => {
+    if (onNodeBehavior)
+      onNodeBehavior.onFocus(index);
+  };
+
   return (
-    <div ref={rootRef} className="node-file-root">
+    <div ref={rootRef} className="node-file-root" onMouseDown={onFocus}>
       <audio ref={ref}>
         <source type=".mp3,.wav" />
         Your browser does not support the audio element.
@@ -142,7 +147,7 @@ const NodeEditorVoice = (props: Props) => {
       ) : status === Status.FileReady ? (
         <div className="node-file-ready">
           <div className="node-file-ready-container">
-            <button onClick={onBtnToggleAudioPlayClick}>{isVoicePause ? <AppIcon name="union" className="icon" /> : <AppIcon name="play" className="icon" />}</button>
+            <button onClick={onBtnToggleAudioPlayClick}>{isVoicePause ? <AppIcon name="pause" className="icon" /> : <AppIcon name="play" className="icon" />}</button>
             <input value={fileName} onChange={(e) => onChangeFileName(e.target.value)} placeholder="نام فایل را بنویسید..." className="title" />
             <div className="subtitle">
               <span>{currentDuration}</span>

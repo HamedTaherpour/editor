@@ -125,7 +125,7 @@ export default function Home() {
   };
 
   return (
-    <main style={{ marginTop: "154px" }}>
+    <main>
       <EditorApp onJsonEditorUpdateListener={listener} onUploadFileListener={onUploadFileListener} />
     </main>
   );

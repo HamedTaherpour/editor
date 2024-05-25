@@ -17,7 +17,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={vazirmatnFont.className + " dir-rtl h-screen"}>
+      <body className={vazirmatnFont.className + " dir-rtl"}>
         <div id="modal"></div>
         <div id="menu"></div>
         {children}

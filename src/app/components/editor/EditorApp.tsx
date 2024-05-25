@@ -15,6 +15,8 @@ import { JsonEditor, Node, NodeDivider, NodeFile, NodeImage, NodeQuote, NodeText
 import NodeEditor from "./NodeEditor";
 import { ToolsColorStyleItemTextEditor, ToolsStyleItemTextEditor } from "@/app/lib/editor-text/type";
 import ToolbarBottom from "@/app/components/editor/mobile/toolbar-bottom/ToolbarBottom";
+import { isMobile } from "@/app/lib/helpers";
+import { createPortal } from "react-dom";
 
 interface AddNode {
   type: number;
@@ -349,8 +351,6 @@ const EditorApp = (props: Props) => {
     },
     onFocus(index: number) {
       setCurrentNodeIndex(index);
-      if (highlightListener)
-        highlightListener.onTextHighlight(true);
     },
     getCurrentNodeSelectedIndex(): number {
       return currentNodeIndex;
@@ -457,12 +457,17 @@ const EditorApp = (props: Props) => {
   return (
     <div className={(jsonEditor.length <= 1 ? "empty-editor " : "") + " editor-app-root"}>
       <EditorContext.Provider value={onNodeBehavior}>
-        <div className="node-list">
+        <div id="node-list" className="node-list">
           {jsonEditor.map((item: any, i: number) => (
             <NodeEditor key={item.id} index={i} node={item} />
           ))}
         </div>
-        <ToolbarBottom />
+        {
+          isMobile() && createPortal(
+            <ToolbarBottom />,
+          document.body,
+          )
+        }
       </EditorContext.Provider>
     </div>
   );

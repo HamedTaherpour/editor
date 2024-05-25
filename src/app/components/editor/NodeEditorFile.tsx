@@ -80,8 +80,13 @@ const NodeEditorFile = (props: Props) => {
     setStatus(Status.FileReady);
   };
 
+  const onFocus = () => {
+    if (onNodeBehavior)
+      onNodeBehavior.onFocus(index);
+  };
+
   return (
-    <div ref={rootRef} className="node-file-root">
+    <div ref={rootRef} className="node-file-root" onMouseDown={onFocus}>
       {status === Status.None ? (
         <label className="node-file-none">
           <AppIcon name="document-upload" className="icon" />
