@@ -11,12 +11,10 @@ import NodeEditorVideoModule from "../../lib/editor/video/module";
 
 import { EditorContext } from "../../lib/editor/hook/context";
 
-import { JsonEditor, Node, NodeDivider, NodeFile, NodeImage, NodeQuote, NodeText, NodeVideo, NodeVoice, OnJsonEditorUpdateListener, OnNodeBehavior, OnTextHighlightListener, OnUploadFileListener, TYPE_NODE_DIVIDER, TYPE_NODE_FILE, TYPE_NODE_IMAGE, TYPE_NODE_QUOTE, TYPE_NODE_TEXT, TYPE_NODE_VIDEO, TYPE_NODE_VOICE } from "../../lib/editor/type";
+import { EditorOptions, JsonEditor, Node, NodeDivider, NodeFile, NodeImage, NodeQuote, NodeText, NodeVideo, NodeVoice, OnJsonEditorUpdateListener, OnNodeBehavior, OnTextHighlightListener, OnUploadFileListener, TYPE_NODE_DIVIDER, TYPE_NODE_FILE, TYPE_NODE_IMAGE, TYPE_NODE_QUOTE, TYPE_NODE_TEXT, TYPE_NODE_VIDEO, TYPE_NODE_VOICE } from "../../lib/editor/type";
 import NodeEditor from "./NodeEditor";
 import { ToolsColorStyleItemTextEditor, ToolsStyleItemTextEditor } from "@/app/lib/editor-text/type";
-import ToolbarBottom from "@/app/components/editor/mobile/toolbar-bottom/ToolbarBottom";
-import { isMobile } from "@/app/lib/helpers";
-import { createPortal } from "react-dom";
+import { useEditorOptions } from "@/app/lib/editor/hook";
 
 interface AddNode {
   type: number;
@@ -28,6 +26,7 @@ interface Props {
   value?: JsonEditor;
   onJsonEditorUpdateListener: OnJsonEditorUpdateListener;
   onUploadFileListener: OnUploadFileListener;
+  options?: EditorOptions;
 }
 
 const EditorApp = (props: Props) => {
@@ -39,6 +38,7 @@ const EditorApp = (props: Props) => {
 
   let highlightListener: OnTextHighlightListener;
 
+  const editorOptions = useEditorOptions(props.options);
   const editor = new Editor(jsonEditor);
   const nodeEditorTextModule = new NodeEditorTextModule(editor);
   const nodeEditorVoiceModule = new NodeEditorVoiceModule(editor);
@@ -55,12 +55,17 @@ const EditorApp = (props: Props) => {
     }
   }, [jsonEditor.length]);
 
+  useEffect(() => {
+    setJsonEditor(value || []);
+  }, [value]);
+
   const onNodeBehavior: OnNodeBehavior = {
     toolsMenu: [
       {
         title: "متن",
         description: "محتوای متنی به عنوان یک درس",
         icon: "textalign",
+        type: "text",
         action: (index: number) => {
           onBtnAddNodeClick({ type: TYPE_NODE_TEXT, index });
         }
@@ -69,6 +74,7 @@ const EditorApp = (props: Props) => {
         title: "عنوان 1",
         description: "سایز بزرگ برای نوشتن عنوان",
         icon: "smallcaps",
+        type: "h1",
         action: (index: number) => {
           const node = new NodeText();
           node.baseTag = "h1";
@@ -79,6 +85,7 @@ const EditorApp = (props: Props) => {
         title: "عنوان 2",
         description: "سایز متوسط برای نوشتن عنوان",
         icon: "smallcaps",
+        type: "h2",
         action: (index: number) => {
           const node = new NodeText();
           node.baseTag = "h2";
@@ -89,6 +96,7 @@ const EditorApp = (props: Props) => {
         title: "عنوان 3",
         description: "سایز کوچک برای نوشتن عنوان",
         icon: "smallcaps",
+        type: "h3",
         action: (index: number) => {
           const node = new NodeText();
           node.baseTag = "h3";
@@ -99,6 +107,7 @@ const EditorApp = (props: Props) => {
         title: "نقل‌قول",
         description: "برای نوشتن نقل‌قول استفاده کنید.",
         icon: "quote-up",
+        type: "quote",
         action: (index: number) => {
           onBtnAddNodeClick({ type: TYPE_NODE_QUOTE, index });
         }
@@ -107,6 +116,7 @@ const EditorApp = (props: Props) => {
         title: "لیست نقطه‌ای",
         description: "لیست ساده نقطه‌ای بسازید.",
         icon: "bulleted",
+        type: "bullet",
         action: (index: number) => {
           const node = new NodeText();
           node.baseTag = "ul-disc";
@@ -117,6 +127,7 @@ const EditorApp = (props: Props) => {
         title: "لیست شماره‌دار",
         description: "لیست شماره‌دار ایجاد کنید.",
         icon: "numbered",
+        type: "bulletNumber",
         action: (index: number) => {
           const node = new NodeText();
           node.baseTag = "ul-decimal";
@@ -127,6 +138,7 @@ const EditorApp = (props: Props) => {
         title: "تصویر",
         description: "تصویر خود را بارگذاری کنید.",
         icon: "gallery",
+        type: "image",
         action: (index: number) => {
           onBtnAddNodeClick({ type: TYPE_NODE_IMAGE, index });
         }
@@ -135,6 +147,7 @@ const EditorApp = (props: Props) => {
         title: "ویدیو",
         description: "ویدیو خود را بارگذاری کنید.",
         icon: "play-circle",
+        type: "video",
         action: (index: number) => {
           onBtnAddNodeClick({ type: TYPE_NODE_VIDEO, index });
         }
@@ -143,6 +156,7 @@ const EditorApp = (props: Props) => {
         title: "فایل یا پوشه",
         description: "فایل خود را بارگذاری کنید.",
         icon: "document",
+        type: "file",
         action: (index: number) => {
           onBtnAddNodeClick({ type: TYPE_NODE_FILE, index });
         }
@@ -151,6 +165,7 @@ const EditorApp = (props: Props) => {
         title: "صوتی",
         description: "صوت یا ویس خود را بارگذاری کنید.",
         icon: "volume",
+        type: "voice",
         action: (index: number) => {
           onBtnAddNodeClick({ type: TYPE_NODE_VOICE, index });
         }
@@ -159,6 +174,7 @@ const EditorApp = (props: Props) => {
         title: "جداکننده",
         description: "جداکننده بخش‌های مختلف",
         icon: "divider",
+        type: "divider",
         action: (index: number) => {
           onBtnAddNodeClick({
             type: TYPE_NODE_DIVIDER,
@@ -167,6 +183,12 @@ const EditorApp = (props: Props) => {
         }
       }
     ],
+    getToolsMenu(): Array<any> {
+      return this.toolsMenu.filter((item: { type: string }) => {
+        // @ts-ignore
+        return editorOptions[item.type] && editorOptions[item.type].enabled;
+      });
+    },
     onStyle(style, type, index) {
       const node = jsonEditor[index];
       if (type === "background") {
@@ -462,12 +484,12 @@ const EditorApp = (props: Props) => {
             <NodeEditor key={item.id} index={i} node={item} />
           ))}
         </div>
-        {
-          isMobile() && createPortal(
-            <ToolbarBottom />,
-          document.body,
-          )
-        }
+        {/*{*/}
+        {/*  isMobile() && createPortal(*/}
+        {/*    <ToolbarBottom />,*/}
+        {/*  document.body,*/}
+        {/*  )*/}
+        {/*}*/}
       </EditorContext.Provider>
     </div>
   );

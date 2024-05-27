@@ -469,7 +469,7 @@ export const setLink = (editorState: EditorState, link: string): EditorState => 
 };
 
 export const getBlockPositionDOM = (offsetKey: string) => {
-  let postion = { x: 0, y: 0 };
+  let position = { x: 0, y: 0 };
   let x = 0;
   let y = 0;
   let blockEl = document.querySelector("span[data-offset-key=\"" + offsetKey + "\"]");
@@ -489,10 +489,10 @@ export const getBlockPositionDOM = (offsetKey: string) => {
     }
 
     x = x + blockWidth;
-    postion = {
+    position = {
       x: x,
       y: y + blockHeight
     };
   }
-  return postion;
+  return position;
 };

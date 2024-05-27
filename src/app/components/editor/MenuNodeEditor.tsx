@@ -12,7 +12,7 @@ const MenuNodeEditor = (props: Props) => {
   const { index, onActionClick } = props;
   const onNodeBehavior = useContext<OnNodeBehavior | undefined>(EditorContext);
   let menuList = [];
-  if (onNodeBehavior) menuList = onNodeBehavior.toolsMenu;
+  if (onNodeBehavior) menuList = onNodeBehavior.getToolsMenu();
 
   return (
     <div className="menu-node-editor">

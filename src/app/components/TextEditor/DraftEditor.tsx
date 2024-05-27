@@ -3,7 +3,7 @@ import { createPortal } from "react-dom";
 
 import { Editor, convertToRaw, getDefaultKeyBinding, EditorState, RichUtils, DraftEditorCommand } from "draft-js";
 
-import { getValue, getLineNumberSelected, getLineKeySelected, getLineSize, getPositionOfLine, getValueOfLine, customStyleMap, blockStyleFn, editLink, getBlockPositionDOM, setLink, getFirstInitEditorState, setStyle, getLastStyleFontColor, getLastStyleBackgroundColor, isStyleActive, getValueHighlight } from "../../lib/editor-text/hook/tools";
+import { getValue, getLineNumberSelected, getLineKeySelected, getLineSize, getPositionOfLine, getValueOfLine, customStyleMap, blockStyleFn, editLink, getBlockPositionDOM, setLink, getFirstInitEditorState, setStyle, getLastStyleFontColor, getLastStyleBackgroundColor, isStyleActive } from "../../lib/editor-text/hook/tools";
 
 import Toolbar from "./Toolbar";
 import MenuNodeEditor from "../editor/MenuNodeEditor";
@@ -266,7 +266,7 @@ const DraftEditor = forwardRef(function DraftEditor(props: Props, _ref) {
   };
 
   const onMouseUp = (e: React.MouseEvent<HTMLElement>) => {
-    if(!isMobile()) {
+    if (!isMobile()) {
       const section = window.getSelection();
       if (!!section && section.toString()) {
         setShowToolbar(true);

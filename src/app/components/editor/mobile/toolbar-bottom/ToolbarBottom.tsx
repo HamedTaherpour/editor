@@ -26,7 +26,7 @@ const ToolbarBottom = () => {
   const onNodeBehavior = useContext<OnNodeBehavior | undefined>(EditorContext);
   let menuList = [];
   if (onNodeBehavior) {
-    menuList = onNodeBehavior.toolsMenu;
+    menuList = onNodeBehavior.getToolsMenu();
   }
 
   useEffect(() => {
@@ -59,6 +59,7 @@ const ToolbarBottom = () => {
   }, [keyboardIsOpen]);
 
   const onBtnOpenMenuNodeEditor = () => {
+    console.log(keyboardHeight);
     setTabMenuBottomName("tools");
     if (showMenuBottom) {
       setMenuBottomHeight(`0px`);
@@ -410,4 +411,5 @@ const ToolbarBottom = () => {
     </div>
   );
 };
+
 export default ToolbarBottom;

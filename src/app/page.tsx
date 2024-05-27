@@ -1,7 +1,7 @@
 "use client";
 
 import dynamic from "next/dynamic";
-import { OnJsonEditorUpdateListener, OnUploadFileListener } from "./lib/editor/type";
+import { OnJsonEditorUpdateListener, OnUploadFileListener, EditorOptions } from "./lib/editor/type";
 
 const EditorApp = dynamic(() => import("@/app/components/editor/EditorApp"), { ssr: false });
 
@@ -124,9 +124,18 @@ export default function Home() {
     }
   };
 
+  const options: EditorOptions = {
+    image: {
+      enabled: false
+    },
+    text: {
+      enabled: false
+    }
+  };
+
   return (
     <main>
-      <EditorApp onJsonEditorUpdateListener={listener} onUploadFileListener={onUploadFileListener} />
+      <EditorApp options={options} onJsonEditorUpdateListener={listener} onUploadFileListener={onUploadFileListener} />
     </main>
   );
 }

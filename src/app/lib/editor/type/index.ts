@@ -12,6 +12,69 @@ export const TYPE_NODE_VIDEO = 6;
 export interface JsonEditor extends Array<Node> {
 }
 
+export interface ImageEditorOptions {
+  enabled?: boolean;
+}
+
+export interface TextEditorOptions {
+  enabled?: boolean;
+}
+
+export interface H1EditorOptions {
+  enabled?: boolean;
+}
+
+export interface H2EditorOptions {
+  enabled?: boolean;
+}
+
+export interface H3EditorOptions {
+  enabled?: boolean;
+}
+
+export interface QuoteEditorOptions {
+  enabled?: boolean;
+}
+
+export interface BulletEditorOptions {
+  enabled?: boolean;
+}
+
+export interface BulletNumberEditorOptions {
+  enabled?: boolean;
+}
+
+export interface VideoEditorOptions {
+  enabled?: boolean;
+}
+
+export interface FileEditorOptions {
+  enabled?: boolean;
+}
+
+export interface VoiceEditorOptions {
+  enabled?: boolean;
+}
+
+export interface DividerEditorOptions {
+  enabled?: boolean;
+}
+
+export interface EditorOptions {
+  image?: ImageEditorOptions;
+  text?: TextEditorOptions;
+  h1?: H1EditorOptions;
+  h2?: H2EditorOptions;
+  h3?: H3EditorOptions;
+  quote?: QuoteEditorOptions;
+  bullet?: BulletEditorOptions;
+  bulletNumber?: BulletNumberEditorOptions;
+  video?: VideoEditorOptions;
+  file?: FileEditorOptions;
+  voice?: VoiceEditorOptions;
+  divider?: DividerEditorOptions;
+}
+
 export class Node {
   type: number;
   id: number;
@@ -128,6 +191,8 @@ export interface OnJsonEditorUpdateListener {
 
 export interface OnNodeBehavior {
   toolsMenu: Array<any>;
+
+  getToolsMenu(): Array<any>;
 
   isClipboardExists(): boolean;
 
