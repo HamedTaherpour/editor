@@ -56,7 +56,8 @@ const EditorApp = (props: Props) => {
   }, [jsonEditor.length]);
 
   useEffect(() => {
-    setJsonEditor(value || []);
+    if (value)
+      setJsonEditor(value);
   }, [value]);
 
   const onNodeBehavior: OnNodeBehavior = {
@@ -410,7 +411,7 @@ const EditorApp = (props: Props) => {
 
   editor.setOnJsonEditorUpdateListener({
     onUpdate: (_jsonEditor) => {
-      setJsonEditor(_jsonEditor.concat());
+      setJsonEditor([..._jsonEditor]);
       if (onJsonEditorUpdateListener) onJsonEditorUpdateListener.onUpdate(_jsonEditor);
     }
   });
@@ -443,12 +444,11 @@ const EditorApp = (props: Props) => {
         break;
     }
 
-    handlingAddBlankLines(index);
+    // handlingAddBlankLines(index);
   };
 
   const handlingAddBlankLines = (index?: number) => {
     let _index = typeof index === "undefined" ? 0 : index + 1;
-
     if (_index + 1 === jsonEditor.length) {
       for (let x = 0; x <= 2; x++) {
         nodeEditorTextModule.add(new NodeText());

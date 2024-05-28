@@ -96,6 +96,8 @@ const NodeEditorImage = (props: Props) => {
 
   const onChangeFile = (e: ChangeEvent<HTMLInputElement>) => {
     if (!!e.target.files) {
+      node.url = URL.createObjectURL(e.target.files[0]);
+      setImage(node.url);
       if (onNodeBehavior) {
         setLoading(true);
         onNodeBehavior
@@ -108,28 +110,34 @@ const NodeEditorImage = (props: Props) => {
           })
           .finally(() => setLoading(false));
       }
-      node.url = URL.createObjectURL(e.target.files[0]);
-      setImage(node.url);
     }
   };
 
   const setImage = (url: string) => {
+    console.clear();
     node.url = url;
     if (ref.current) {
       ref.current.src = url;
       const img = new Image();
       img.src = url;
+      console.log("Start");
       img.onload = () => {
+        console.log("setImage: onload");
         let width = 0;
         if (!!node.width) width = node.width;
         else if (img.width >= maxWidth) width = maxWidth;
         else width = img.width;
-
         setSize({ x: width });
         node.width = width;
+        console.log("setImage: set size");
         if (onNodeBehavior) onNodeBehavior.onUpdate(node);
       };
-
+      img.onerror = (event) => {
+        console.log("onerror" + event);
+      };
+      img.onabort = (ev) => {
+        console.log("onabort", ev);
+      };
       if (onNodeBehavior) onNodeBehavior.onUpdate(node);
     }
     setShowFileSelected(false);

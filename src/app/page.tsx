@@ -10,73 +10,105 @@ export default function Home() {
   const dataStr = JSON.stringify(
     [
       {
-        "id": 275380,
+        "id": 856530,
         "type": 0,
-        "clazz": null,
-        "backgroundColor": null,
-        "fontColor": null,
+        "clazz": "",
+        "backgroundColor": "",
+        "fontColor": "",
         "baseTag": "p",
-        "text": {
-          "blocks": [
-            {
-              "key": "9k69r",
-              "text": "یشسیشسی",
-              "type": "unstyled",
-              "depth": 0,
-              "inlineStyleRanges": [],
-              "entityRanges": [],
-              "data": []
-            }
-          ],
-          "entityMap": []
-        },
-        "plainText": "یشسیشسی"
+        "text": "",
+        "plainText": "",
+        "heroRef": {
+          "current": {}
+        }
       },
       {
-        "id": 275381,
+        "id": 856581,
         "type": 0,
-        "clazz": null,
-        "backgroundColor": null,
-        "fontColor": null,
+        "clazz": "",
+        "backgroundColor": "",
+        "fontColor": "",
         "baseTag": "p",
-        "text": {
-          "blocks": [
-            {
-              "key": "kjke",
-              "text": "شسیشسیشس",
-              "type": "unstyled",
-              "depth": 0,
-              "inlineStyleRanges": [],
-              "entityRanges": [],
-              "data": []
-            }
-          ],
-          "entityMap": []
-        },
-        "plainText": "شسیشسیشس"
+        "text": "",
+        "plainText": "",
+        "heroRef": {
+          "current": {}
+        }
       },
       {
-        "id": 275302,
+        "id": 856502,
         "type": 0,
-        "clazz": null,
-        "backgroundColor": null,
-        "fontColor": null,
+        "clazz": "",
+        "backgroundColor": "",
+        "fontColor": "",
         "baseTag": "p",
-        "text": {
-          "blocks": [
-            {
-              "key": "3u357",
-              "text": "شسیشسیشسیشسی",
-              "type": "unstyled",
-              "depth": 0,
-              "inlineStyleRanges": [],
-              "entityRanges": [],
-              "data": []
-            }
-          ],
-          "entityMap": []
-        },
-        "plainText": "شسیشسیشسیشسی"
+        "text": "",
+        "plainText": "",
+        "heroRef": {
+          "current": {}
+        }
+      },
+      {
+        "id": 856583,
+        "type": 0,
+        "clazz": "",
+        "backgroundColor": "",
+        "fontColor": "",
+        "baseTag": "p",
+        "text": "",
+        "plainText": "",
+        "heroRef": {
+          "current": {}
+        }
+      },
+      {
+        "id": 857934,
+        "type": 2,
+        "clazz": "node-gap",
+        "backgroundColor": "",
+        "fontColor": "",
+        "url": "",
+        "caption": "",
+        "verticallyAlign": "center"
+      },
+      {
+        "id": 857905,
+        "type": 0,
+        "clazz": "",
+        "backgroundColor": "",
+        "fontColor": "",
+        "baseTag": "p",
+        "text": "",
+        "plainText": "",
+        "heroRef": {
+          "current": {}
+        }
+      },
+      {
+        "id": 857906,
+        "type": 0,
+        "clazz": "",
+        "backgroundColor": "",
+        "fontColor": "",
+        "baseTag": "p",
+        "text": "",
+        "plainText": "",
+        "heroRef": {
+          "current": {}
+        }
+      },
+      {
+        "id": 857907,
+        "type": 0,
+        "clazz": "",
+        "backgroundColor": "",
+        "fontColor": "",
+        "baseTag": "p",
+        "text": "",
+        "plainText": "",
+        "heroRef": {
+          "current": {}
+        }
       }
     ],
     function(key, value) {
@@ -125,9 +157,6 @@ export default function Home() {
   };
 
   const options: EditorOptions = {
-    image: {
-      enabled: false
-    },
     text: {
       enabled: false
     }
@@ -135,7 +164,7 @@ export default function Home() {
 
   return (
     <main>
-      <EditorApp options={options} onJsonEditorUpdateListener={listener} onUploadFileListener={onUploadFileListener} />
+      <EditorApp value={dataJson} options={options} onJsonEditorUpdateListener={listener} onUploadFileListener={onUploadFileListener} />
     </main>
   );
 }
