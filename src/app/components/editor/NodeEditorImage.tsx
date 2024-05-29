@@ -133,7 +133,7 @@ const NodeEditorImage = (props: Props) => {
         if (onNodeBehavior) onNodeBehavior.onUpdate(node);
       };
       img.onerror = (event) => {
-        console.log("onerror" + event);
+        console.log("onerror" + event.toString());
       };
       img.onabort = (ev) => {
         console.log("onabort", ev);

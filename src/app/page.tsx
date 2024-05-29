@@ -164,7 +164,21 @@ export default function Home() {
 
   return (
     <main>
-      <EditorApp value={dataJson} options={options} onJsonEditorUpdateListener={listener} onUploadFileListener={onUploadFileListener} />
+      <div style={
+        {
+          width: "100%",
+          height: "400px",
+          backgroundColor: "red"
+        }
+      }>
+
+      </div>
+      <div style={{
+        width:"600px",
+        border:"1px solid red",
+      }}>
+        <EditorApp value={dataJson} onJsonEditorUpdateListener={listener} onUploadFileListener={onUploadFileListener} />
+      </div>
     </main>
   );
 }

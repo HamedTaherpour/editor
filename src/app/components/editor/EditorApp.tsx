@@ -343,31 +343,31 @@ const EditorApp = (props: Props) => {
     },
     onBtnHeadingItemClick(item: ToolsStyleItemTextEditor) {
       const node = jsonEditor[currentNodeIndex];
-      if (node && node.heroRef && node.heroRef.current) {
+      if (node && node.heroRef && node.heroRef.current && node.type === TYPE_NODE_TEXT) {
         node.heroRef.current.onBtnHeadingItemClick(item);
       }
     },
     onBtnBackgroundClick(item: ToolsColorStyleItemTextEditor) {
       const node = jsonEditor[currentNodeIndex];
-      if (node && node.heroRef && node.heroRef.current) {
+      if (node && node.heroRef && node.heroRef.current && node.type === TYPE_NODE_TEXT) {
         node.heroRef.current.onBtnBackgroundClick(item);
       }
     },
     onBtnColorClick(item: ToolsColorStyleItemTextEditor) {
       const node = jsonEditor[currentNodeIndex];
-      if (node && node.heroRef && node.heroRef.current) {
+      if (node && node.heroRef && node.heroRef.current && node.type === TYPE_NODE_TEXT) {
         node.heroRef.current.onBtnColorClick(item);
       }
     },
     onBtnStyleClick(item: ToolsStyleItemTextEditor) {
       const node = jsonEditor[currentNodeIndex];
-      if (node && node.heroRef && node.heroRef.current) {
+      if (node && node.heroRef && node.heroRef.current && node.type === TYPE_NODE_TEXT) {
         node.heroRef.current.onBtnStyleClick(item);
       }
     },
     isTextStyleActive(style: any, method: string): boolean {
       const node = jsonEditor[currentNodeIndex];
-      if (node && node.heroRef && node.heroRef.current) {
+      if (node && node.heroRef && node.heroRef.current && node.type === TYPE_NODE_TEXT) {
         return node.heroRef.current.isTextStyleActive(style, method);
       } else
         return false;
@@ -391,12 +391,12 @@ const EditorApp = (props: Props) => {
     },
     focusCurrentNodeSelected() {
       const node = jsonEditor[currentNodeIndex];
-      if (node && node.heroRef && node.heroRef.current)
+      if (node && node.heroRef && node.heroRef.current && node.type === TYPE_NODE_TEXT)
         node.heroRef.current.focus();
     },
     blurCurrentNodeSelected() {
       const node = jsonEditor[currentNodeIndex];
-      if (node && node.heroRef && node.heroRef.current)
+      if (node && node.heroRef && node.heroRef.current && node.type === TYPE_NODE_TEXT)
         node.heroRef.current.blur();
     },
     undo() {
@@ -404,7 +404,7 @@ const EditorApp = (props: Props) => {
     },
     onBtnShowLinkConfirmClick() {
       const node = jsonEditor[currentNodeIndex];
-      if (node && node.heroRef && node.heroRef.current)
+      if (node && node.heroRef && node.heroRef.current && node.type === TYPE_NODE_TEXT)
         node.heroRef.current.onBtnShowLinkConfirmClick();
     }
   };
@@ -455,7 +455,7 @@ const EditorApp = (props: Props) => {
       }
       setTimeout(() => {
         const node = jsonEditor[_index];
-        if (node && node.heroRef && node.heroRef.current) {
+        if (node && node.heroRef && node.heroRef.current && node.type === TYPE_NODE_TEXT) {
           node.heroRef.current.focus();
         }
       }, 100);
@@ -464,14 +464,14 @@ const EditorApp = (props: Props) => {
 
   const selectUp = (index: number) => {
     const node = jsonEditor[index - 1];
-    if (node && node.heroRef && node.heroRef.current) {
+    if (node && node.heroRef && node.heroRef.current && node.type === TYPE_NODE_TEXT) {
       node.heroRef.current.focus();
     }
   };
 
   const selectDown = (index: number) => {
     const node = jsonEditor[index + 1];
-    if (node && node.heroRef && node.heroRef.current) {
+    if (node && node.heroRef && node.heroRef.current && node.type === TYPE_NODE_TEXT) {
       node.heroRef.current.focus();
     }
   };
