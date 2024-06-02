@@ -1,114 +1,407 @@
 "use client";
 
 import dynamic from "next/dynamic";
-import { OnJsonEditorUpdateListener, OnUploadFileListener, EditorOptions } from "./lib/editor/type";
+import { EditorOptions, OnJsonEditorUpdateListener } from "@/app/type/index.type";
 
-const EditorApp = dynamic(() => import("@/app/components/editor/EditorApp"), { ssr: false });
+const EditorApp = dynamic(() => import("@/app/components/EditorApp"), { ssr: false });
 
 export default function Home() {
 
   const dataStr = JSON.stringify(
     [
       {
-        "id": 856530,
-        "type": 0,
-        "clazz": "",
-        "backgroundColor": "",
-        "fontColor": "",
-        "baseTag": "p",
         "text": "",
-        "plainText": "",
-        "heroRef": {
-          "current": {}
+        "id": "EtG-PpteeELMlvsqBzq1N",
+        "name": 0,
+        "backgroundColor": "",
+        "fontColor": "COLOR_DARK",
+        "heading": "p"
+      },
+      {
+        "text": "",
+        "id": "k13MB0aJYxTcBilkCSQAP",
+        "name": 0,
+        "backgroundColor": "",
+        "fontColor": "COLOR_DARK",
+        "heading": "p"
+      },
+      {
+        "text": "",
+        "id": "F_vWYSMRsdFYn6E6Wb33p",
+        "name": 0,
+        "backgroundColor": "",
+        "fontColor": "COLOR_DARK",
+        "heading": "p"
+      },
+      {
+        "text": "",
+        "id": "L3p6kl5GJhs7nCBQICXBn",
+        "name": 0,
+        "backgroundColor": "",
+        "fontColor": "COLOR_DARK",
+        "heading": "p"
+      },
+      {
+        "text": "ETFهای اتریوم و چالش‌های جذب سرمایه‌گذاران وال استریت",
+        "id": "V8sga9cKLIv8E61cetK3w",
+        "name": 0,
+        "backgroundColor": "",
+        "fontColor": "COLOR_DARK",
+        "heading": "h1",
+        "json": {
+          "blocks": [
+            {
+              "key": "5noen",
+              "text": "ETFهای اتریوم و چالش‌های جذب سرمایه‌گذاران وال استریت",
+              "type": "header-one",
+              "depth": 0,
+              "inlineStyleRanges": [],
+              "entityRanges": [],
+              "data": {}
+            }
+          ],
+          "entityMap": {}
         }
       },
       {
-        "id": 856581,
-        "type": 0,
-        "clazz": "",
-        "backgroundColor": "",
-        "fontColor": "",
-        "baseTag": "p",
         "text": "",
-        "plainText": "",
-        "heroRef": {
-          "current": {}
-        }
+        "id": "T4qe88y89DrzxGtteSEFk",
+        "name": 0,
+        "backgroundColor": "",
+        "fontColor": "COLOR_DARK",
+        "heading": "p"
       },
       {
-        "id": 856502,
-        "type": 0,
-        "clazz": "",
-        "backgroundColor": "",
-        "fontColor": "",
-        "baseTag": "p",
-        "text": "",
-        "plainText": "",
-        "heroRef": {
-          "current": {}
-        }
-      },
-      {
-        "id": 856583,
-        "type": 0,
-        "clazz": "",
-        "backgroundColor": "",
-        "fontColor": "",
-        "baseTag": "p",
-        "text": "",
-        "plainText": "",
-        "heroRef": {
-          "current": {}
-        }
-      },
-      {
-        "id": 857934,
-        "type": 2,
+        "id": "9iv3PzRI1Lef-7UvEf1A1",
+        "name": 2,
+        "verticallyAlign": "center",
         "clazz": "node-gap",
         "backgroundColor": "",
         "fontColor": "",
-        "url": "",
-        "caption": "",
-        "verticallyAlign": "center"
+        "caption": "ویرایش",
+        "url": "https://s3.cointelegraph.com/uploads/2024-04/8fdd3d0b-924f-491e-83f2-d96220ce0037.jpg",
+        "width": 380
       },
       {
-        "id": 857905,
-        "type": 0,
-        "clazz": "",
-        "backgroundColor": "",
-        "fontColor": "",
-        "baseTag": "p",
         "text": "",
-        "plainText": "",
-        "heroRef": {
-          "current": {}
+        "id": "GyyFPu853qAesCcYtiFjJ",
+        "name": 0,
+        "backgroundColor": "",
+        "fontColor": "COLOR_DARK",
+        "heading": "p"
+      },
+      {
+        "text": "اتریوم (ETH) درحال‌حاضر میزبان بزرگترین پروتکل‌های  امور مالی غیرمتمرکز (دیفای)، توکن‌های حوزه دارایی‌های واقعی (RWA) و  استیبل \u0001کوین‌های جهان است، اما درک نقشه راه فنی آن برای امور مالی سنتی  (TradiFi) ممکن است دشوار باشد.",
+        "id": "NxEHEtxnOmeIywbQftWfT",
+        "name": 0,
+        "backgroundColor": "",
+        "fontColor": "COLOR_DARK",
+        "heading": "p",
+        "json": {
+          "blocks": [
+            {
+              "key": "5siqb",
+              "text": "اتریوم (ETH) درحال‌حاضر میزبان بزرگترین پروتکل‌های  امور مالی غیرمتمرکز (دیفای)، توکن‌های حوزه دارایی‌های واقعی (RWA) و  استیبل ",
+              "type": "unstyled",
+              "depth": 0,
+              "inlineStyleRanges": [
+                {
+                  "offset": 0,
+                  "length": 12,
+                  "style": "BOLD"
+                }
+              ],
+              "entityRanges": [],
+              "data": {}
+            },
+            {
+              "key": "1gavm",
+              "text": "کوین‌های جهان است، اما درک نقشه راه فنی آن برای امور مالی سنتی  (TradiFi) ممکن است دشوار باشد.",
+              "type": "unstyled",
+              "depth": 0,
+              "inlineStyleRanges": [],
+              "entityRanges": [],
+              "data": {}
+            }
+          ],
+          "entityMap": {}
         }
       },
       {
-        "id": 857906,
-        "type": 0,
-        "clazz": "",
-        "backgroundColor": "",
-        "fontColor": "",
-        "baseTag": "p",
         "text": "",
-        "plainText": "",
-        "heroRef": {
-          "current": {}
+        "id": "inPQ7lu35NXyXNzx2uahK",
+        "name": 0,
+        "backgroundColor": "",
+        "fontColor": "COLOR_DARK",
+        "heading": "p"
+      },
+      {
+        "text": "انتظار می‌رود اتریوم، دومین شبکه بلاک چین بزرگ جهان، ارز دیجیتال بعدی باشد که صندوق‌های قابل معامله در بورس (ETF) آن در بازار قابل معامله خواهد بود، با این‌حال اتریوم علی‌رغم پتانسیل  بالا، ممکن است در جذب سرمایه گذاران از طریق ETFها با چالش هایی روبه‌رو  شود.",
+        "id": "wqp3I_c24UDlIzA9xQgEx",
+        "name": 0,
+        "backgroundColor": "",
+        "fontColor": "COLOR_DARK",
+        "heading": "p",
+        "json": {
+          "blocks": [
+            {
+              "key": "345nf",
+              "text": "انتظار می‌رود اتریوم، دومین شبکه بلاک چین بزرگ جهان، ارز دیجیتال بعدی باشد که صندوق‌های قابل معامله در بورس (ETF) آن در بازار قابل معامله خواهد بود، با این‌حال اتریوم علی‌رغم پتانسیل  بالا، ممکن است در جذب سرمایه گذاران از طریق ETFها با چالش هایی روبه‌رو  شود.",
+              "type": "unstyled",
+              "depth": 0,
+              "inlineStyleRanges": [
+                {
+                  "offset": 78,
+                  "length": 35,
+                  "style": "BOLD"
+                }
+              ],
+              "entityRanges": [],
+              "data": {}
+            }
+          ],
+          "entityMap": {}
         }
       },
       {
-        "id": 857907,
-        "type": 0,
-        "clazz": "",
+        "text": "",
+        "id": "IOiwyU7rhmDYv3GQzF5Ik",
+        "name": 0,
+        "backgroundColor": "",
+        "fontColor": "COLOR_DARK",
+        "heading": "p"
+      },
+      {
+        "text": "این واقعیت که اتریوم درآمدهای ناچیزی نسبت به ارزش بازار خود ایجاد  می‌کند و علیرغم بازدهی استکینگ که از بازدهی خزانه‌داری پایین‌تر است، آن  را به یک سرمایه‌گذاری قابل قبول و تولیدکننده جریان نقدی کافی تبدیل  نمی‌کند.",
+        "id": "eUf6zGi-nBocyuGvwuZrL",
+        "name": 3,
+        "backgroundColor": "COLOR_RED",
+        "fontColor": "COLOR_DARK",
+        "heading": "p",
+        "json": {
+          "blocks": [
+            {
+              "key": "cmmkr",
+              "text": "این واقعیت که اتریوم درآمدهای ناچیزی نسبت به ارزش بازار خود ایجاد  می‌کند و علیرغم بازدهی استکینگ که از بازدهی خزانه‌داری پایین‌تر است، آن  را به یک سرمایه‌گذاری قابل قبول و تولیدکننده جریان نقدی کافی تبدیل  نمی‌کند.",
+              "type": "unstyled",
+              "depth": 0,
+              "inlineStyleRanges": [],
+              "entityRanges": [],
+              "data": {}
+            }
+          ],
+          "entityMap": {}
+        }
+      },
+      {
+        "text": "",
+        "id": "F1UGM145r9L8iaW39GuTB",
+        "name": 0,
+        "backgroundColor": "",
+        "fontColor": "COLOR_DARK",
+        "heading": "p"
+      },
+      {
+        "text": "",
+        "id": "_UQFX7sxx9XXZQgu1SO5K",
+        "name": 0,
+        "backgroundColor": "",
+        "fontColor": "COLOR_DARK",
+        "heading": "p"
+      },
+      {
+        "id": "Wm6cXgSAWgYV2rrG-_2jv",
+        "name": 4,
         "backgroundColor": "",
         "fontColor": "",
-        "baseTag": "p",
-        "text": "",
-        "plainText": "",
-        "heroRef": {
-          "current": {}
+        "clazz": ""
+      },
+      {
+        "text": "آینده امور مالی",
+        "id": "KDzerdzkFavwJPa6rje9U",
+        "name": 0,
+        "backgroundColor": "",
+        "fontColor": "COLOR_DARK",
+        "heading": "h2",
+        "json": {
+          "blocks": [
+            {
+              "key": "4f631",
+              "text": "آینده امور مالی",
+              "type": "header-two",
+              "depth": 0,
+              "inlineStyleRanges": [
+                {
+                  "offset": 0,
+                  "length": 15,
+                  "style": "COLOR_RED"
+                }
+              ],
+              "entityRanges": [],
+              "data": {}
+            }
+          ],
+          "entityMap": {}
         }
+      },
+      {
+        "id": "U3lPshdnPzA5D6UmazppY",
+        "name": 4,
+        "backgroundColor": "",
+        "fontColor": "",
+        "clazz": ""
+      },
+      {
+        "text": "به گفته هنریک اندرسون (Henrik Andersson)، مدیر ارشد سرمایه‌گذاری در  شرکت مدیریت سرمایه‌گذاری آپولو کریپتو (Apollo Crypto)، اتریوم می‌تواند  به‌عنوان یک پلتفرم غیرمتمرکزسازی انواع خدمات ارائه شود که همه چیز را از  امور مالی و شبکه‌های اجتماعی تا هوش مصنوعی پشتیبانی می‌کند.",
+        "id": "FumHaF05P8JOAiWRBvKJk",
+        "name": 0,
+        "backgroundColor": "",
+        "fontColor": "COLOR_DARK",
+        "heading": "p",
+        "json": {
+          "blocks": [
+            {
+              "key": "f14av",
+              "text": "به گفته هنریک اندرسون (Henrik Andersson)، مدیر ارشد سرمایه‌گذاری در  شرکت مدیریت سرمایه‌گذاری آپولو کریپتو (Apollo Crypto)، اتریوم می‌تواند  به‌عنوان یک پلتفرم غیرمتمرکزسازی انواع خدمات ارائه شود که همه چیز را از  امور مالی و شبکه‌های اجتماعی تا هوش مصنوعی پشتیبانی می‌کند.",
+              "type": "unstyled",
+              "depth": 0,
+              "inlineStyleRanges": [],
+              "entityRanges": [],
+              "data": {}
+            }
+          ],
+          "entityMap": {}
+        }
+      },
+      {
+        "id": "LvidbJ4-vOVlpshrc2YJe",
+        "name": 1,
+        "clazz": "node-gap",
+        "backgroundColor": "",
+        "fontColor": "COLOR_PINK",
+        "url": "https://www.w3schools.com/html/horse.ogg",
+        "description": "توضیحات صدا",
+        "fileName": "RAYE_Escapism._feat._070_Shake_0EBw-CWc4Uw_140.mp3",
+        "fileSize": 0
+      },
+      {
+        "id": "14kpobEvIItcsYfJLjtlE",
+        "name": 2,
+        "verticallyAlign": "left",
+        "clazz": "node-gap",
+        "backgroundColor": "",
+        "fontColor": "",
+        "caption": "سلام",
+        "url": "https://s3.cointelegraph.com/uploads/2024-04/8fdd3d0b-924f-491e-83f2-d96220ce0037.jpg",
+        "width": 187
+      },
+      {
+        "id": "lSMhvEOkz1bK5lelhCrkL",
+        "name": 6,
+        "clazz": "node-gap",
+        "backgroundColor": "",
+        "fontColor": "",
+        "url": "https://www.w3schools.com/html/horse.ogg",
+        "description": "ت فیلم",
+        "fileName": "فیلم",
+        "fileSize": 1339422
+      },
+      {
+        "id": "yEgCFuN0vXRafqYjsjBu0",
+        "name": 5,
+        "clazz": "node-gap",
+        "backgroundColor": "COLOR_RED",
+        "fontColor": "",
+        "url": "https://www.w3schools.com/html/horse.ogg",
+        "description": "ت فاتیل",
+        "fileName": "photo_2024-03-06_14-54-50.jpg",
+        "fileSize": 46392
+      },
+      {
+        "text": "",
+        "id": "kZ1uwlQY4miHGHDPm2hU8",
+        "name": 0,
+        "backgroundColor": "",
+        "fontColor": "COLOR_DARK",
+        "heading": "p"
+      },
+      {
+        "text": "بیت کوین با رشد سریعتر\u0001لری فینک به آن باور دارد\u0001لری فینک به آن باور دارد",
+        "id": "HBsjuRGoirrWchnf-DrlQ",
+        "name": 0,
+        "backgroundColor": "",
+        "fontColor": "COLOR_DARK",
+        "heading": "ul-decimal",
+        "json": {
+          "blocks": [
+            {
+              "key": "945ps",
+              "text": "بیت کوین با رشد سریعتر",
+              "type": "ordered-list-item",
+              "depth": 0,
+              "inlineStyleRanges": [],
+              "entityRanges": [],
+              "data": {}
+            },
+            {
+              "key": "ejrfn",
+              "text": "لری فینک به آن باور دارد",
+              "type": "ordered-list-item",
+              "depth": 0,
+              "inlineStyleRanges": [],
+              "entityRanges": [],
+              "data": {}
+            },
+            {
+              "key": "3q492",
+              "text": "لری فینک به آن باور دارد",
+              "type": "ordered-list-item",
+              "depth": 0,
+              "inlineStyleRanges": [],
+              "entityRanges": [],
+              "data": {}
+            }
+          ],
+          "entityMap": {}
+        }
+      },
+      {
+        "text": "لری فینک به آن باور دارد",
+        "id": "LPF1StX_ffcvKhMFWNLkU",
+        "name": 0,
+        "backgroundColor": "",
+        "fontColor": "COLOR_DARK",
+        "heading": "p",
+        "json": {
+          "blocks": [
+            {
+              "key": "en8kt",
+              "text": "لری فینک به آن باور دارد",
+              "type": "unstyled",
+              "depth": 0,
+              "inlineStyleRanges": [],
+              "entityRanges": [],
+              "data": {}
+            }
+          ],
+          "entityMap": {}
+        }
+      },
+      {
+        "text": "",
+        "id": "Eyk-aVySQp1EYoH4U_6P8",
+        "name": 0,
+        "backgroundColor": "",
+        "fontColor": "COLOR_DARK",
+        "heading": "p"
+      },
+      {
+        "text": "",
+        "id": "t3EBzUVI25nxoFnd5ipX7",
+        "name": 0,
+        "backgroundColor": "",
+        "fontColor": "COLOR_DARK",
+        "heading": "p"
       }
     ],
     function(key, value) {
@@ -122,63 +415,90 @@ export default function Home() {
 
   const listener: OnJsonEditorUpdateListener = {
     onUpdate(jsonEditor) {
+      // console.log(jsonEditor);
     }
   };
 
-  const onUploadFileListener: OnUploadFileListener = {
-    onUploadFile(file) {
-      return new Promise((resolve, reject) => {
-        setTimeout(() => {
-          resolve({ url: "https://www.w3schools.com/html/horse.ogg" });
-        }, 3000);
-      });
-    },
-    onUploadImage(file) {
-      return new Promise((resolve, reject) => {
-        setTimeout(() => {
-          resolve({ url: "https://s3.cointelegraph.com/uploads/2024-04/8fdd3d0b-924f-491e-83f2-d96220ce0037.jpg" });
-        }, 3000);
-      });
-    },
-    onUploadVoice(file) {
-      return new Promise((resolve, reject) => {
-        setTimeout(() => {
-          resolve({ url: "https://www.w3schools.com/html/horse.ogg" });
-        }, 3000);
-      });
-    },
-    onUploadVideo(file) {
-      return new Promise((resolve, reject) => {
-        setTimeout(() => {
-          resolve({ url: "https://www.w3schools.com/html/horse.ogg" });
-        }, 3000);
-      });
-    }
-  };
+  // const onUploadFileListener: OnUploadFileListener = {
+  //   onUploadFile(file) {
+  //     return new Promise((resolve, reject) => {
+  //       setTimeout(() => {
+  //         resolve({ url: "https://www.w3schools.com/html/horse.ogg" });
+  //       }, 3000);
+  //     });
+  //   },
+  //   onUploadImage(file) {
+  //     return new Promise((resolve, reject) => {
+  //       setTimeout(() => {
+  //         resolve({ url: "https://s3.cointelegraph.com/uploads/2024-04/8fdd3d0b-924f-491e-83f2-d96220ce0037.jpg" });
+  //       }, 3000);
+  //     });
+  //   },
+  //   onUploadVoice(file) {
+  //     return new Promise((resolve, reject) => {
+  //       setTimeout(() => {
+  //         resolve({ url: "https://www.w3schools.com/html/horse.ogg" });
+  //       }, 3000);
+  //     });
+  //   },
+  //   onUploadVideo(file) {
+  //     return new Promise((resolve, reject) => {
+  //       setTimeout(() => {
+  //         resolve({ url: "https://www.w3schools.com/html/horse.ogg" });
+  //       }, 3000);
+  //     });
+  //   }
+  // };
 
   const options: EditorOptions = {
-    text: {
-      enabled: false
+    image: {
+      enabled:false,
+      uploader(file: File): Promise<any> {
+        return new Promise((resolve, reject) => {
+          setTimeout(() => {
+            resolve({ url: "https://s3.cointelegraph.com/uploads/2024-04/8fdd3d0b-924f-491e-83f2-d96220ce0037.jpg" });
+          }, 3000);
+        });
+      }
+    },
+    file: {
+      enabled:false,
+      uploader(file: File): Promise<any> {
+        return new Promise((resolve, reject) => {
+          setTimeout(() => {
+            resolve({ url: "https://www.w3schools.com/html/horse.ogg" });
+          }, 3000);
+        });
+      }
+    },
+    h1:{
+      enabled:false,
+    },
+    video: {
+      enabled:false,
+      uploader(file: File): Promise<any> {
+        return new Promise((resolve, reject) => {
+          setTimeout(() => {
+            resolve({ url: "https://www.w3schools.com/html/horse.ogg" });
+          }, 3000);
+        });
+      }
+    },
+    voice: {
+      enabled:false,
+      uploader(file: File): Promise<any> {
+        return new Promise((resolve, reject) => {
+          setTimeout(() => {
+            resolve({ url: "https://www.w3schools.com/html/horse.ogg" });
+          }, 3000);
+        });
+      }
     }
   };
 
   return (
     <main>
-      <div style={
-        {
-          width: "100%",
-          height: "400px",
-          backgroundColor: "red"
-        }
-      }>
-
-      </div>
-      <div style={{
-        width:"600px",
-        border:"1px solid red",
-      }}>
-        <EditorApp value={dataJson} onJsonEditorUpdateListener={listener} onUploadFileListener={onUploadFileListener} />
-      </div>
+      <EditorApp value={[]} options={options} listener={listener} />
     </main>
   );
 }

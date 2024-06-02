@@ -964,6 +964,10 @@
     color: rgb(145 145 145);
 }
 
+.node-image-caption.hidden {
+    visibility: hidden;
+ }
+
 .tools-menu-node-editor {
     display: flex;
     padding: 0.25rem;

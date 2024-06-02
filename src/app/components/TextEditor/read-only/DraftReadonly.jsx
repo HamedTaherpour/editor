@@ -1,21 +1,26 @@
-import React, { useEffect, useState } from 'react';
+"use client";
 
-import { Editor } from 'draft-js';
-import { customStyleMap, blockStyleFn, getFirstInitEditorState } from '../../../lib/editor-text/hook/tools';
+import React from "react";
 
-import 'draft-js/dist/Draft.css';
+import { Editor } from "draft-js";
 
-const DraftReadonly = ({ node }) => {
-  const [editorState, setEditorState] = useState(getFirstInitEditorState(node, true));
+import "draft-js/dist/Draft.css";
+import useEditor from "@/app/hook/useEditor";
+import useDraft from "@/app/hook/useDraft";
 
-  let rootClazz = 'node-' + node.id;
-  if (node.baseTag === 'ul-disc' || node.baseTag === 'ul-decimal') {
-    rootClazz += ' et-bullets';
+const DraftReadonly = ({ index }) => {
+  const { getNodeText } = useEditor();
+  const node = getNodeText(index);
+  const { customDraftStyleMap, blockDraftStyleFn } = useDraft();
+
+  let rootClazz = "node-" + node.id;
+  if (node.value.heading === "ul-disc" || node.value.heading === "ul-decimal") {
+    rootClazz += " et-bullets";
   }
 
   return (
-    <div className={rootClazz + ' node-draft'}>
-      <Editor editorState={editorState} readOnly customStyleMap={customStyleMap} textDirectionality="RTL" blockStyleFn={blockStyleFn} />
+    <div className={rootClazz + " node-draft"}>
+      <Editor editorState={node.draftState} readOnly customStyleMap={customDraftStyleMap} textDirectionality="RTL" blockStyleFn={blockDraftStyleFn} />
     </div>
   );
 };

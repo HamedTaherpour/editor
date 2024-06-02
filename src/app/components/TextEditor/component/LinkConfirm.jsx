@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import AppIcon from '../../AppIcon';
+import AppIcon from '../../app/AppIcon';
 
 const LinkConfirm = ({ onBtnSetLinkClick }) => {
   const [link, setLink] = useState('');

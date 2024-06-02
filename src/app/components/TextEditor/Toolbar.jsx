@@ -1,55 +1,50 @@
-import React, { useContext } from "react";
-import AppDropDownMenu from "../AppDropDownMenu";
-import { toolsFontStylsItems, toolsColorStyleItems, toolsHeadingStyleItems, isStyleActive } from "../../lib/editor-text/hook/tools";
-import AppIcon from "../AppIcon";
-import { TYPE_NODE_QUOTE } from "../../lib/editor/type";
-import { EditorContext } from "@/app/lib/editor/hook/context";
+import React from "react";
+import AppDropDownMenu from "../app/AppDropDownMenu";
+import AppIcon from "../app/AppIcon";
+import useEditor from "@/app/hook/useEditor";
+import { draftColorStyleOptions, draftFontStyleOptions } from "@/app/helpers/constants";
+import { draftHeadingStyleOptions } from "@/app/helpers/constants";
+import { TYPE_NODE_QUOTE } from "@/app/type/index.type";
 
 
-const Toolbar = ({ onTransitionNodeListener, onBtnShowLinkConfirmClick, node }) => {
-  const onNodeBehavior = useContext(EditorContext);
+const Toolbar = ({ index, toggleTransitionToQuote }) => {
+  const { getNodeText } = useEditor();
+  const node = getNodeText(index);
 
   const onBtnHeadingItemClick = (item) => {
-    if (onNodeBehavior)
-      onNodeBehavior.onBtnHeadingItemClick(item);
+    node.setDraftHeading(item);
   };
 
   const onBtnColorClick = (e, item) => {
     e.preventDefault();
-    if (onNodeBehavior)
-      onNodeBehavior.onBtnColorClick(item);
+    node.setDraftFontColor(item);
   };
 
   const onBtnBackgroundClick = (e, item) => {
-    if (onNodeBehavior)
-      onNodeBehavior.onBtnBackgroundClick(item);
+    node.setDraftBackgroundColor(item);
   };
 
   const onBtnStyleClick = (e, item) => {
     e.preventDefault();
-    if (onNodeBehavior)
-      onNodeBehavior.onBtnStyleClick(item);
+    node.setDraftFontStyle(item);
   };
 
   const isTextStyleActive = (style, method) => {
-    if (onNodeBehavior)
-      return onNodeBehavior.isTextStyleActive(style, method);
-    else
-      return false;
+    return node.isDraftStyleActive(style, method);
   };
 
   const onBtnLinkClick = () => {
-    onBtnShowLinkConfirmClick();
+    node.toggleDraftLink();
   };
 
   const onBtnToggleQuoteClick = () => {
-    onTransitionNodeListener();
+    toggleTransitionToQuote()
   };
 
   const classNameDDMColor = () => {
-    const colorName = Object.keys(toolsColorStyleItems).find((item) => isTextStyleActive(toolsColorStyleItems[item].option.style.color, toolsColorStyleItems[item].method));
+    const colorName = Object.keys(draftColorStyleOptions).find((item) => isTextStyleActive(draftColorStyleOptions[item].option.style.color, draftColorStyleOptions[item].method));
     if (colorName) {
-      return toolsColorStyleItems[colorName].option.class.bgColor;
+      return draftColorStyleOptions[colorName].option.class.bgColor;
     } else {
       return "et-bg-dark";
     }
@@ -63,14 +58,14 @@ const Toolbar = ({ onTransitionNodeListener, onBtnShowLinkConfirmClick, node }) 
           onItemClick={onBtnHeadingItemClick}
           activator={
             <div className="draft-toolbar-heading">
-              {Object.keys(toolsHeadingStyleItems).map((item) => (
-                <span key={toolsHeadingStyleItems[item].value} className={!!isTextStyleActive(toolsHeadingStyleItems[item].style, toolsHeadingStyleItems[item].method) ? "" : "draft-toolbar-heading-deactive"}>
-                  {toolsHeadingStyleItems[item].title}
+              {Object.keys(draftHeadingStyleOptions).map((item) => (
+                <span key={draftHeadingStyleOptions[item].value} className={!!isTextStyleActive(draftHeadingStyleOptions[item].style, draftHeadingStyleOptions[item].method) ? "" : "draft-toolbar-heading-deactive"}>
+                  {draftHeadingStyleOptions[item].title}
                 </span>
               ))}
             </div>
           }
-          items={toolsHeadingStyleItems}
+          items={draftHeadingStyleOptions}
         />
         <div className="draft-toolbar-section">
           <AppDropDownMenu
@@ -80,16 +75,16 @@ const Toolbar = ({ onTransitionNodeListener, onBtnShowLinkConfirmClick, node }) 
             menu={
               <div className="color-palette">
                 <div className="color-palette-section">
-                  {Object.keys(toolsColorStyleItems).map((item, i) => (
-                    <button title={toolsColorStyleItems[item].title} key={toolsColorStyleItems[item].value} onMouseDown={(e) => onBtnColorClick(e, toolsColorStyleItems[item])} className={(!!isTextStyleActive(toolsColorStyleItems[item].option.style.color, toolsColorStyleItems[item].method) ? "active" : "") + " " + toolsColorStyleItems[item].option.class.color}>
+                  {Object.keys(draftColorStyleOptions).map((item, i) => (
+                    <button title={draftColorStyleOptions[item].title} key={draftColorStyleOptions[item].value} onMouseDown={(e) => onBtnColorClick(e, draftColorStyleOptions[item])} className={(!!isTextStyleActive(draftColorStyleOptions[item].option.style.color, draftColorStyleOptions[item].method) ? "active" : "") + " " + draftColorStyleOptions[item].option.class.color}>
                       A
                     </button>
                   ))}
                 </div>
                 <hr />
                 <div className="color-palette-section">
-                  {Object.keys(toolsColorStyleItems).map((item, i) => (
-                    <button title={toolsColorStyleItems[item].title} key={toolsColorStyleItems[item].value} onMouseDown={(e) => onBtnBackgroundClick(e, toolsColorStyleItems[item])} className={(!!isTextStyleActive(toolsColorStyleItems[item].option.style.background, toolsColorStyleItems[item].method) ? "active" : "") + " " + toolsColorStyleItems[item].option.class.color + " " + toolsColorStyleItems[item].option.class.background}>
+                  {Object.keys(draftColorStyleOptions).map((item, i) => (
+                    <button title={draftColorStyleOptions[item].title} key={draftColorStyleOptions[item].value} onMouseDown={(e) => onBtnBackgroundClick(e, draftColorStyleOptions[item])} className={(!!isTextStyleActive(draftColorStyleOptions[item].option.style.background, draftColorStyleOptions[item].method) ? "active" : "") + " " + draftColorStyleOptions[item].option.class.color + " " + draftColorStyleOptions[item].option.class.background}>
                       A
                     </button>
                   ))}
@@ -99,14 +94,14 @@ const Toolbar = ({ onTransitionNodeListener, onBtnShowLinkConfirmClick, node }) 
           />
         </div>
         <div className="draft-toolbar-section">
-          {toolsFontStylsItems.map((item) => (
-            <button key={item.style} onMouseDown={(e) => {
-              onBtnStyleClick(e, item);
-            }} className={"draft-toolbar-action " + (!!isTextStyleActive(item.style, item.method) ? "active" : "")}>
-              <AppIcon name={item.icon} className="icon" />
+          {Object.keys(draftFontStyleOptions).map((key) => (
+            <button key={draftFontStyleOptions[key].style} onMouseDown={(e) => {
+              onBtnStyleClick(e, draftFontStyleOptions[key]);
+            }} className={"draft-toolbar-action " + (!!isTextStyleActive(draftFontStyleOptions[key].style, draftFontStyleOptions[key].method) ? "active" : "")}>
+              <AppIcon name={draftFontStyleOptions[key].icon} className="icon" />
             </button>
           ))}
-          <button className={(node.type === TYPE_NODE_QUOTE ? "active" : "") + " draft-toolbar-action"} onMouseDown={() => onBtnToggleQuoteClick()}>
+          <button className={(node.value.name === TYPE_NODE_QUOTE ? "active" : "") + " draft-toolbar-action"} onMouseDown={() => onBtnToggleQuoteClick()}>
             <AppIcon name="quote-up" className="icon" />
           </button>
         </div>
