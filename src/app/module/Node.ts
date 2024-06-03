@@ -38,7 +38,6 @@ export default class Node<T extends INode = INode> {
 
   setFocus(focus: Function) {
     this.focusFun = focus;
-    this.update();
   }
 
   focus() {

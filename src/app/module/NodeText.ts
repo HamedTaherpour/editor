@@ -20,7 +20,6 @@ export default class NodeText extends Node<INodeText> {
   setOnToggleLinkConfirmListener(onToggleLinkConfirmListener: OnToggleLinkConfirmListener) {
     if (!this.onToggleLinkConfirmListener) {
       this.onToggleLinkConfirmListener = onToggleLinkConfirmListener;
-      this.update();
     }
   }
 
@@ -103,4 +102,5 @@ export default class NodeText extends Node<INodeText> {
     const newNode = new NodeText(newId, newIndex, newValue, newDraftState, this.dispatch);
     return newNode;
   }
+
 }

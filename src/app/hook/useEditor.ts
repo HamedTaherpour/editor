@@ -1,8 +1,6 @@
 import { useAppDispatch, useAppSelector } from "@/app/store/use-store";
-import { addNode, setOnKeyboardHandling, setOptions } from "@/app/store/editor-slice";
-import { nanoid } from "@reduxjs/toolkit";
+import { addNode, setOnKeyboardHandling, setOptions, setNodeList, setCurrentNodeSelectedIndex } from "@/app/store/editor-slice";
 import { DraftStyleOption, EditorOptions, INodeDivider, INodeFile, INodeImage, INodeText, INodeVideo, INodeVoice, JsonEditor, NodeType, OnKeyboardHandling, TYPE_NODE_DIVIDER, TYPE_NODE_FILE, TYPE_NODE_IMAGE, TYPE_NODE_QUOTE, TYPE_NODE_TEXT, TYPE_NODE_VIDEO, TYPE_NODE_VOICE } from "@/app/type/index.type";
-import useDraft from "@/app/hook/useDraft";
 import NodeText from "@/app/module/NodeText";
 import Node from "@/app/module/Node";
 import { KeyboardEvent } from "react";
@@ -12,15 +10,17 @@ import NodeVideo from "@/app/module/NodeVideo";
 import NodeVoice from "@/app/module/NodeVoice";
 import NodeDivider from "@/app/module/NodeDivider";
 import { draftHeadingStyleOptions, draftFormatStyleOptions } from "@/app/helpers/constants";
+import NodeController from "@/app/module";
 
 const useEditor = () => {
 
   const dispatch = useAppDispatch();
   const nodeList = useAppSelector((state) => state.editor.nodeList);
+  const currentNodeSelectedIndex = useAppSelector((state) => state.editor.currentNodeSelectedIndex);
   const onKeyboardHandling = useAppSelector((state) => state.editor.onKeyboardHandling);
   const editorOptions = useAppSelector((state) => state.editor.options);
 
-  const { getInitialDraftState } = useDraft();
+  const nodeController = new NodeController(nodeList, dispatch, editorOptions);
 
   const nodeListMenu = [
     {
@@ -163,217 +163,39 @@ const useEditor = () => {
 
   // region Add Node
   const addNewNodeText = (index?: number): NodeText => {
-    const DEFAULT_BACKGROUND_COLOR = "";
-    const DEFAULT_FONT_COLOR = "COLOR_DARK";
-    const DEFAULT_TAG = "p";
-
-    let newIndex = nodeList.length <= 0 ? 0 : nodeList.length;
-    if (index || index === 0) {
-      newIndex = index + 1;
-    }
-
-    const id = nanoid();
-    const value: INodeText = {
-      text: "",
-      id,
-      name: TYPE_NODE_TEXT,
-      backgroundColor: DEFAULT_BACKGROUND_COLOR,
-      fontColor: DEFAULT_FONT_COLOR,
-      heading: DEFAULT_TAG
-    };
-    const editorState = getInitialDraftState();
-    const node = new NodeText(id, newIndex, value, editorState, dispatch);
-
-    dispatch(addNode({ index: newIndex, node }));
-    return node;
-  };
-
-  const addNodeText = (value: INodeText, index?: number, readonly = false): NodeText => {
-    let newIndex = nodeList.length <= 0 ? 0 : nodeList.length;
-    if (index || index === 0) {
-      newIndex = index + 1;
-    }
-
-    const editorState = getInitialDraftState(value, readonly);
-    const node = new NodeText(value.id, newIndex, value, editorState, dispatch);
-
-    dispatch(addNode({ index: newIndex, node }));
+    const node = nodeController.getNodeTextInstance(index);
+    dispatch(addNode({ index: node.index, node }));
+    setCurrentNodeIndex(node.index);
     return node;
   };
 
   const addNewNodeImage = (index?: number): NodeImage => {
-    let newIndex = nodeList.length <= 0 ? 0 : nodeList.length;
-    if (index || index === 0) {
-      newIndex = index + 1;
-    }
-
-    const id = nanoid();
-    const value: INodeImage = {
-      id,
-      name: TYPE_NODE_IMAGE,
-      verticallyAlign: "center",
-      clazz: "node-gap",
-      backgroundColor: "",
-      fontColor: "",
-      caption: "",
-      url: ""
-    };
-    const node = new NodeImage(id, newIndex, value, dispatch, editorOptions);
-
-    dispatch(addNode({ index: newIndex, node }));
-    return node;
-  };
-
-  const addNodeImage = (value: INodeImage, index?: number): NodeImage => {
-    let newIndex = nodeList.length <= 0 ? 0 : nodeList.length;
-    if (index || index === 0) {
-      newIndex = index + 1;
-    }
-    const node = new NodeImage(value.id, newIndex, value, dispatch, editorOptions);
-
-    dispatch(addNode({ index: newIndex, node }));
+    const node = nodeController.getNodeImageInstance(index);
+    dispatch(addNode({ index: node.index, node }));
     return node;
   };
 
   const addNewNodeFile = (index?: number): NodeFile => {
-    let newIndex = nodeList.length <= 0 ? 0 : nodeList.length;
-    if (index || index === 0) {
-      newIndex = index + 1;
-    }
-
-    const id = nanoid();
-    const value: INodeFile = {
-      id,
-      name: TYPE_NODE_FILE,
-      clazz: "node-gap",
-      backgroundColor: "",
-      fontColor: "",
-      url: "",
-      description: "",
-      fileName: "",
-      fileSize: 0
-    };
-    const node = new NodeFile(id, newIndex, value, dispatch, editorOptions);
-
-    dispatch(addNode({ index: newIndex, node }));
-    return node;
-  };
-
-  const addNodeFile = (value: INodeFile, index?: number): NodeFile => {
-    let newIndex = nodeList.length <= 0 ? 0 : nodeList.length;
-    if (index || index === 0) {
-      newIndex = index + 1;
-    }
-
-    const node = new NodeFile(value.id, newIndex, value, dispatch, editorOptions);
-
-    dispatch(addNode({ index: newIndex, node }));
+    const node = nodeController.getNodeFileInstance(index);
+    dispatch(addNode({ index: node.index, node }));
     return node;
   };
 
   const addNewNodeDivider = (index?: number): NodeDivider => {
-    let newIndex = nodeList.length <= 0 ? 0 : nodeList.length;
-    if (index || index === 0) {
-      newIndex = index + 1;
-    }
-
-    const id = nanoid();
-    const value: INodeDivider = {
-      id,
-      name: TYPE_NODE_DIVIDER,
-      backgroundColor: "",
-      fontColor: "",
-      clazz: ""
-    };
-
-
-    const node = new NodeDivider(id, newIndex, value, dispatch, editorOptions);
-
-    dispatch(addNode({ index: newIndex, node }));
-    return node;
-  };
-
-  const addNodeDivider = (value: INodeDivider, index?: number): NodeDivider => {
-    let newIndex = nodeList.length <= 0 ? 0 : nodeList.length;
-    if (index || index === 0) {
-      newIndex = index + 1;
-    }
-
-    const node = new NodeDivider(value.id, newIndex, value, dispatch, editorOptions);
-
-    dispatch(addNode({ index: newIndex, node }));
+    const node = nodeController.getNodeDividerInstance(index);
+    dispatch(addNode({ index: node.index, node }));
     return node;
   };
 
   const addNewNodeVoice = (index?: number): NodeVoice => {
-    let newIndex = nodeList.length <= 0 ? 0 : nodeList.length;
-    if (index || index === 0) {
-      newIndex = index + 1;
-    }
-
-    const id = nanoid();
-    const value: INodeVoice = {
-      id,
-      name: TYPE_NODE_VOICE,
-      clazz: "node-gap",
-      backgroundColor: "",
-      fontColor: "",
-      url: "",
-      description: "",
-      fileName: "",
-      fileSize: 0
-    };
-    const node = new NodeVoice(id, newIndex, value, dispatch, editorOptions);
-
-    dispatch(addNode({ index: newIndex, node }));
-    return node;
-  };
-
-  const addNodeVoice = (value: INodeVoice, index?: number): NodeVoice => {
-    let newIndex = nodeList.length <= 0 ? 0 : nodeList.length;
-    if (index || index === 0) {
-      newIndex = index + 1;
-    }
-
-    const node = new NodeVoice(value.id, newIndex, value, dispatch, editorOptions);
-
-    dispatch(addNode({ index: newIndex, node }));
+    const node = nodeController.getNodeVoiceInstance(index);
+    dispatch(addNode({ index: node.index, node }));
     return node;
   };
 
   const addNewNodeVideo = (index?: number): NodeVideo => {
-    let newIndex = nodeList.length <= 0 ? 0 : nodeList.length;
-    if (index || index === 0) {
-      newIndex = index + 1;
-    }
-
-    const id = nanoid();
-    const value: INodeVideo = {
-      id,
-      name: TYPE_NODE_VIDEO,
-      clazz: "node-gap",
-      backgroundColor: "",
-      fontColor: "",
-      url: "",
-      description: "",
-      fileName: "",
-      fileSize: 0
-    };
-    const node = new NodeVideo(id, newIndex, value, dispatch, editorOptions);
-
-    dispatch(addNode({ index: newIndex, node }));
-    return node;
-  };
-
-  const addNodeVideo = (value: INodeVideo, index?: number): NodeVideo => {
-    let newIndex = nodeList.length <= 0 ? 0 : nodeList.length;
-    if (index || index === 0) {
-      newIndex = index + 1;
-    }
-
-    const node = new NodeVideo(value.id, newIndex, value, dispatch, editorOptions);
-
-    dispatch(addNode({ index: newIndex, node }));
+    const node = nodeController.getNodeVideoInstance(index);
+    dispatch(addNode({ index: node.index, node }));
     return node;
   };
 
@@ -384,29 +206,8 @@ const useEditor = () => {
   };
 
   const addNewNodeQuote = (index?: number): NodeText => {
-    const DEFAULT_BACKGROUND_COLOR = "COLOR_GRAY";
-    const DEFAULT_FONT_COLOR = "COLOR_DARK";
-    const DEFAULT_TAG = "p";
-
-    let newIndex = nodeList.length <= 0 ? 0 : nodeList.length;
-    if (index || index === 0) {
-      newIndex = index + 1;
-    }
-
-    const id = nanoid();
-    const value: INodeText = {
-      text: "",
-      id,
-      clazz: "node-gap",
-      name: TYPE_NODE_QUOTE,
-      backgroundColor: DEFAULT_BACKGROUND_COLOR,
-      fontColor: DEFAULT_FONT_COLOR,
-      heading: DEFAULT_TAG
-    };
-    const editorState = getInitialDraftState();
-    const node = new NodeText(id, newIndex, value, editorState, dispatch);
-
-    dispatch(addNode({ index: newIndex, node }));
+    const node = nodeController.getNodeQuoteInstance(index);
+    dispatch(addNode({ index: node.index, node }));
     return node;
   };
   // endregion
@@ -449,7 +250,7 @@ const useEditor = () => {
         if (!editorOptions[type])
           return true;
         // @ts-ignore
-        else if (editorOptions[type].enabled === false){
+        else if (editorOptions[type].enabled === false) {
           return false;
         }
         return true;
@@ -471,38 +272,51 @@ const useEditor = () => {
 
   const setJsonEditor = (jsonEditor?: JsonEditor, readonly = false) => {
     if (jsonEditor) {
+      let newNodeList: Array<NodeType> = [];
       for (let index in jsonEditor) {
-        if (jsonEditor[index].name === TYPE_NODE_TEXT || jsonEditor[index].name === TYPE_NODE_QUOTE) {
+        let node: NodeType;
+        if (jsonEditor[index].name === TYPE_NODE_TEXT) {
+          const myNode = jsonEditor[index] as INodeText;
+          node = nodeController.getNodeTextInstance(parseInt(index), myNode, readonly);
+        } else if (jsonEditor[index].name === TYPE_NODE_QUOTE) {
           const myItem = jsonEditor[index] as INodeText;
-          addNodeText(myItem, parseInt(index), readonly);
+          node = nodeController.getNodeQuoteInstance(parseInt(index), myItem, readonly);
         } else if (jsonEditor[index].name === TYPE_NODE_IMAGE) {
           const myItem = jsonEditor[index] as INodeImage;
-          addNodeImage(myItem, parseInt(index));
+          node = nodeController.getNodeImageInstance(parseInt(index), myItem, readonly);
         } else if (jsonEditor[index].name === TYPE_NODE_FILE) {
           const myItem = jsonEditor[index] as INodeFile;
-          addNodeFile(myItem, parseInt(index));
+          node = nodeController.getNodeFileInstance(parseInt(index), myItem, readonly);
         } else if (jsonEditor[index].name === TYPE_NODE_VIDEO) {
           const myItem = jsonEditor[index] as INodeVideo;
-          addNodeVideo(myItem, parseInt(index));
+          node = nodeController.getNodeVideoInstance(parseInt(index), myItem, readonly);
         } else if (jsonEditor[index].name === TYPE_NODE_VOICE) {
           const myItem = jsonEditor[index] as INodeVoice;
-          addNodeVoice(myItem, parseInt(index));
+          node = nodeController.getNodeVoiceInstance(parseInt(index), myItem, readonly);
         } else if (jsonEditor[index].name === TYPE_NODE_DIVIDER) {
           const myItem = jsonEditor[index] as INodeDivider;
-          addNodeDivider(myItem, parseInt(index));
+          node = nodeController.getNodeDividerInstance(parseInt(index), myItem, readonly);
         }
+        // @ts-ignore
+        if (node)
+          newNodeList.push(node);
       }
+      dispatch(setNodeList(newNodeList));
     }
+  };
+
+  const setCurrentNodeIndex = (index: number) => {
+    dispatch(setCurrentNodeSelectedIndex(index));
   };
 
   return {
     addNewNodeText,
-    nodeList,
+    nodeList, currentNodeSelectedIndex,
     getNodeImage,
     getNodeText,
     selectUp,
     selectDown,
-    getNode, setKeyboardHandling, pressKeyUp, duplicate, getNodeListMenu, setEditorOptions, editorOptions, getNodeFile, getNodeVideo, getNodeVoice, getNodeDivider,
+    getNode, setKeyboardHandling, pressKeyUp, duplicate, getNodeListMenu, setEditorOptions, editorOptions, getNodeFile, getNodeVideo, getNodeVoice, getNodeDivider, setCurrentNodeIndex,
     getJsonEditor, setJsonEditor
   };
 };

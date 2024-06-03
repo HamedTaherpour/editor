@@ -62,6 +62,7 @@ const NodeEditorFile = (props: Props) => {
       setTempFileName(e.target.files[0].name);
       setFileSize(getFileSizeFormat(node.value.fileSize));
       const uploader = node.getUploader();
+      console.log(uploader);
       if (uploader) {
         setStatus(Status.Uploading);
         uploader(e.target.files[0])

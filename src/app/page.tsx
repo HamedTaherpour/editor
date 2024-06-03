@@ -2,6 +2,7 @@
 
 import dynamic from "next/dynamic";
 import { EditorOptions, OnJsonEditorUpdateListener } from "@/app/type/index.type";
+import { useEffect, useState } from "react";
 
 const EditorApp = dynamic(() => import("@/app/components/EditorApp"), { ssr: false });
 
@@ -411,7 +412,13 @@ export default function Home() {
       return value;
     }
   );
-  const dataJson = JSON.parse(dataStr);
+  const [dataJson, setDataJson] = useState([]);
+
+  useEffect(() => {
+    setTimeout(() => {
+      setDataJson(JSON.parse(dataStr))
+    }, 4000);
+  }, []);
 
   const listener: OnJsonEditorUpdateListener = {
     onUpdate(jsonEditor) {
@@ -419,40 +426,8 @@ export default function Home() {
     }
   };
 
-  // const onUploadFileListener: OnUploadFileListener = {
-  //   onUploadFile(file) {
-  //     return new Promise((resolve, reject) => {
-  //       setTimeout(() => {
-  //         resolve({ url: "https://www.w3schools.com/html/horse.ogg" });
-  //       }, 3000);
-  //     });
-  //   },
-  //   onUploadImage(file) {
-  //     return new Promise((resolve, reject) => {
-  //       setTimeout(() => {
-  //         resolve({ url: "https://s3.cointelegraph.com/uploads/2024-04/8fdd3d0b-924f-491e-83f2-d96220ce0037.jpg" });
-  //       }, 3000);
-  //     });
-  //   },
-  //   onUploadVoice(file) {
-  //     return new Promise((resolve, reject) => {
-  //       setTimeout(() => {
-  //         resolve({ url: "https://www.w3schools.com/html/horse.ogg" });
-  //       }, 3000);
-  //     });
-  //   },
-  //   onUploadVideo(file) {
-  //     return new Promise((resolve, reject) => {
-  //       setTimeout(() => {
-  //         resolve({ url: "https://www.w3schools.com/html/horse.ogg" });
-  //       }, 3000);
-  //     });
-  //   }
-  // };
-
   const options: EditorOptions = {
     image: {
-      enabled:false,
       uploader(file: File): Promise<any> {
         return new Promise((resolve, reject) => {
           setTimeout(() => {
@@ -462,7 +437,6 @@ export default function Home() {
       }
     },
     file: {
-      enabled:false,
       uploader(file: File): Promise<any> {
         return new Promise((resolve, reject) => {
           setTimeout(() => {
@@ -471,11 +445,10 @@ export default function Home() {
         });
       }
     },
-    h1:{
-      enabled:false,
+    h1: {
+      enabled: false
     },
     video: {
-      enabled:false,
       uploader(file: File): Promise<any> {
         return new Promise((resolve, reject) => {
           setTimeout(() => {
@@ -485,7 +458,6 @@ export default function Home() {
       }
     },
     voice: {
-      enabled:false,
       uploader(file: File): Promise<any> {
         return new Promise((resolve, reject) => {
           setTimeout(() => {

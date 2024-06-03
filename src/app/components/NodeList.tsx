@@ -12,7 +12,7 @@ interface Props {
 const NodeList = (props: Props) => {
   const { listener, options, value } = props;
 
-  const { nodeList, getNodeText, setKeyboardHandling, selectDown, selectUp, addNewNodeText, setEditorOptions, getJsonEditor, setJsonEditor } = useEditor();
+  const { nodeList, getNodeText, getNode, setKeyboardHandling, selectDown, selectUp, addNewNodeText, setEditorOptions, getJsonEditor, setJsonEditor, currentNodeSelectedIndex } = useEditor();
 
   const onKeyboardHandling: OnKeyboardHandling = {
     onKeyUp(e: React.KeyboardEvent<HTMLElement>, index: number) {
@@ -38,9 +38,16 @@ const NodeList = (props: Props) => {
   };
 
   useEffect(() => {
-    if (nodeList.length <= 0)
+    if (value && value?.length > 0) {
       setJsonEditor(value);
+    }
   }, [value]);
+
+  useEffect(() => {
+    const currentNode = getNode(currentNodeSelectedIndex);
+    if (currentNode)
+      currentNode.focus();
+  }, [currentNodeSelectedIndex]);
 
   useEffect(() => {
     if (nodeList.length <= 0) {

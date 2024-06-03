@@ -1,4 +1,4 @@
-import {  RawDraftContentState } from "draft-js";
+import { RawDraftContentState } from "draft-js";
 import Node from "@/app/module/Node";
 import NodeText from "@/app/module/NodeText";
 import { KeyboardEvent } from "react";
@@ -24,6 +24,7 @@ export interface IEditorStore {
   nodeList: Array<NodeType>;
   onKeyboardHandling?: OnKeyboardHandling;
   options?: EditorOptions,
+  currentNodeSelectedIndex: number,
 }
 
 export interface INode {
@@ -80,7 +81,7 @@ export interface DraftStyleOption {
   value: string;
   method: string;
   style: string;
-  icon?:string,
+  icon?: string,
   option?: {
     style: {
       color: string;

@@ -1,10 +1,11 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { EditorOptions, IEditorStore, JsonEditor, NodeType, OnKeyboardHandling } from "@/app/type/index.type";
+import { EditorOptions, IEditorStore, NodeType, OnKeyboardHandling } from "@/app/type/index.type";
 import Node from "@/app/module/Node";
 
 const initialState: IEditorStore = {
   nodeList: [],
-  options: {}
+  options: {},
+  currentNodeSelectedIndex: 0
 };
 
 interface Params {
@@ -16,6 +17,9 @@ const editorSlice = createSlice({
   name: "editor",
   initialState,
   reducers: {
+    setNodeList: (state, action: PayloadAction<Array<NodeType>>) => {
+      state.nodeList = action.payload.map((item: NodeType) => item);
+    },
     addNode: (state, action: PayloadAction<Params>) => {
       const newNodeList = state.nodeList.concat();
       newNodeList.splice(action.payload.index, 0, action.payload.node);
@@ -36,8 +40,11 @@ const editorSlice = createSlice({
     setOptions(state, action: PayloadAction<EditorOptions | undefined>) {
       state.options = action.payload;
     },
+    setCurrentNodeSelectedIndex(state, action: PayloadAction<number>) {
+      state.currentNodeSelectedIndex = action.payload;
+    }
   }
 });
 
-export const { setOptions, setOnKeyboardHandling, addNode, updateNode, deleteNode } = editorSlice.actions;
+export const { setOptions, setCurrentNodeSelectedIndex, setNodeList, setOnKeyboardHandling, addNode, updateNode, deleteNode } = editorSlice.actions;
 export default editorSlice.reducer;

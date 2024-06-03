@@ -73,12 +73,8 @@ const DraftEditor = (props: Props) => {
         setShowLinkConfirm(!showLinkConfirm);
       }
     });
-    focus();
-  }, []);
-
-  useEffect(() => {
     node.setFocus(focus);
-  }, [node]);
+  }, []);
 
   useEffect(() => {
     if (showEditLinkConfirm && refEditConfirm.current) {
